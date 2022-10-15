@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class LaundryPranches extends Migration
+class Categorytranslations extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,13 @@ class LaundryPranches extends Migration
     public function up()
     {
         //
-        Schema::create('laundry_pranches', function (Blueprint $table) {
+        Schema::create('categorytranslations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('laundry_id');
-            $table->foreign('laundry_id')->references('id')->on('laundries')->onDelete('cascade');
-            $table->unsignedBigInteger('pranche_id');
-            $table->foreign('pranche_id')->references('id')->on('pranches')->onDelete('cascade');
+            $table->string('name');
+            $table->string('locale')->index();
+            $table->unique(['category_id', 'locale']);
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

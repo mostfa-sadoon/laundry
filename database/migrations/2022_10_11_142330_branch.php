@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Panche extends Migration
+class branch extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class Panche extends Migration
     public function up()
     {
         //
-        Schema::create('pranches', function (Blueprint $table) {
+        Schema::create('branchs', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
             $table->string('phone')->unique();
