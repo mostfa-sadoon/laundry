@@ -14,7 +14,7 @@ class CategoryService extends Migration
     public function up()
     {
         //
-        Schema::create('categoryservices', function (Blueprint $table) {
+        Schema::create('category_service', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('service_id');
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');

@@ -16,7 +16,7 @@ class service extends Seeder
     public function run()
     {
         //
-        DB::table('services')->insert([
+        DB::table('services')->insert([[
             'id' => 1,
         ],[
             'id' => 2,
@@ -24,6 +24,6 @@ class service extends Seeder
             'id' => 3,
         ],[
             'id'=>4
-        ]);
+        ]]);
     }
 }

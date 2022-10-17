@@ -14,10 +14,10 @@ class laundrybranchs extends Seeder
      */
     public function run()
     {
-        DB::table('laundry_branches')->insert([
+        DB::table('laundry_branches')->insert([[
             'id'=>1,
             'laundry_id'=>1,
             'branch_id'=>1,
-        ]);
+        ]]);
     }
 }

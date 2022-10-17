@@ -16,24 +16,32 @@ class categoryservices extends Seeder
     public function run()
     {
         //
-        DB::table('categoryservices')->insert([
+        DB::table('category_service')->insert([[
             'id' => 1,
             'category_id'=>1,
             'service_id'=>1,
 
-        ],[
-            'id' => 2,
+        ],  ['id' => 2,
+            'category_id'=>2,
+            'service_id'=>1,
+
+         ],[
+            'id' => 3,
             'category_id'=>1,
             'service_id'=>2,
-        ]
-        ,[
-            'id' => 2,
+        ],[
+            'id' => 4,
+            'category_id'=>2,
+            'service_id'=>2,
+        ],[
+            'id' => 5,
             'category_id'=>1,
             'service_id'=>3,
         ],[
-            'id' => 2,
+            'id' => 6,
             'category_id'=>1,
             'service_id'=>4,
-        ]);
+        ]
+    ]);
     }
 }

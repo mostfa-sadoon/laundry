@@ -17,7 +17,7 @@ class laundry extends Seeder
     public function run()
     {
         //
-        DB::table('laundries')->insert([
+        DB::table('laundries')->insert([[
             'id'=>1,
             'email'=>'laundry@laundry.com',
             'phone'=>'0552342385',
@@ -27,6 +27,6 @@ class laundry extends Seeder
              'taxcard'=>'2556230',
              'logo'=>'vfvdvfd.jpg',
              'password' => Hash::make(123456),
-        ]);
+        ]]);
     }
 }

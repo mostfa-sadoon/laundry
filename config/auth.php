@@ -40,6 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'branch-api' => [
+            'driver' => 'jwt',
+            'provider' => 'branchs',
+        ],
+        'laundry-api' => [
+            'driver' => 'jwt',
+            'provider' => 'laundries',
+        ],
     ],
 
     /*
@@ -63,6 +71,14 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'laundries' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Laundry\laundry::class,
+        ],
+        'branchs' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Laundry\branch::class,
         ],
 
         // 'users' => [

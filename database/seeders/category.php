@@ -16,7 +16,7 @@ class category extends Seeder
     public function run()
     {
         //
-        DB::table('categories')->insert([
+        DB::table('categories')->insert([[
             'id' => 1,
         ],[
             'id' => 2,
@@ -24,6 +24,6 @@ class category extends Seeder
             'id' => 3,
         ],[
             'id'=>4
-        ]);
+        ]]);
     }
 }

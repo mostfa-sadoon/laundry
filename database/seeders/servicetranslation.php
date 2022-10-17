@@ -15,7 +15,7 @@ class servicetranslation extends Seeder
     public function run()
     {
         //
-        DB::table('servicetranslations')->insert([
+        DB::table('servicetranslations')->insert([[
             'id' => 1,
             'service_id'=>1,
             'name'=>'washing',
@@ -55,6 +55,6 @@ class servicetranslation extends Seeder
             'service_id'=>4,
             'name'=>'غسيل ومكوي',
             'locale'=>'ar',
-        ]);
+        ]]);
     }
 }

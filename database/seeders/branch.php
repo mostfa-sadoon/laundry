@@ -20,6 +20,7 @@ class branch extends Seeder
         DB::table('branchs')->insert([
             'id'=>1,
             'email'=>'branch@laundry.com',
+            'username'=>'branchusername',
             'phone'=>'2342385',
              'status'=>'open',
              'lat'=>'2023453',

@@ -17,6 +17,7 @@ class branch extends Migration
         Schema::create('branchs', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
+            $table->string('username')->unique();
             $table->string('phone')->unique();
             $table->string('lat')->unique();
             $table->string('long')->unique();

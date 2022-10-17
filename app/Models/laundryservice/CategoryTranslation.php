@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Models\Laundry;
+namespace App\Models\laundryservice;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
-class Pranch extends Authenticatable
+class CategoryTranslation extends Model
 {
     use HasFactory;
     protected $guarded=[];
+    protected $table='categorytranslations';
 }

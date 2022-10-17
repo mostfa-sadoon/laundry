@@ -16,17 +16,17 @@ class branchtranslations extends Seeder
     public function run()
     {
         //
-        DB::table('branchtranslations')->insert([
+        DB::table('branchtranslations')->insert([[
             'id' => 1,
             'branch_id'=>1,
             'name'=>'nazifaa',
             'locale'=>'en',
         ],
         [
-            'id' => 1,
+            'id' => 2,
             'branch_id'=>1,
             'name'=>'نظيفه',
             'locale'=>'ar',
-        ]);
+        ]]);
     }
 }

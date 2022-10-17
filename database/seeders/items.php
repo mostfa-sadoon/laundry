@@ -15,7 +15,7 @@ class items extends Seeder
     public function run()
     {
         //
-        DB::table('items')->insert([
+        DB::table('items')->insert([[
             'id' => 1,
             'category_id'=>1
         ],[
@@ -24,7 +24,7 @@ class items extends Seeder
         ],[
             'id' => 3,
             'category_id'=>1
-        ],
+        ]],
     );
     }
 }

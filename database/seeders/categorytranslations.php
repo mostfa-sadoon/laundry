@@ -16,7 +16,7 @@ class categorytranslations extends Seeder
     public function run()
     {
         //
-        DB::table('categorytranslations')->insert([
+        DB::table('categorytranslations')->insert([[
             'id' => 1,
             'category_id'=>1,
             'name'=>'clothes',
@@ -26,6 +26,6 @@ class categorytranslations extends Seeder
             'category_id'=>1,
             'name'=>'ملابس',
             'locale'=>'ar',
-        ]);
+        ]]);
     }
 }
