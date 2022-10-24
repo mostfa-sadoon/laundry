@@ -69,9 +69,16 @@ class AuthController extends Controller
                         'branch_id'=>$branch->id,
                     ]);
                   }
-
            });
-           return $this->returnData('branch_id', $branch->id, $msg = "branch added succesffuly",200);
+           $credentials = ['username'=>$branch->username,
+                          'password'=>$request->password];
+           if (!$token = auth()->guard('branch-api')->attempt($credentials)) {
+               return response()->json(['error' => 'Unauthorized'], 401);
+           }
+            $data=[];
+            $data['branch_id']=$branch->id;
+            $data['token']=$token;
+           return $this->returnData('branch', $data, $msg = "branch added succesffuly",200);
     }
 
 

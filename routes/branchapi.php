@@ -31,7 +31,9 @@ Route::controller(ServiceController::class)->group(function () {
     Route::get('branch/services','getservices');
 });
  Route::group(['middleware' => 'branchApiAuth'],function(){
-
+    Route::controller(ServiceController::class)->group(function () {
+        Route::post('branch/services/set/itemprice','setitemprice');
+    });
 });
 
 

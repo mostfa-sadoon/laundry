@@ -18,16 +18,11 @@ class ServiceController extends Controller
          App::setLocale($lang);
          $data=[];
          $services=service::select('id')->listsTranslations('name')->with('categories.items')->get();
-         //dd($services);
-        //  $services=service::
-        //  join('servicetranslations','services.id','=','servicetranslations.service_id')
-        // ->join('categoryservices','services.id','=','categoryservices.service_id')
-        // ->join('categories','categoryservices.category_id','=','categories.id')
-        // ->join('categorytranslations','categorytranslations.category_id','=','categories.id')
-        // ->select('services.id','servicetranslations.name as servicename','categorytranslations.name as categorynamename')
-        // ->distinct()
-        // ->get();
         $data['services']= $services;
         return response()->json(['data'=>$data]);
+    }
+
+    public function setitemprice(Request $request){
+        dd($request->all());
     }
 }
