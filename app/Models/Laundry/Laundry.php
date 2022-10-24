@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
 
-class Laundry extends Authenticatable implements JWTSubject
+class Laundry extends Authenticatable implements JWTSubject,TranslatableContract
 {
-    use HasFactory;
+    use HasFactory,Translatable;
     protected $guarded=[];
     protected $table="laundries";
+    public $translatedAttributes = ['name'];
     public function getJWTIdentifier()
     {
         return $this->getKey();

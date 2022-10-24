@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
         $this->call(laundrybranchs::class);
         $this->call(items::class);
         $this->call(itemtranslations::class);
+        $this->call(closeingday::class);
+        $this->call(closeingdaytranslation::class);
         // \App\Models\User::factory(10)->create();
     }
 }

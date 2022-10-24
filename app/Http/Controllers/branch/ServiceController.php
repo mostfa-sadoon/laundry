@@ -17,7 +17,7 @@ class ServiceController extends Controller
          $lang=$request->header('lang');
          App::setLocale($lang);
          $data=[];
-         $services=service::select('id')->listsTranslations('name')->with('categories')->get();
+         $services=service::select('id')->listsTranslations('name')->with('categories.items')->get();
          //dd($services);
         //  $services=service::
         //  join('servicetranslations','services.id','=','servicetranslations.service_id')

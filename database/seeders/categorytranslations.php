@@ -26,6 +26,16 @@ class categorytranslations extends Seeder
             'category_id'=>1,
             'name'=>'ملابس',
             'locale'=>'ar',
+        ],[
+        'id' => 3,
+        'category_id'=>2,
+        'name'=>'carpets',
+        'locale'=>'en',
+        ],[
+            'id' => 4,
+            'category_id'=>2,
+            'name'=>'سجاد',
+            'locale'=>'ar',
         ]]);
     }
 }

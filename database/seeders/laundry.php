@@ -18,9 +18,10 @@ class laundry extends Seeder
     {
         //
         DB::table('laundries')->insert([[
-            'id'=>1,
-            'email'=>'laundry@laundry.com',
-            'phone'=>'0552342385',
+             'id'=>1,
+             'email'=>'laundry@laundry.com',
+             'phone'=>'0552342385',
+             'country_code'=>'011',
              'status'=>'active',
              'branch'=>'one',
              'companyregister'=>'2023453',

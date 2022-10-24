@@ -10,4 +10,5 @@ class ServiceTranslation extends Model
     use HasFactory;
     protected $guarded=[];
     protected $table='servicetranslations';
+    protected $hidden=['translations'];
 }

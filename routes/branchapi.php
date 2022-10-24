@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\branch\Auth\AuthController;
 use App\Http\Controllers\branch\ServiceController;
+use  App\Http\Controllers\branch\closeingdaycontroller;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,7 +22,10 @@ use App\Http\Controllers\branch\ServiceController;
 
 Route::controller(AuthController::class)->group(function () {
         Route::post('branch/login','login');
-       // Route::get('branch/test','test');
+        Route::post('branch/register','registration');
+});
+Route::controller(closeingdaycontroller::class)->group(function () {
+    Route::get('branch/closingday','getcloseingday');
 });
  Route::group(['middleware' => 'branchApiAuth'],function(){
     Route::controller(ServiceController::class)->group(function () {

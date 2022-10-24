@@ -20,13 +20,12 @@ use App\Http\Controllers\Laundry\Auth\AuthController;
 
 Route::controller(AuthController::class)->group(function () {
         Route::post('laundry/login','login');
-
+        Route::post('laundry/register','registration');
 });
  Route::group(['middleware' => ['lundryApiAuth']],function(){
-    Route::controller(AuthController::class)->group(function () {
-
+        Route::controller(AuthController::class)->group(function () {
         Route::get('laundry/test','test');
+    });
 });
- });
 
 

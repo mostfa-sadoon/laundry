@@ -53,14 +53,15 @@ trait GeneralTrait
         ];
     }
 
-    public function returnData($key, $value, $msg = "")
+    public function returnData($key, $value, $msg = "",$status=null)
     {
+
         return response()->json([
             'result' => true,
             'errNum' => "S000",
             'message' => $msg,
              $key => $value
-        ]);
+        ],$status);
     }
 
 

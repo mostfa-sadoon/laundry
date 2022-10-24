@@ -18,6 +18,7 @@ class branch extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->string('username')->unique();
+            $table->string('country_code');
             $table->string('phone')->unique();
             $table->string('lat')->unique();
             $table->string('long')->unique();
@@ -25,6 +26,8 @@ class branch extends Migration
             $table->enum('status',['open','closed']);
             $table->timestamp('open_time')->nullable();
             $table->timestamp('closed_time')->nullable();
+            $table->unsignedBigInteger('laundry_id');
+            $table->foreign('laundry_id')->references('id')->on('laundries')->onDelete('cascade');
             $table->string('logo');
             $table->rememberToken();
             $table->timestamps();

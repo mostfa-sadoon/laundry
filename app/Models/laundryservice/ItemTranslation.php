@@ -5,10 +5,8 @@ namespace App\Models\laundryservice;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CategoryTranslation extends Model
+class ItemTranslation extends Model
 {
     use HasFactory;
-    protected $guarded=[];
-    protected $table='categorytranslations';
-    protected $hidden=['translations'];
+    protected $table='itemtranslations';
 }

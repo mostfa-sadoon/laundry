@@ -21,12 +21,14 @@ class branch extends Seeder
             'id'=>1,
             'email'=>'branch@laundry.com',
             'username'=>'branchusername',
+            'country_code'=>'011',
             'phone'=>'2342385',
-             'status'=>'open',
-             'lat'=>'2023453',
-             'long'=>'2556230',
-             'logo'=>'vfvdvfd.jpg',
-             'password' => Hash::make(123456),
+            'status'=>'open',
+            'lat'=>'2023453',
+            'long'=>'2556230',
+            'laundry_id'=>1,
+            'logo'=>'vfvdvfd.jpg',
+            'password' => Hash::make(123456),
         ]);
     }
 }
