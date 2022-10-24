@@ -27,11 +27,11 @@ Route::controller(AuthController::class)->group(function () {
 Route::controller(closeingdaycontroller::class)->group(function () {
     Route::get('branch/closingday','getcloseingday');
 });
+Route::controller(ServiceController::class)->group(function () {
+    Route::get('branch/services','getservices');
+});
  Route::group(['middleware' => 'branchApiAuth'],function(){
-    Route::controller(ServiceController::class)->group(function () {
-        Route::get('branch/services','getservices');
 
-    });
 });
 
 
