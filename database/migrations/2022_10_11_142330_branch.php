@@ -20,8 +20,8 @@ class branch extends Migration
             $table->string('username')->unique();
             $table->string('country_code');
             $table->string('phone')->unique();
-            $table->string('lat')->unique();
-            $table->string('long')->unique();
+            $table->string('lat');
+            $table->string('long');
             $table->string('password');
             $table->enum('status',['open','closed']);
             $table->timestamp('open_time')->nullable();

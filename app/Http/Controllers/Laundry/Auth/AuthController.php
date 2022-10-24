@@ -60,7 +60,7 @@ class AuthController extends Controller
         'logo'=>$logo,
         'password' => Hash::make($request->password),
        ]);
-       return $this->returnData('laundry', $laundry->id, $msg = "laundery added succesffuly",200);
+       return $this->returnData('laundry_id', $laundry->id, $msg = "laundery added succesffuly",200);
     }
 
 
