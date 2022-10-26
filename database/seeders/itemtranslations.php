@@ -46,6 +46,16 @@ class itemtranslations extends Seeder
             'item_id'=>3,
             'name'=>'فستان',
             'locale'=>'ar',
+        ],[
+            'id' => 7,
+            'item_id'=>4,
+            'name'=>'carpets',
+            'locale'=>'en',
+        ],[
+            'id' => 8,
+            'item_id'=>4,
+            'name'=>'سجاد فاخر',
+            'locale'=>'ar',
         ]]);
     }
 }

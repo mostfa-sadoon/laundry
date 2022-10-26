@@ -24,6 +24,9 @@ class items extends Seeder
         ],[
             'id' => 3,
             'category_id'=>1
+        ],[
+            'id' => 4,
+            'category_id'=>2
         ]],
     );
     }

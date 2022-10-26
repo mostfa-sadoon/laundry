@@ -23,7 +23,14 @@ class AuthController extends Controller
         if (!$token = auth()->guard('branch-api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-       return $this->returnData('token', $token, $msg = "",200);
+        $branchid=Auth::guard('branch-api')->user()->id;
+        $branch=branch::listsTranslations('name')->find($branchid)->makehidden('translations');
+
+        $data['token']=$token;
+        $data['branch']=$branch;
+
+       // return response()->json(['message'=>'login success','branch'=>$branch,'token'=>$token]);
+       return $this->returnData('data', $data, $msg = "login success",200);
        return $this->respo($token);
     }
 
