@@ -37,6 +37,7 @@ class AuthController extends Controller
          'password_confirmation' => 'required|max:50|min:6',
          'branch_number'=>'required',
          'company_register'=>'required',
+         'phone'=>'required|unique:laundries',
          'tax_card'=>'required',
        ]);
        if ($validator->fails()) {
