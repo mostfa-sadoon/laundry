@@ -47,7 +47,7 @@ class AuthController extends Controller
        if ($validator->fails()) {
         return response()->json([
             'message'=>$validator->messages()->first()
-        ]);
+        ],401);
         }
        $company_register=$this->MoveImage($request->file('company_register'),'uploads/laundry/company_register');
        $tax_card=$this->MoveImage($request->file('tax_card'),'uploads/laundry/tax_card');
@@ -65,8 +65,10 @@ class AuthController extends Controller
         'logo'=>$logo,
         'password' => Hash::make($request->password),
        ]);
+       if(!$laundry){
+        return response('some thing rong',500);
+       }
 
-      //  dd($laundry);
        $credentials = ['email'=>$laundry->email,
        'password'=>$request->password];
         if (!$token = auth()->guard('laundry_api')->attempt($credentials)) {
