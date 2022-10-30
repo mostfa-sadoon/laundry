@@ -33,6 +33,7 @@ class AuthController extends Controller
 
     public function registration(Request $request){
       // dd($request->all());
+      return response()->json($request->all());
       $validator =Validator::make($request->all(), [
          'name'=>'required|unique:laundry_translations',
          'email'=>'required|unique:laundries',
@@ -44,6 +45,7 @@ class AuthController extends Controller
          'phone'=>'required|unique:laundries',
          'tax_card'=>'required',
        ]);
+
        if ($validator->fails()) {
         return response()->json([
             'message'=>$validator->messages()->first()
