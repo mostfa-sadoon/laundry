@@ -35,15 +35,8 @@ class AuthController extends Controller
       // dd($request->all());
       //return response()->json($request->all());
       $validator =Validator::make($request->all(), [
-       
-         'email'=>'required|unique:laundries',
-         'country_code'=>'required',
-         'password'=> 'required|min:6|max:50|confirmed',
-         'password_confirmation' => 'required|max:50|min:6',
-         'branch_number'=>'required',
-         'company_register'=>'required',
-         'phone'=>'required|unique:laundries',
-         'tax_card'=>'required',
+
+        
        ]);
 
        if ($validator->fails()) {
