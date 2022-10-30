@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(service::class);
         $this->call(servicetranslation::class);
+        $this->call(Aditionalservice::class);
+        $this->call(AditionalserviceTranslations::class);
         $this->call(category::class);
         $this->call(categorytranslations::class);
         $this->call(categoryservices::class);

@@ -20,7 +20,7 @@ class Laundry extends Migration
             $table->string('country_code');
             $table->string('phone')->unique();
             $table->string('password');
-            $table->enum('status',['active','disactive']);
+            $table->enum('status',['true','false']);
             $table->enum('branch',['one','multiple']);
             $table->string('companyregister');
             $table->string('taxcard');

@@ -16,12 +16,14 @@ class ServiceItemPrice extends Migration
         //
         Schema::create('serviceitems', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('service_id');
+            $table->unsignedBigInteger('service_id')->nullable();
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->unsignedBigInteger('branch_id');
             $table->foreign('branch_id')->references('id')->on('branchs')->onDelete('cascade');
-            $table->unsignedBigInteger('branch_item_id');
-            $table->foreign('branch_item_id')->references('id')->on('branchitems')->onDelete('cascade');
+            $table->unsignedBigInteger('branchitem_id');
+            $table->foreign('branchitem_id')->references('id')->on('branchitems')->onDelete('cascade');
+            $table->unsignedBigInteger('additionalservice_id')->nullable();
+            $table->foreign('additionalservice_id')->references('id')->on('additionalservices')->onDelete('cascade');
             $table->double('price')->nullable();
             $table->timestamps();
         });

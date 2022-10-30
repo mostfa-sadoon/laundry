@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class branchitemtranslations extends Migration
+class Additionalservicetranslation extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,13 @@ class branchitemtranslations extends Migration
     public function up()
     {
         //
-        Schema::create('branchitemtranslations', function (Blueprint $table) {
+        Schema::create('additionalservicetranslations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name'); 
             $table->string('locale')->index();
-            $table->unique(['branchitem_id', 'locale']);
-            $table->unsignedBigInteger('branchitem_id');
-            $table->foreign('branchitem_id')->references('id')->on('branchitems')->onDelete('cascade');
+            $table->unique(['additionalservice_id', 'locale']);
+            $table->unsignedBigInteger('additionalservice_id');
+            $table->foreign('additionalservice_id')->references('id')->on('additionalservices')->onDelete('cascade');
             $table->timestamps();
         });
     }

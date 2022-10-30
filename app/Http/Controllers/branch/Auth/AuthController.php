@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Traits\GeneralTrait;
 use App\Models\Laundry\branch;
+use App\Models\Laundry\Laundry;
 use App\Models\Laundry\branchcloseingday;
 use App\Traits\fileTrait;
 use Illuminate\Support\Facades\DB;
@@ -21,19 +22,24 @@ class AuthController extends Controller
     public function login(Request $request){
         $credentials = request(['username', 'password']);
         if (!$token = auth()->guard('branch-api')->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Your Branch username or password maybe incorrect, please try agian'], 401);
         }
         $branchid=Auth::guard('branch-api')->user()->id;
-        $branch=branch::listsTranslations('name')->find($branchid)->makehidden('translations');
+        $branch=branch::find($branchid);
+        $laundry=Laundry::find($branch->laundry_id);
+       // dd($branch);
+        if($laundry->status=='false'){
+            $data['message']='your laundry activation is false';
 
+            return response()->json($data,401);
+        }
         $data['token']=$token;
-        $data['branch']=$branch;
+        return response()->json($data);
 
        // return response()->json(['message'=>'login success','branch'=>$branch,'token'=>$token]);
        return $this->returnData('data', $data, $msg = "login success",200);
        return $this->respo($token);
     }
-
     public function registration(Request $request){
         //dd($request->all());
         $validator =Validator::make($request->all(), [

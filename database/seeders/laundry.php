@@ -22,7 +22,7 @@ class laundry extends Seeder
              'email'=>'laundry@laundry.com',
              'phone'=>'0552342385',
              'country_code'=>'011',
-             'status'=>'active',
+             'status'=>'true',
              'branch'=>'one',
              'companyregister'=>'2023453',
              'taxcard'=>'2556230',

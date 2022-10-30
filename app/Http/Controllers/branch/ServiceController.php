@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\laundry\branchitem;
 use App\Models\laundry\branchitemTranslation;
 use App\Models\laundryservice\Item;
+use App\Models\laundryservice\Aditionalservice;
 use App;
 use Auth;
 
@@ -33,10 +34,7 @@ class ServiceController extends Controller
 
         $mainitem=Item::where('id',1)->first();
       //  return response()->json([$mainitem->translate('en')->name]);
-
-
-
-        DB::transaction(function()use($request)
+        DB::transaction(function()use($request,$branchid)
         {
            foreach($request->services as $service){
                 foreach($service['categories'] as $category){
@@ -46,13 +44,14 @@ class ServiceController extends Controller
                             'item_id'=>$item['item_id'],
                             'service_id'=>$service['service_id'],
                             'price'=>$item['price'],
+                            'branch_id'=>$branchid
                          ]);
                          $mainitem=Item::where('id',1)->first();
                          foreach(config('translatable.locales') as $locale){
                                 branchitemTranslation::create([
                                     'name'=>$mainitem->translate($locale)->name,
                                     'locale'=>$locale,
-                                    'branch_item_id'=>$baranchitem->id,
+                                    'branchitem_id'=>$baranchitem->id,
                                 ]);
                             }
                      }
@@ -61,5 +60,12 @@ class ServiceController extends Controller
         });
         return response()->json(['message'=>'service prices added successfully']);
        // return $this->returnData('laundry_id', $laundry->id, $msg = "laundery added succesffuly",200);
+    }
+    public function getaditionalservices(Request $request){
+       // dd($request->all());
+        $branchid=Auth::guard('branch-api')->user()->id;
+        $baranchitems= branchitem::where('branch_id',$branchid)->get()->makehidden('translations');
+        $aditionalservice=Aditionalservice::listsTranslations()->get();
+        return response()->json(['baranchitems'=>$baranchitems ,  'aditionalservice'=>$aditionalservice]);
     }
 }
