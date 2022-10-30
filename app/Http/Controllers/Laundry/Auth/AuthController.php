@@ -36,7 +36,7 @@ class AuthController extends Controller
       //return response()->json($request->all());
       $validator =Validator::make($request->all(), [
 
-        
+       
        ]);
 
        if ($validator->fails()) {
