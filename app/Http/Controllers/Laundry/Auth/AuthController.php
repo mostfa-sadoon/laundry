@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use App\Traits\GeneralTrait;
+use App\Models\Laundry\branch;
 use App\Models\Laundry\Laundry;
 use App\Traits\fileTrait;
 use Validator;
@@ -21,8 +22,9 @@ class AuthController extends Controller
         if (!$token = auth()->guard('laundry-api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-       return $this->returnData('token', $token, $msg = "");
-       return $this->respo($token);
+        return response()->json($token);
+        // return $this->returnData('token', $token, $msg = "");
+        // return $this->respo($token);
     }
 
     public function registration(Request $request){
@@ -39,7 +41,6 @@ class AuthController extends Controller
        ]);
        if ($validator->fails()) {
         return response()->json([
-            'status'=>false,
             'message'=>$validator->messages()->first()
         ]);
         }
@@ -53,18 +54,29 @@ class AuthController extends Controller
         'phone'=>$request->phone,
         'country_code'=>$request->country_code,
         'email'=>$request->email,
-        'status'=>'disactive',
         'branch'=>$request->branch_number,
         'companyregister'=> $company_register,
         'taxcard'=>$tax_card,
         'logo'=>$logo,
         'password' => Hash::make($request->password),
        ]);
-       return $this->returnData('laundry_id', $laundry->id, $msg = "laundery added succesffuly",200);
+
+      //  dd($laundry);
+       $credentials = ['email'=>$laundry->email,
+       'password'=>$request->password];
+        if (!$token = auth()->guard('laundry-api')->attempt($credentials)) {
+        return response()->json(['error' => 'Your Branch username or password maybe incorrect, please try agian'], 401);
+        }
+        $data=[];
+        $data['message']='laundery added succesffuly';
+        $data['laundry_id']=$laundry->id;
+        $data['token']=$token;
+        return response()->json($data);
+        //return $this->returnData($data,200);
     }
 
 
-    public function test(){
-        dd('gfgf');
+    public function getpranchinfo(Request $request){
+       dd('sadoon');
     }
 }

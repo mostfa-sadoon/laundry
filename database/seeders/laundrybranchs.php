@@ -18,6 +18,10 @@ class laundrybranchs extends Seeder
             'id'=>1,
             'laundry_id'=>1,
             'branch_id'=>1,
+        ],[
+            'id'=>2,
+            'laundry_id'=>1,
+            'branch_id'=>2,
         ]]);
     }
 }

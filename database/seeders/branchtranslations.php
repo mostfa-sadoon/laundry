@@ -27,6 +27,17 @@ class branchtranslations extends Seeder
             'branch_id'=>1,
             'name'=>'نظيفه',
             'locale'=>'ar',
+        ],[
+            'id' => 3,
+            'branch_id'=>2,
+            'name'=>'nazifaa seconde ',
+            'locale'=>'en',
+        ],
+        [
+            'id' => 4,
+            'branch_id'=>2,
+            'name'=>'نظيفه الفرع الثاني',
+            'locale'=>'ar',
         ]]);
     }
 }

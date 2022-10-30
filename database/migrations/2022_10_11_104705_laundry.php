@@ -20,10 +20,12 @@ class Laundry extends Migration
             $table->string('country_code');
             $table->string('phone')->unique();
             $table->string('password');
-            $table->enum('status',['true','false']);
+            $table->enum('status',['true','false'])->default('false');
             $table->enum('branch',['one','multiple']);
             $table->string('companyregister');
             $table->string('taxcard');
+            $table->string('fingre_print')->unique()->nullable();
+            $table->string('face_id')->unique()->nullable();
             $table->string('logo')->nullable();
             $table->rememberToken();
             $table->timestamps();

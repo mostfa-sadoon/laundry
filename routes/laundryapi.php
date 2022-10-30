@@ -24,7 +24,7 @@ Route::controller(AuthController::class)->group(function () {
 });
  Route::group(['middleware' => ['lundryApiAuth']],function(){
         Route::controller(AuthController::class)->group(function () {
-        Route::get('laundry/test','test');
+        Route::get('laundry/branchsinfo','getpranchinfo');
     });
 });
 

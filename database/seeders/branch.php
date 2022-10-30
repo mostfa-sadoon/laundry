@@ -17,7 +17,7 @@ class branch extends Seeder
     public function run()
     {
         //
-        DB::table('branchs')->insert([
+        DB::table('branchs')->insert([[
             'id'=>1,
             'email'=>'branch@laundry.com',
             'username'=>'branchusername',
@@ -28,6 +28,18 @@ class branch extends Seeder
             'long'=>'2556230',
             'laundry_id'=>1,
             'password' => Hash::make(123456),
-        ]);
+        ],
+         [
+            'id'=>2,
+            'email'=>'branch@laundry2.com',
+            'username'=>'secondbranch',
+            'country_code'=>'011',
+            'phone'=>'0125526',
+            'status'=>'open',
+            'lat'=>'2023453',
+            'long'=>'2556230',
+            'laundry_id'=>1,
+            'password' => Hash::make(123456),
+         ]]);
     }
 }

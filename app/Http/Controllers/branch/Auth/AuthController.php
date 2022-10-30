@@ -22,7 +22,7 @@ class AuthController extends Controller
     public function login(Request $request){
         $credentials = request(['username', 'password']);
         if (!$token = auth()->guard('branch-api')->attempt($credentials)) {
-            return response()->json(['error' => 'Your Branch username or password maybe incorrect, please try agian'], 401);
+            return response()->json(['message' => 'Your Branch username or password maybe incorrect, please try agian'], 401);
         }
         $branchid=Auth::guard('branch-api')->user()->id;
         $branch=branch::find($branchid);
@@ -52,7 +52,6 @@ class AuthController extends Controller
           ]);
           if ($validator->fails()) {
            return response()->json([
-               'status'=>false,
                'message'=>$validator->messages()->first()
            ]);
            }
@@ -67,10 +66,8 @@ class AuthController extends Controller
                     'status'=>'open',
                     'lat'=>$request->lat,
                     'long'=>$request->long,
-
                     'open_time'=>$request->open,
                     'closed_time'=>$request->closed,
-
                     'laundry_id'=>$request->laundry_id,
                     'password' => Hash::make($request->password),
                   ]);
@@ -84,7 +81,7 @@ class AuthController extends Controller
            $credentials = ['username'=>$branch->username,
                           'password'=>$request->password];
            if (!$token = auth()->guard('branch-api')->attempt($credentials)) {
-               return response()->json(['error' => 'Unauthorized'], 401);
+               return response()->json(['message' => 'Unauthorized'], 401);
            }
             $data=[];
             $data['branch_id']=$branch->id;
