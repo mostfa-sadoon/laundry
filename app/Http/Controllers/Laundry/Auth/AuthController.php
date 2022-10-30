@@ -34,12 +34,6 @@ class AuthController extends Controller
     public function registration(Request $request){
       // dd($request->all());
       //return response()->json($request->all());
-
-      $data['message']='laundery added succesffuly';
-      $data['laundry_id']=1;
-      $data['token']=$request->name;
-      return response()->json($data);
-
       $validator =Validator::make($request->all(), [
          'name'=>'required|unique:laundry_translations',
          'email'=>'required|unique:laundries',
