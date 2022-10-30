@@ -66,7 +66,7 @@ class AuthController extends Controller
         'password' => Hash::make($request->password),
        ]);
        if(!$laundry){
-        return response('some thing rong',500);
+        return response()->json(['some thing rong'],500);
        }
 
        $credentials = ['email'=>$laundry->email,
