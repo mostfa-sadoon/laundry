@@ -63,6 +63,7 @@ class ServiceController extends Controller
     }
     public function getaditionalservices(Request $request){
        // dd($request->all());
+      
         $branchid=Auth::guard('branch-api')->user()->id;
         $baranchitems= branchitem::where('branch_id',$branchid)->get()->makehidden('translations');
         $aditionalservice=Aditionalservice::listsTranslations()->get();

@@ -9,8 +9,10 @@ use App\Traits\GeneralTrait;
 use App\Models\Laundry\branch;
 use App\Models\Laundry\Laundry;
 use App\Traits\fileTrait;
+use App\Http\Resources\Branchinfo;
 use Validator;
 use Hash;
+use App;
 
 class AuthController extends Controller
 {
@@ -80,6 +82,11 @@ class AuthController extends Controller
 
 
     public function getpranchinfo(Request $request){
-       dd('sadoon');
+       $lang=$request->header('lang');
+       App::setLocale($lang);
+       $laundry_id=Auth::guard('laundry_api')->user()->id;
+       $branches=branch::select('address','id','open_time','closed_time','closed_time')->where('laundry_id',$laundry_id)->get()->makehidden('translations');
+    //   return Branchinfo::collection($branches);
+       return response()->json(['branches'=>$branches]);
     }
 }

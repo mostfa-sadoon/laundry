@@ -27,6 +27,7 @@ class branch extends Migration
             $table->time('open_time')->nullable();
             $table->time('closed_time')->nullable();
             $table->unsignedBigInteger('laundry_id');
+            $table->string('address');
             $table->foreign('laundry_id')->references('id')->on('laundries')->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();

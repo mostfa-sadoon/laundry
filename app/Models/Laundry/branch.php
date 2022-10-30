@@ -26,5 +26,8 @@ class branch extends Authenticatable implements JWTSubject,TranslatableContract
         return [];
     }
 
-
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 }

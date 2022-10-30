@@ -48,6 +48,7 @@ class AuthController extends Controller
             'phone'=>'required|unique:branchs',
             'password'=> 'required|min:6|max:50|confirmed',
             'password_confirmation' => 'required|max:50|min:6',
+            'address'=>'required',
             'laundry_id'=>'required|exists:App\Models\Laundry\laundry,id',
           ]);
           if ($validator->fails()) {
@@ -68,6 +69,7 @@ class AuthController extends Controller
                     'long'=>$request->long,
                     'open_time'=>$request->open,
                     'closed_time'=>$request->closed,
+                    'address'=>$request->address,
                     'laundry_id'=>$request->laundry_id,
                     'password' => Hash::make($request->password),
                   ]);

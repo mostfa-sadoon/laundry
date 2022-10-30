@@ -27,6 +27,9 @@ class branch extends Seeder
             'lat'=>'2023453',
             'long'=>'2556230',
             'laundry_id'=>1,
+            'open_time'=>'09:41:05',
+            'closed_time'=>'10:41:05',
+            'address'=>'el ahram street',
             'password' => Hash::make(123456),
         ],
          [
@@ -39,6 +42,9 @@ class branch extends Seeder
             'lat'=>'2023453',
             'long'=>'2556230',
             'laundry_id'=>1,
+            'open_time'=>'09:41:05',
+            'closed_time'=>'10:41:05',
+            'address'=>'el ahram street',
             'password' => Hash::make(123456),
          ]]);
     }
