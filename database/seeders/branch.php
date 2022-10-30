@@ -27,7 +27,6 @@ class branch extends Seeder
             'lat'=>'2023453',
             'long'=>'2556230',
             'laundry_id'=>1,
-            'logo'=>'vfvdvfd.jpg',
             'password' => Hash::make(123456),
         ]);
     }

@@ -24,11 +24,10 @@ class branch extends Migration
             $table->string('long');
             $table->string('password');
             $table->enum('status',['open','closed']);
-            $table->timestamp('open_time')->nullable();
-            $table->timestamp('closed_time')->nullable();
+            $table->time('open_time')->nullable();
+            $table->time('closed_time')->nullable();
             $table->unsignedBigInteger('laundry_id');
             $table->foreign('laundry_id')->references('id')->on('laundries')->onDelete('cascade');
-            $table->string('logo');
             $table->rememberToken();
             $table->timestamps();
         });

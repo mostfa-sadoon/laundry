@@ -35,7 +35,6 @@ class AuthController extends Controller
         }
         $data['token']=$token;
         return response()->json($data);
-
        // return response()->json(['message'=>'login success','branch'=>$branch,'token'=>$token]);
        return $this->returnData('data', $data, $msg = "login success",200);
        return $this->respo($token);
@@ -60,10 +59,6 @@ class AuthController extends Controller
 
            DB::transaction(function()use(&$branch,$request)
            {
-            $logo=null;
-            if($request->logo){
-            $logo=$this->MoveImage($request->file('logo'),'uploads/branches/logos');
-            }
                 $branch=branch::create([
                     'email'=>$request->email,
                     'username'=>$request->username,
@@ -72,8 +67,11 @@ class AuthController extends Controller
                     'status'=>'open',
                     'lat'=>$request->lat,
                     'long'=>$request->long,
+
+                    'open_time'=>$request->open,
+                    'closed_time'=>$request->closed,
+
                     'laundry_id'=>$request->laundry_id,
-                    'logo'=>$logo,
                     'password' => Hash::make($request->password),
                   ]);
                   foreach($request->closeing_daies as $closeingday){
