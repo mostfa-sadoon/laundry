@@ -20,7 +20,7 @@ class lundryApiAuth
     public function handle(Request $request, Closure $next)
     {
         if ($request->header('Authorization')) {
-           // return response()->json([Auth::guard('laundry_api')->check()]);
+           //    return response()->json([Auth::guard('laundry_api')->check()]);
             if (Auth::guard('laundry_api')->check()) {
                 try {
                     JWTAuth::parseToken()->authenticate();

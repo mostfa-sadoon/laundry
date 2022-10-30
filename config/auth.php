@@ -74,7 +74,7 @@ return [
         ],
         'laundries' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Laundry\laundry::class,
+            'model' => App\Models\Laundry\Laundry::class,
         ],
         'branchs' => [
             'driver' => 'eloquent',
