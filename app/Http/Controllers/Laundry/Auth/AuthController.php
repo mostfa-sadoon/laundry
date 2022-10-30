@@ -19,9 +19,11 @@ class AuthController extends Controller
     use GeneralTrait;
     public function login(Request $request){
         $credentials = request(['email', 'password']);
-        if (!$token = auth()->guard('laundry-api')->attempt($credentials)) {
+        if (!$token = auth('laundry_api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+      // return response()->json(Auth::guard('laundry-api')->check());
+
         return response()->json($token);
         // return $this->returnData('token', $token, $msg = "");
         // return $this->respo($token);
@@ -65,7 +67,7 @@ class AuthController extends Controller
       //  dd($laundry);
        $credentials = ['email'=>$laundry->email,
        'password'=>$request->password];
-        if (!$token = auth()->guard('laundry-api')->attempt($credentials)) {
+        if (!$token = auth()->guard('laundry_api')->attempt($credentials)) {
         return response()->json(['error' => 'Your Branch username or password maybe incorrect, please try agian'], 401);
         }
         $data=[];

@@ -24,7 +24,6 @@ class branchApiAuth
     public function handle(Request $request, Closure $next)
     {
         if ($request->header('Authorization')) {
-            return response->json (Auth::guard('branch-api')->check());
             if (Auth::guard('branch-api')->check()) {
                 try {
                     JWTAuth::parseToken()->authenticate();

@@ -44,7 +44,7 @@ return [
             'driver' => 'jwt',
             'provider' => 'branchs',
         ],
-        'laundry-api' => [
+        'laundry_api' => [
             'driver' => 'jwt',
             'provider' => 'laundries',
         ],

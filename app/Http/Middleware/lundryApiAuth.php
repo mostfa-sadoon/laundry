@@ -20,7 +20,8 @@ class lundryApiAuth
     public function handle(Request $request, Closure $next)
     {
         if ($request->header('Authorization')) {
-            if (Auth::guard('laundry-api')->check()) {
+           // return response()->json([Auth::guard('laundry_api')->check()]);
+            if (Auth::guard('laundry_api')->check()) {
                 try {
                     JWTAuth::parseToken()->authenticate();
                 } catch (Exception $exception) {
@@ -36,6 +37,7 @@ class lundryApiAuth
             }
             return response()->json(['status' => 'false','message'=>'please login and return go to request , Invalid Token']);
         }
+
         return response()->json(['status' => 'false','message'=>'please login and return go to request , Invalid Token']);
     }
 }
