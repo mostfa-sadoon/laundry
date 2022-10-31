@@ -25,7 +25,7 @@ class ServiceController extends Controller
          $data=[];
          $services=service::select('id')->listsTranslations('name')->with('categories.items')->get();
         $data['services']= $services;
-        return response()->json(['data'=>$data]);
+        return response()->json(['message'=>'get services succefully','data'=>$data]);
     }
 
     public function setitemprice(Request $request){
@@ -63,7 +63,7 @@ class ServiceController extends Controller
     }
     public function getaditionalservices(Request $request){
        // dd($request->all());
-      
+
         $branchid=Auth::guard('branch-api')->user()->id;
         $baranchitems= branchitem::where('branch_id',$branchid)->get()->makehidden('translations');
         $aditionalservice=Aditionalservice::listsTranslations()->get();

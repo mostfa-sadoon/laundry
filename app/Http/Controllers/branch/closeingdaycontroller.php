@@ -13,7 +13,10 @@ class closeingdaycontroller extends Controller
     public function getcloseingday(Request $request){
         $lang=$request->header('lang');
         App::setLocale($lang);
-      $Closeingdaies=Closeingday::get();
-      return response()->json(['Closeingdaies'=>$Closeingdaies]);
+        $Closeingdaies=Closeingday::get();
+        $data=[];
+        $data['message']="get data success";
+        $data['data']['Closeingdaies']=$Closeingdaies;
+        return response()->json($data,200);
     }
 }

@@ -78,8 +78,8 @@ class AuthController extends Controller
         }
         $data=[];
         $data['message']='laundery added succesffuly';
-        $data['laundry_id']=$laundry->id;
-        $data['token']=$token;
+        $data['data']['laundry_id']=$laundry->id;
+        $data['data']['token']=$token;
         return response()->json($data);
         //return $this->returnData($data,200);
     }

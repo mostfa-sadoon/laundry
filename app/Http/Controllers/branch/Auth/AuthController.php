@@ -43,12 +43,14 @@ class AuthController extends Controller
         //dd($request->all());
         $validator =Validator::make($request->all(), [
             'username'=>'required|unique:branchs',
-            'email'=>'required|unique:laundries',
+            'email'=>'required|unique:branchs',
             'country_code'=>'required',
             'phone'=>'required|unique:branchs',
             'password'=> 'required|min:6|max:50|confirmed',
             'password_confirmation' => 'required|max:50|min:6',
             'address'=>'required',
+            'lat'=>'required',
+            'long'=>'required',
             'laundry_id'=>'required|exists:App\Models\Laundry\laundry,id',
           ]);
           if ($validator->fails()) {
@@ -86,9 +88,10 @@ class AuthController extends Controller
                return response()->json(['message' => 'Unauthorized'], 401);
            }
             $data=[];
-            $data['branch_id']=$branch->id;
-            $data['token']=$token;
-           return $this->returnData('branch', $data, $msg = "branch added succesffuly",200);
+            $data['message']="branch added successfully";
+            $data['data']['branch_id']=$branch->id;
+            $data['data']['token']=$token;
+            return response()->json($data,200);
     }
 
 
