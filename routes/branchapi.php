@@ -27,25 +27,24 @@ Route::controller(AuthController::class)->group(function () {
 Route::group(['middleware' => 'lundryApiAuth'],function(){
     Route::controller(AuthController::class)->group(function () {
     Route::post('branch/register','registration');
-});
-});
-
-
-
-
- Route::group(['middleware' => 'branchApiAuth'],function(){
+    });
     Route::controller(ServiceController::class)->group(function () {
-        Route::post('branch/services/set/itemprice','setitemprice');
-    });
-
-    Route::controller(ServiceController::class)->group(function () {
-        Route::get('branch/services','getservices');
-        Route::get('branch/aditionalservices','getaditionalservices');
-    });
-
-    Route::controller(closeingdaycontroller::class)->group(function () {
-        Route::get('branch/closingday','getcloseingday');
+       Route::post('branch/services/set/itemprice','setitemprice');
     });
 });
+Route::controller(closeingdaycontroller::class)->group(function () {
+    Route::get('branch/closingday','getcloseingday');
+});
+Route::controller(ServiceController::class)->group(function () {
+    Route::get('branch/services','getservices');
+    Route::get('branch/aditionalservices','getaditionalservices');
+});
+
+
+
+
+Route::group(['middleware' => 'branchApiAuth'],function(){
+
+ });
 
 

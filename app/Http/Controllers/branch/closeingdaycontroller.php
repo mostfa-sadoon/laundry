@@ -15,6 +15,7 @@ class closeingdaycontroller extends Controller
         App::setLocale($lang);
         $Closeingdaies=Closeingday::get();
         $data=[];
+        $data['status']=true;
         $data['message']="get data success";
         $data['data']['Closeingdaies']=$Closeingdaies;
         return response()->json($data,200);

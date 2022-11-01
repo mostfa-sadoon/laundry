@@ -26,12 +26,12 @@ class ServiceController extends Controller
          $data=[];
          $services=service::select('id')->listsTranslations('name')->with('categories.items')->get();
         $data['services']= $services;
-        return response()->json(['message'=>'get services succefully','data'=>$data]);
+        return response()->json(['status'=>true,'message'=>'get services succefully','data'=>$data]);
     }
     public function setitemprice(Request $request){
        // dd($request->services[0]->categories[0]);
-        $branchid=Auth::guard('branch-api')->user()->id;
-        $mainitem=Item::where('id',1)->first();
+        $branchid=$request->pranch_id;
+       // $mainitem=Item::where('id',1)->first();
       //  return response()->json([$mainitem->translate('en')->name]);
         DB::transaction(function()use($request,$branchid)
         {

@@ -77,6 +77,7 @@ class AuthController extends Controller
         return response()->json(['error' => 'Your Branch username or password maybe incorrect, please try agian'], 401);
         }
         $data=[];
+        $data['status']=true;   
         $data['message']='laundery added succesffuly';
         $data['data']['laundry_id']=$laundry->id;
         $data['data']['token']=$token;
