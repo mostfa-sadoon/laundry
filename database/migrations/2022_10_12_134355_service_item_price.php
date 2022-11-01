@@ -14,7 +14,7 @@ class ServiceItemPrice extends Migration
     public function up()
     {
         //
-        Schema::create('serviceitems', function (Blueprint $table) {
+        Schema::create('serviceitems_price', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('service_id')->nullable();
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
