@@ -107,7 +107,7 @@ class ServiceController extends Controller
             foreach($service['categories'] as $category){
                  foreach($category['items'] as $item){
                   $baranchitem= branchitem::where('item_id',$item['item_id'])->first();
-                  $vlaidtebranchitem=Serviceitemprice::where('branch_id',$branchid)->where('additionalservice_id',$service['additionalservice_id'])->where('branchitem_id',$baranchitem)->first();
+                  $vlaidtebranchitem=Serviceitemprice::where('branch_id',$branchid)->where('additionalservice_id',$service['additionalservice_id'])->where('branchitem_id',$baranchitem->id)->first();
                    if($vlaidtebranchitem!=null){
                        return response()->json(['status'=>false,'message'=>'this item already exist in this branch']);
                    }
