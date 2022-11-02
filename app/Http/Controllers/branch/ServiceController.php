@@ -26,8 +26,8 @@ class ServiceController extends Controller
          App::setLocale($lang);
          $data=[];
          $services=Service::select('id')->listsTranslations('name')->with('categories.items')->get();
-        $data['services']= $services;
-        return response()->json(['status'=>true,'message'=>'get services succefully','data'=>$data]);
+         $data['services']= $services;
+         return response()->json(['status'=>true,'message'=>'get services succefully','data'=>$data]);
     }
     public function setitemprice(Request $request){
        // dd($request->services[0]->categories[0]);
