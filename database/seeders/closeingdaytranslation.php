@@ -18,7 +18,7 @@ class closeingdaytranslation extends Seeder
         DB::table('closeingdaytranslations')->insert([[
             'id' => 1,
             'closeingday_id' => 1,
-             'name'=>'saturday',
+             'name'=>'Saturday',
              'locale'=>'en'
         ],[
             'id' => 2,

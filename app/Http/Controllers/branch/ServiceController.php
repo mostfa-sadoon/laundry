@@ -58,7 +58,6 @@ class ServiceController extends Controller
                             'category_id'=>$category['category_id'],
                             'item_id'=>$item['item_id'],
                             'service_id'=>$service['service_id'],
-                            'price'=>$item['price'],
                             'branch_id'=>$branchid
                          ]);
                          $serviceitemprice=Serviceitemprice::create([
@@ -83,7 +82,7 @@ class ServiceController extends Controller
                 ]);
            }
         });
-        return response()->json(['message'=>'service prices added successfully']);
+        return response()->json(['status'=>true,'message'=>'service prices added successfully']);
     }
     public $item_id=[];
     public function getaditionalservices(Request $request){
@@ -103,33 +102,31 @@ class ServiceController extends Controller
     }
 
     public function setaditionalserviceprice(Request $request){
+        $branchid=$request->pranch_id;
         foreach($request->aditionalservices as $service){
             foreach($service['categories'] as $category){
                  foreach($category['items'] as $item){
-                   $baranchitem= branchitem::create([
-                        'category_id'=>$category['category_id'],
-                        'item_id'=>$item['item_id'],
-                        'additionalservice_id'=>$service['service_id'],
-                        'price'=>$item['price'],
-                        'branch_id'=>$branchid
-                     ]);
+                  $vlaidtebranchitem=branchitem::where('branch_id',$branchid)->where('service_id',$service['additionalservice_id'])->where('item_id',$item['item_id'])->first();
+                   if($vlaidtebranchitem!=null){
+                       return response()->json(['status'=>false,'message'=>'this item already exist in this branch']);
+                   }
+                 }
+                }
+            }
+        foreach($request->aditionalservices as $service){
+            foreach($service['categories'] as $category){
+                 foreach($category['items'] as $item){
+                    $baranchitem= branchitem::where('item_id',$item['item_id'])->first();
                      $serviceitemprice=Serviceitemprice::create([
                         'branchitem_id'=>$baranchitem->id,
                         'branch_id'=>$branchid,
-                        'additionalservice_id'=>$service['service_id'],
+                        'additionalservice_id'=>$service['additionalservice_id'],
                         'price'=>$item['price'],
                      ]);
-                     $mainitem=Item::where('id',1)->first();
-                     foreach(config('translatable.locales') as $locale){
-                            branchitemTranslation::create([
-                                'name'=>$mainitem->translate($locale)->name,
-                                'locale'=>$locale,
-                                'branchitem_id'=>$baranchitem->id,
-                            ]);
-                        }
                  }
             }
        }
+       return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
     }
 
 }

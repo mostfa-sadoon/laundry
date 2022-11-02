@@ -24,6 +24,8 @@ Route::controller(AuthController::class)->group(function () {
         Route::post('branch/login','login');
 });
 
+
+
 Route::group(['middleware' => 'lundryApiAuth'],function(){
     Route::controller(AuthController::class)->group(function () {
     Route::post('branch/register','registration');
