@@ -117,12 +117,14 @@ class ServiceController extends Controller
             foreach($service['categories'] as $category){
                  foreach($category['items'] as $item){
                     $baranchitem= branchitem::where('item_id',$item['item_id'])->first();
-                     $serviceitemprice=Serviceitemprice::create([
-                        'branchitem_id'=>$baranchitem->id,
-                        'branch_id'=>$branchid,
-                        'additionalservice_id'=>$service['additionalservice_id'],
-                        'price'=>$item['price'],
-                     ]);
+                    if($baranchitem!=null){
+                        $serviceitemprice=Serviceitemprice::create([
+                            'branchitem_id'=>$baranchitem->id,
+                            'branch_id'=>$branchid,
+                            'additionalservice_id'=>$service['additionalservice_id'],
+                            'price'=>$item['price'],
+                         ]);
+                    }
                  }
             }
        }
