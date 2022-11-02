@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(category::class);
         $this->call(categorytranslations::class);
         $this->call(categoryservices::class);
+        $this->call(additionalservice_category::class);
         $this->call(laundry::class);
         $this->call(branch::class);
         $this->call(branchtranslations::class);

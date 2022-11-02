@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Additionalservicetranslation extends Migration
+class CategoryAditionalservice extends Migration
 {
     /**
      * Run the migrations.
@@ -14,13 +14,12 @@ class Additionalservicetranslation extends Migration
     public function up()
     {
         //
-        Schema::create('additionalservicetranslations', function (Blueprint $table) {
+        Schema::create('additionalservice_category', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('locale')->index();  
-            $table->unique(['additionalservice_id', 'locale']);
             $table->unsignedBigInteger('additionalservice_id');
             $table->foreign('additionalservice_id')->references('id')->on('additionalservices')->onDelete('cascade');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
