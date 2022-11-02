@@ -98,7 +98,10 @@ class ServiceController extends Controller
                $q->wherein('id',$this->item_id)->get();
             }])->get();
         }])->get()->makehidden('translations');
-        return response()->json($aditionalservices);
+        $data=[];
+        $data['status']=true;
+        $data['data']=$aditionalservices;
+        return response()->json($data);
     }
 
     public function setaditionalserviceprice(Request $request){
