@@ -26,18 +26,18 @@ class lundryApiAuth
                     JWTAuth::parseToken()->authenticate();
                 } catch (Exception $exception) {
                     if ($exception instanceof \Tymon\JWTAuth\Exceptions\TokenInvalidException) {
-                       return response()->json(['status' => false,'message'=>'Token is Invalid']);
+                       return response()->json(['status' => false,'message'=>'Token is Invalid'],401);
                     } else if ($exception instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
-                        return response()->json(['status' => false,'message'=>'Token is Expired']);
+                        return response()->json(['status' => false,'message'=>'Token is Expired'],401);
                     } else {
-                        return response()->json(['status' => false,'message'=>'Authorization Token not found']);
+                        return response()->json(['status' => false,'message'=>'Authorization Token not found'],401);
                     }
                 }
                 return $next($request);
             }
-            return response()->json(['status' => false,'message'=>'please login and return go to request , Invalid Token']);
+            return response()->json(['status' => false,'message'=>'please login and return go to request , Invalid Token'],401);
         }
 
-        return response()->json(['status' => false,'message'=>'please login and return go to request , Invalid Token']);
+        return response()->json(['status' => false,'message'=>'please login and return go to request , Invalid Token'],401);
     }
 }
