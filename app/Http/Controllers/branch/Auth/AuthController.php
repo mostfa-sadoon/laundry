@@ -40,7 +40,6 @@ class AuthController extends Controller
        return $this->respo($token);
     }
     public function registration(Request $request){
-        //dd($request->all());
         $validator =Validator::make($request->all(), [
             'username'=>'required|unique:branchs',
             'country_code'=>'required',
@@ -55,7 +54,7 @@ class AuthController extends Controller
           if ($validator->fails()) {
            return response()->json([
                'message'=>$validator->messages()->first()
-           ]);
+           ],403);
            }
 
            DB::transaction(function()use(&$branch,$request)
@@ -88,6 +87,7 @@ class AuthController extends Controller
             $data=[];
             $data['status']=true;
             $data['message']="branch added successfully";
+            $data['data']['laundry_activation']='false';
             $data['data']['branch_id']=$branch->id;
             return response()->json($data,200);
     }
