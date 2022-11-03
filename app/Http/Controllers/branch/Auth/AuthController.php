@@ -39,6 +39,13 @@ class AuthController extends Controller
        return $this->returnData('data', $data, $msg = "login success",200);
        return $this->respo($token);
     }
+    public function logout(){
+        Auth::guard('branch-api')->logout();
+        return response()->json([
+            'status' => true,
+            'msg'=>'logout success',
+        ]);
+    }
     public function registration(Request $request){
         $validator =Validator::make($request->all(), [
             'username'=>'required|unique:branchs',

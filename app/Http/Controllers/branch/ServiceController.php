@@ -104,9 +104,9 @@ class ServiceController extends Controller
             foreach($service['categories'] as $category){
                  foreach($category['items'] as $item){
                   $baranchitem= branchitem::where('item_id',$item['item_id'])->first();
-                  return response()->json($baranchitem);
+                 // return response()->json($baranchitem);
 
-                  if($baranchitem=null){
+                  if($baranchitem==null){
                     return response()->json(['status'=>false,'message'=>'please set price of main services first'],403);
                   }
                   $vlaidtebranchitem=Serviceitemprice::where('branch_id',$branchid)->where('additionalservice_id',$service['additionalservice_id'])->where('branchitem_id',$baranchitem->id)->first();
@@ -133,15 +133,25 @@ class ServiceController extends Controller
        }
        return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
     }
-    public function branchservices(){
+    public function branchservices(Request $request){
+      $lang=$request->header('lang');
+      App::setLocale($lang);
       $branch_id=Auth::guard('branch-api')->user()->id;
-      $branchservices=branchservice::where('branch_id',$branch_id)->get();
+       $branchservices=DB::table('brnachservices')
+       ->join('services','services.id','=','brnachservices.service_id')
+       ->join('servicetranslations','servicetranslations.service_id','=','services.id')->where('locale',$lang)
+       ->select('status','brnachservices.service_id','name')->distinct()->get();
       if($branchservices->count()==0){
         return response()->json(['status'=>false,'message'=>'no services yet']);
       }
+      $branchitem=branchitem::select('id')->with(['aditionalservices'=>function($q){
+        $q->get()->makehidden('created_at');
+      }])->get();
+      //dd($branchitem);
+      return response()->json($branchitem);
       $data=[];
       $data['status']=true;
-      $data['data']['branchservices']==$branchservices;
+      $data['data']['branchservices']=$branchservices;
       return response()->json($data);
     }
 }

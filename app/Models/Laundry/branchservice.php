@@ -10,4 +10,5 @@ class branchservice extends Model
     use HasFactory;
     protected $table="brnachservices";
     protected $guarded=[];
+ 
 }

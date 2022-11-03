@@ -13,6 +13,7 @@ class Additionalservice extends Model implements TranslatableContract
     protected $guarded=[];
     public $translatedAttributes = ['name'];
     protected $table='additionalservices';
+    protected $hidden=['pivot','translations'];
     public function categoryaditionalservices()
     {
         return $this->hasMany(AdditionalCategoryService::class);
