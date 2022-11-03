@@ -13,11 +13,9 @@ use App\Models\Laundry\branchitemTranslation;
 use App\Models\laundryservice\Item;
 use App\Models\laundryservice\Additionalservice;
 use App\Models\laundryservice\Serviceitemprice;
-use App\Models\Laundry\Pranchservice;
+use App\Models\Laundry\branchservice;
 use App;
 use Auth;
-
-
 class ServiceController extends Controller
 {
     //
@@ -32,9 +30,6 @@ class ServiceController extends Controller
     public function setitemprice(Request $request){
        // dd($request->services[0]->categories[0]);
         $branchid=$request->pranch_id;
-       // $mainitem=Item::where('id',1)->first();
-      //  return response()->json([$mainitem->translate('en')->name]);
-
       foreach($request->services as $service){
         foreach($service['categories'] as $category){
              foreach($category['items'] as $item){
@@ -76,7 +71,7 @@ class ServiceController extends Controller
                             }
                      }
                 }
-                Pranchservice::create([
+                branchservice::create([
                     'service_id'=>$service['service_id'],
                     'branch_id'=>$branchid
                 ]);
@@ -103,13 +98,17 @@ class ServiceController extends Controller
         $data['data']=$aditionalservices;
         return response()->json($data);
     }
-
     public function setaditionalserviceprice(Request $request){
         $branchid=$request->pranch_id;
         foreach($request->aditionalservices as $service){
             foreach($service['categories'] as $category){
                  foreach($category['items'] as $item){
                   $baranchitem= branchitem::where('item_id',$item['item_id'])->first();
+                  return response()->json($baranchitem);
+
+                  if($baranchitem=null){
+                    return response()->json(['status'=>false,'message'=>'please set price of main services first'],403);
+                  }
                   $vlaidtebranchitem=Serviceitemprice::where('branch_id',$branchid)->where('additionalservice_id',$service['additionalservice_id'])->where('branchitem_id',$baranchitem->id)->first();
                    if($vlaidtebranchitem!=null){
                        return response()->json(['status'=>false,'message'=>'this item already exist in this branch']);
@@ -134,5 +133,9 @@ class ServiceController extends Controller
        }
        return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
     }
-
+    public function branchservices(){
+      $branch_id=Auth::guard('branch-api')->user()->id;
+      $branchservices=branchservice::where('branch_id',$branch_id)->get();
+      dd($branchservices);
+    }
 }

@@ -43,7 +43,6 @@ class AuthController extends Controller
         //dd($request->all());
         $validator =Validator::make($request->all(), [
             'username'=>'required|unique:branchs',
-            'email'=>'required|unique:branchs',
             'country_code'=>'required',
             'phone'=>'required|unique:branchs',
             'password'=> 'required|min:6|max:50|confirmed',
@@ -62,7 +61,6 @@ class AuthController extends Controller
            DB::transaction(function()use(&$branch,$request)
            {
                 $branch=branch::create([
-                    'email'=>$request->email,
                     'username'=>$request->username,
                     'country_code'=>$request->country_code,
                     'phone'=>$request->phone,

@@ -5,9 +5,9 @@ namespace App\Models\laundry;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pranchservice extends Model
+class branchservice extends Model
 {
     use HasFactory;
-    protected $table="prnachservices";
+    protected $table="brnachservices";
     protected $guarded=[];
 }

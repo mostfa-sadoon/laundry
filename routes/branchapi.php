@@ -47,7 +47,9 @@ Route::controller(ServiceController::class)->group(function () {
 
 
 Route::group(['middleware' => 'branchApiAuth'],function(){
-
- });
+    Route::controller(ServiceController::class)->group(function () {
+    Route::get('get/branch/services','branchservices');
+  });
+});
 
 

@@ -14,8 +14,9 @@ class Pranchservice extends Migration
     public function up()
     {
         //
-        Schema::create('prnachservices', function (Blueprint $table) {
+        Schema::create('brnachservices', function (Blueprint $table) {
             $table->id();
+            $table->enum('status',['on','off'])->default('off');
             $table->unsignedBigInteger('branch_id');
             $table->foreign('branch_id')->references('id')->on('branchs')->onDelete('cascade');
             $table->unsignedBigInteger('service_id');
