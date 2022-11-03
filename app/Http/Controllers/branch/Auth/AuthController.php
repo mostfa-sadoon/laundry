@@ -87,7 +87,7 @@ class AuthController extends Controller
             $data=[];
             $data['status']=true;
             $data['message']="branch added successfully";
-            $data['data']['laundry_activation']='false';
+           // $data['data']['laundry_activation']='false';
             $data['data']['branch_id']=$branch->id;
             return response()->json($data,200);
     }

@@ -136,6 +136,12 @@ class ServiceController extends Controller
     public function branchservices(){
       $branch_id=Auth::guard('branch-api')->user()->id;
       $branchservices=branchservice::where('branch_id',$branch_id)->get();
-      dd($branchservices);
+      if($branchservices->count()==0){
+        return response()->json(['status'=>false,'message'=>'no services yet']);
+      }
+      $data=[];
+      $data['status']=true;
+      $data['data']['branchservices']==$branchservices;
+      return response()->json($data);
     }
 }
