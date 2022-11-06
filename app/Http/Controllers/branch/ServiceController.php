@@ -48,7 +48,7 @@ class ServiceController extends Controller
                                 BranchitemTranslation::create([
                                     'name'=>$mainitem->translate($locale)->name,
                                     'locale'=>$locale,
-                                    'Branchitem_id'=>$baranchitem->id,
+                                    'branchitem_id'=>$baranchitem->id,
                                 ]);
                             }
                        }
@@ -64,10 +64,10 @@ class ServiceController extends Controller
             foreach($service['categories'] as $category){
                  foreach($category['items'] as $item){
                     $Branchitem=Branchitem::where('branch_id',$branchid)->where('item_id',$item['item_id'])->first();
-                    $serviceitemprice= Serviceitemprice::where('service_id',$service['service_id'])->where('Branchitem_id',$Branchitem->id)->first();
+                    $serviceitemprice= Serviceitemprice::where('service_id',$service['service_id'])->where('branchitem_id',$Branchitem->id)->first();
                     if($serviceitemprice==null){
                         $serviceitemprice=Serviceitemprice::create([
-                            'Branchitem_id'=>$Branchitem->id,
+                            'branchitem_id'=>$Branchitem->id,
                             'branch_id'=>$branchid,
                             'service_id'=>$service['service_id'],
                             'price'=>$item['price'],
@@ -110,7 +110,7 @@ class ServiceController extends Controller
         //           if($baranchitem==null){
         //             return response()->json(['status'=>false,'message'=>'please set price of main services first'],403);
         //           }
-        //           $vlaidteBranchitem=Serviceitemprice::where('branch_id',$branchid)->where('additionalservice_id',$service['additionalservice_id'])->where('Branchitem_id',$baranchitem->id)->first();
+        //           $vlaidteBranchitem=Serviceitemprice::where('branch_id',$branchid)->where('additionalservice_id',$service['additionalservice_id'])->where('branchitem_id',$baranchitem->id)->first();
         //            if($vlaidteBranchitem!=null){
         //                return response()->json(['status'=>false,'message'=>'this item already exist in this branch']);
         //            }
@@ -123,14 +123,14 @@ class ServiceController extends Controller
                     $baranchitem= Branchitem::where('item_id',$item['item_id'])->where('branch_id',$request->branch_id)->first();
                     if($baranchitem!=null){
                         $serviceitemprice=Serviceitemprice::create([
-                            'Branchitem_id'=>$baranchitem->id,
+                            'branchitem_id'=>$baranchitem->id,
                             'branch_id'=>$branchid,
                             'additionalservice_id'=>$service['additionalservice_id'],
                             'price'=>$item['price'],
                          ]);
 
                          branchAdditionalservice::create([
-                            'Branchitem_id'=>$baranchitem->id,
+                            'branchitem_id'=>$baranchitem->id,
                             'branch_id'=>$branchid,
                             'additionalservice_id'=>$service['additionalservice_id'],
                     ]);
@@ -178,20 +178,24 @@ class ServiceController extends Controller
        // dd($request->all());
         $branch_id=Auth::guard('branch-api')->user()->id;
         $additionalservice_id=$request->additionalservice_id;
-        $branchAdditionalservice= branchAdditionalservice::where('Branchitem_id',$request->Branchitem_id)->where('branch_id',$branch_id)->where('additionalservice_id',$additionalservice_id)->first();
-        dd($branchAdditionalservice);
-        if($branchAdditionalservice->status=='on'){
-            $branchAdditionalservice->update([
-                'status'=>'off'
-             ]);
+        $branchAdditionalservice= branchAdditionalservice::where('branchitem_id',$request->branchitem_id)->where('branch_id',$branch_id)->where('additionalservice_id',$additionalservice_id)->first();
+        if($branchAdditionalservice!=null){
+            if($branchAdditionalservice->status=='on'){
+                $branchAdditionalservice->update([
+                    'status'=>'off'
+                 ]);
+            }else{
+                $branchAdditionalservice->update([
+                    'status'=>'on'
+                 ]);
+            }
         }else{
-            $branchAdditionalservice->update([
-                'status'=>'on'
-             ]);
+            $data['status']=false;
+            $data['message']='this item not fount';
         }
         $data['status']=true;
         $data['message']='service updated succefully';
-        $data['data']['Branchitem_id']['id']=$request->Branchitem_id;
+        $data['data']['branchitem_id']['id']=$request->branchitem_id;
         $data['data']['additionalservice']['status']=$branchAdditionalservice->status;
         return response()->json($data);
     }
