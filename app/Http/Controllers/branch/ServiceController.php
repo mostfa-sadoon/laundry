@@ -151,12 +151,12 @@ class ServiceController extends Controller
       if($branchservices->count()==0){
         return response()->json(['status'=>false,'message'=>'no services yet']);
       }
-      $branchitem=branchitem::select('id')->with(['itemadditionalservice.additionalservice'])->get()->makehidden('translations');
+     // $branchitem=branchitem::select('id')->with(['itemadditionalservice.additionalservice'])->get()->makehidden('translations');
       $data=[];
       $data['status']=true;
       $data['message']="get All services succesfully";
       $data['data']['branchservices']=$branchservices;
-      $data['data']['branchitem']=$branchitem;
+     // $data['data']['branchitem']=$branchitem;
       return response()->json($data);
     }
     public function updateservicestatus(Request $request){
@@ -197,6 +197,6 @@ class ServiceController extends Controller
     public $category=[];
     public function edit(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
-        
+
     }
 }
