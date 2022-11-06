@@ -202,6 +202,6 @@ class ServiceController extends Controller
     public $category=[];
     public function edit(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
-
+        dd($branch_id);
     }
 }
