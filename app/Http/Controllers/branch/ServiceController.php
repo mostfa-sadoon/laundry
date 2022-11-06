@@ -151,7 +151,7 @@ class ServiceController extends Controller
       if($branchservices->count()==0){
         return response()->json(['status'=>false,'message'=>'no services yet']);
       }
-     $Branchitem=Branchitem::select('id')->get()->makehidden('translations');
+     $Branchitem=Branchitem::select('id')->with(['itemadditionalservice.additionalservice'])->get()->makehidden('translations');
       $data=[];
       $data['status']=true;
       $data['message']="get All services succesfully";
@@ -179,6 +179,7 @@ class ServiceController extends Controller
         $branch_id=Auth::guard('branch-api')->user()->id;
         $additionalservice_id=$request->additionalservice_id;
         $branchAdditionalservice= branchAdditionalservice::where('Branchitem_id',$request->Branchitem_id)->where('branch_id',$branch_id)->where('additionalservice_id',$additionalservice_id)->first();
+        dd($branchAdditionalservice);
         if($branchAdditionalservice->status=='on'){
             $branchAdditionalservice->update([
                 'status'=>'off'
