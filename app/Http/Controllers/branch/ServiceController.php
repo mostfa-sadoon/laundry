@@ -156,7 +156,7 @@ class ServiceController extends Controller
       $data['status']=true;
       $data['message']="get All services succesfully";
       $data['data']['branchservices']=$branchservices;
-     // $data['data']['branchitem']=$branchitem;
+      $data['data']['branchitem']=$branchitem;
       return response()->json($data);
     }
     public function updateservicestatus(Request $request){
