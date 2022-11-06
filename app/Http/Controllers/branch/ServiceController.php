@@ -8,8 +8,8 @@ use App\Models\laundryservice\Service;
 use App\Models\laundryservice\Category;
 use App\Models\laundryservice\CategoryTranslations;
 use Illuminate\Support\Facades\DB;
-use App\Models\Laundry\branchitem;
-use App\Models\Laundry\branchitemTranslation;
+use App\Models\Laundry\Branchitem;
+use App\Models\Laundry\BranchitemTranslation;
 use App\Models\laundryservice\Item;
 use App\Models\laundryservice\Additionalservice;
 use App\Models\laundryservice\Serviceitemprice;
@@ -36,19 +36,19 @@ class ServiceController extends Controller
            foreach($request->services as $service){
                 foreach($service['categories'] as $category){
                      foreach($category['items'] as $item){
-                        $baranchitem=branchitem::where('branch_id',$branchid)->where('category_id',$category['category_id'])->where('item_id',$item['item_id'])->first();
+                        $baranchitem=Branchitem::where('branch_id',$branchid)->where('category_id',$category['category_id'])->where('item_id',$item['item_id'])->first();
                        if($baranchitem==null){
-                        $baranchitem= branchitem::create([
+                        $baranchitem= Branchitem::create([
                             'category_id'=>$category['category_id'],
                             'item_id'=>$item['item_id'],
                             'branch_id'=>$branchid
                          ]);
                          $mainitem=Item::where('id',$item['item_id'])->first();
                          foreach(config('translatable.locales') as $locale){
-                                branchitemTranslation::create([
+                                BranchitemTranslation::create([
                                     'name'=>$mainitem->translate($locale)->name,
                                     'locale'=>$locale,
-                                    'branchitem_id'=>$baranchitem->id,
+                                    'Branchitem_id'=>$baranchitem->id,
                                 ]);
                             }
                        }
@@ -63,11 +63,11 @@ class ServiceController extends Controller
            foreach($request->services as $service){
             foreach($service['categories'] as $category){
                  foreach($category['items'] as $item){
-                    $branchitem=branchitem::where('branch_id',$branchid)->where('item_id',$item['item_id'])->first();
-                    $serviceitemprice= Serviceitemprice::where('service_id',$service['service_id'])->where('branchitem_id',$branchitem->id)->first();
+                    $Branchitem=Branchitem::where('branch_id',$branchid)->where('item_id',$item['item_id'])->first();
+                    $serviceitemprice= Serviceitemprice::where('service_id',$service['service_id'])->where('Branchitem_id',$Branchitem->id)->first();
                     if($serviceitemprice==null){
                         $serviceitemprice=Serviceitemprice::create([
-                            'branchitem_id'=>$branchitem->id,
+                            'Branchitem_id'=>$Branchitem->id,
                             'branch_id'=>$branchid,
                             'service_id'=>$service['service_id'],
                             'price'=>$item['price'],
@@ -83,7 +83,7 @@ class ServiceController extends Controller
     public function getaditionalservices(Request $request){
         $lang=$request->header('lang');
         App::setLocale($lang);
-        $baranchitems=branchitem::select('item_id')->where('branch_id',$request->branch_id)->distinct()->get();
+        $baranchitems=Branchitem::select('item_id')->where('branch_id',$request->branch_id)->distinct()->get();
         foreach($baranchitems as $baranchitem)
         {
             array_push($this->item_id,$baranchitem->item_id);
@@ -104,14 +104,14 @@ class ServiceController extends Controller
         // foreach($request->aditionalservices as $service){
         //     foreach($service['categories'] as $category){
         //          foreach($category['items'] as $item){
-        //           $baranchitem= branchitem::where('item_id',$item['item_id'])->first();
+        //           $baranchitem= Branchitem::where('item_id',$item['item_id'])->first();
         //          // return response()->json($baranchitem);
 
         //           if($baranchitem==null){
         //             return response()->json(['status'=>false,'message'=>'please set price of main services first'],403);
         //           }
-        //           $vlaidtebranchitem=Serviceitemprice::where('branch_id',$branchid)->where('additionalservice_id',$service['additionalservice_id'])->where('branchitem_id',$baranchitem->id)->first();
-        //            if($vlaidtebranchitem!=null){
+        //           $vlaidteBranchitem=Serviceitemprice::where('branch_id',$branchid)->where('additionalservice_id',$service['additionalservice_id'])->where('Branchitem_id',$baranchitem->id)->first();
+        //            if($vlaidteBranchitem!=null){
         //                return response()->json(['status'=>false,'message'=>'this item already exist in this branch']);
         //            }
         //          }
@@ -120,17 +120,17 @@ class ServiceController extends Controller
         foreach($request->aditionalservices as $service){
             foreach($service['categories'] as $category){
                  foreach($category['items'] as $item){
-                    $baranchitem= branchitem::where('item_id',$item['item_id'])->where('branch_id',$request->branch_id)->first();
+                    $baranchitem= Branchitem::where('item_id',$item['item_id'])->where('branch_id',$request->branch_id)->first();
                     if($baranchitem!=null){
                         $serviceitemprice=Serviceitemprice::create([
-                            'branchitem_id'=>$baranchitem->id,
+                            'Branchitem_id'=>$baranchitem->id,
                             'branch_id'=>$branchid,
                             'additionalservice_id'=>$service['additionalservice_id'],
                             'price'=>$item['price'],
                          ]);
 
                          branchAdditionalservice::create([
-                            'branchitem_id'=>$baranchitem->id,
+                            'Branchitem_id'=>$baranchitem->id,
                             'branch_id'=>$branchid,
                             'additionalservice_id'=>$service['additionalservice_id'],
                     ]);
@@ -151,12 +151,12 @@ class ServiceController extends Controller
       if($branchservices->count()==0){
         return response()->json(['status'=>false,'message'=>'no services yet']);
       }
-     $branchitem=branchitem::select('id')->with(['itemadditionalservice.additionalservice'])->get()->makehidden('translations');
+     $Branchitem=Branchitem::select('id')->with(['itemadditionalservice.additionalservice'])->get()->makehidden('translations');
       $data=[];
       $data['status']=true;
       $data['message']="get All services succesfully";
       $data['data']['branchservices']=$branchservices;
-      $data['data']['branchitem']=$branchitem;
+      $data['data']['Branchitem']=$Branchitem;
       return response()->json($data);
     }
     public function updateservicestatus(Request $request){
@@ -178,7 +178,7 @@ class ServiceController extends Controller
        // dd($request->all());
         $branch_id=Auth::guard('branch-api')->user()->id;
         $additionalservice_id=$request->additionalservice_id;
-        $branchAdditionalservice= branchAdditionalservice::where('branchitem_id',$request->branchitem_id)->where('branch_id',$branch_id)->where('additionalservice_id',$additionalservice_id)->first();
+        $branchAdditionalservice= branchAdditionalservice::where('Branchitem_id',$request->Branchitem_id)->where('branch_id',$branch_id)->where('additionalservice_id',$additionalservice_id)->first();
         if($branchAdditionalservice->status=='on'){
             $branchAdditionalservice->update([
                 'status'=>'off'
@@ -190,7 +190,7 @@ class ServiceController extends Controller
         }
         $data['status']=true;
         $data['message']='service updated succefully';
-        $data['data']['branchitem_id']['id']=$request->branchitem_id;
+        $data['data']['Branchitem_id']['id']=$request->Branchitem_id;
         $data['data']['additionalservice']['status']=$branchAdditionalservice->status;
         return response()->json($data);
     }

@@ -11,7 +11,7 @@ use App\Models\laundryservice\Additionalservice;
 use App\Models\laundryservice\branchAdditionalservice;
 use App\Models\Laundry\branchitemTranslation;
 
-class branchitem extends Model implements TranslatableContract
+class Branchitem extends Model implements TranslatableContract
 {
     use HasFactory,Translatable;
     protected $table='branchitems';
