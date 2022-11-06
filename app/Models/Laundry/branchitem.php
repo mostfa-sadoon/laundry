@@ -9,7 +9,7 @@ use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use App\Models\laundryservice\Additionalservice;
 use App\Models\laundryservice\branchAdditionalservice;
-
+use App\Models\Laundry\branchitemTranslation;
 
 class branchitem extends Model implements TranslatableContract
 {
