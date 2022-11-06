@@ -68,6 +68,7 @@ class ServiceController extends Controller
                     if($serviceitemprice==null){
                         $serviceitemprice=Serviceitemprice::create([
                             'branchitem_id'=>$Branchitem->id,
+                            'category_id'=>$category['category_id'],
                             'branch_id'=>$branchid,
                             'service_id'=>$service['service_id'],
                             'price'=>$item['price'],
@@ -126,6 +127,7 @@ class ServiceController extends Controller
                             'branchitem_id'=>$baranchitem->id,
                             'branch_id'=>$branchid,
                             'additionalservice_id'=>$service['additionalservice_id'],
+                            'category_id'=>$category['category_id'],
                             'price'=>$item['price'],
                          ]);
 
@@ -200,8 +202,24 @@ class ServiceController extends Controller
         return response()->json($data);
     }
     public $category=[];
+    public $service_ids=[];
+    public $additionalservice_ids=[];
     public function edit(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
-        dd($branch_id);
+        $branchservices=Serviceitemprice::select('service_id')->where('branch_id',$branch_id)->where('service_id','!=',null)->distinct()->get();
+        foreach($branchservices as $branchservice){
+            array_push($this->service_ids,$branchservice->service_id);
+        }
+        $services=Service::wherein('id',$this->service_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
+        $branchservices=Serviceitemprice::select('additionalservice_id')->where('branch_id',$branch_id)->where('additionalservice_id','!=',null)->distinct()->get();
+        foreach($branchservices as $branchservice){
+            array_push($this->additionalservice_ids,$branchservice->additionalservice_id);
+        }
+        $additionalservices=Additionalservice::wherein('id',$this->additionalservice_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
+        $data['status']=true;
+        $data['message']="get pranch services succefully";
+        $data['data']['services']=$services;
+        $data['data']['additionalservices']=$additionalservices;
+        return response()->json($data);
     }
 }

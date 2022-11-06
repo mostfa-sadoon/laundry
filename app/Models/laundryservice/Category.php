@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
+use App\Models\Laundry\Branchitem;
 
 class Category extends Model implements TranslatableContract
 {
@@ -30,5 +31,13 @@ class Category extends Model implements TranslatableContract
 
     public function categorytranslate(){
         return $this->hasMany(CategoryTranslations::class);
+    }
+
+    public function itemprice(){
+        return $this->hasMany(Serviceitemprice::class)->select('branchitem_id','price','category_id','service_id');
+    }
+
+    public function branchitems(){
+        return $this->hasMany(Branchitem::class);
     }
 }

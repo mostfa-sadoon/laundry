@@ -24,6 +24,8 @@ class ServiceItemPrice extends Migration
             $table->foreign('branchitem_id')->references('id')->on('branchitems')->onDelete('cascade');
             $table->unsignedBigInteger('additionalservice_id')->nullable();
             $table->foreign('additionalservice_id')->references('id')->on('additionalservices')->onDelete('cascade');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->double('price')->nullable();
             $table->timestamps();
         });
