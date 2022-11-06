@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
 use Astrotomic\Translatable\Translatable;
 use App\Models\laundryservice\Additionalservice;
-
+use App\Models\laundryservice\branchAdditionalservice;
 
 
 class branchitem extends Model implements TranslatableContract
@@ -19,6 +19,10 @@ class branchitem extends Model implements TranslatableContract
     protected $guarded=[];
     protected $hidden=['pivot'];
     public function aditionalservices(){
-        return $this->belongsToMany(Additionalservice::class,'serviceitems_price');
+        return $this->belongsToMany(Additionalservice::class,'branch_additionalservice');
     }
+    public function itemadditionalservice(){
+        return $this->hasMany(branchAdditionalservice::class);
+    }
+
 }

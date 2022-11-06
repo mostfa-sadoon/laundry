@@ -20,8 +20,8 @@ class branchitems extends Migration
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->unsignedBigInteger('item_id')->nullable();
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->unsignedBigInteger('service_id');
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
+            // $table->unsignedBigInteger('service_id');
+            // $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
             $table->unsignedBigInteger('branch_id');
             $table->foreign('branch_id')->references('id')->on('branchs')->onDelete('cascade');
             $table->integer('serial')->nullable();
