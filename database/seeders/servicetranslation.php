@@ -18,7 +18,7 @@ class servicetranslation extends Seeder
         DB::table('servicetranslations')->insert([[
             'id' => 1,
             'service_id'=>1,
-            'name'=>'washing',
+            'name'=>'Washing',
             'locale'=>'en',
         ],[
             'id' => 2,
@@ -28,7 +28,7 @@ class servicetranslation extends Seeder
         ],[
             'id' => 3,
             'service_id'=>2,
-            'name'=>'dry clean',
+            'name'=>'Dry clean',
             'locale'=>'en',
         ],[
             'id' => 4,
@@ -38,7 +38,7 @@ class servicetranslation extends Seeder
         ],[
             'id' => 5,
             'service_id'=>3,
-            'name'=>'ironing',
+            'name'=>'Ironing',
             'locale'=>'en',
         ],[
             'id' => 6,
@@ -48,7 +48,7 @@ class servicetranslation extends Seeder
         ],[
             'id' => 7,
             'service_id'=>4,
-            'name'=>'washing&ironing',
+            'name'=>'Washing & Ironing',
             'locale'=>'en',
         ],[
             'id' => 8,

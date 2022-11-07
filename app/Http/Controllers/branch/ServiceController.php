@@ -15,6 +15,8 @@ use App\Models\laundryservice\Additionalservice;
 use App\Models\laundryservice\Serviceitemprice;
 use App\Models\Laundry\branchservice;
 use App\Models\laundryservice\branchAdditionalservice;
+use App\Http\Resources\categoryresource;
+use App\Http\Resources\editservice\serviceresource;
 use App;
 use Auth;
 class ServiceController extends Controller
@@ -221,5 +223,16 @@ class ServiceController extends Controller
         $data['data']['services']=$services;
         $data['data']['additionalservices']=$additionalservices;
         return response()->json($data);
+    }
+    public function getcategory(Request $request){
+        $branch_id=Auth::guard('branch-api')->user()->id;
+        $service_id=$request->service_id;
+        $service=Service::select('id')->listsTranslations('name')->with(['categories.branchitems'=>function($q)use($service_id,$branch_id){
+            $q->with(['branchitemprice'=>function($q)use($service_id,$branch_id){
+                $q->where('service_id',$service_id)->where('branch_id',$branch_id)->get();
+            }])->get();
+        }])->find($service_id)->makehidden('translations');
+        return new  serviceresource($service);
+        return response()->json($services);
     }
 }

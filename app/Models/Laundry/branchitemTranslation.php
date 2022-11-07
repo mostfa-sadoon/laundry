@@ -9,5 +9,6 @@ class BranchitemTranslation extends Model
 {
     use HasFactory;
     protected $table='branchitemtranslations';
+    protected $hidden=['translations'];
     protected $guarded=[];
 }

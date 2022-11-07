@@ -18,7 +18,7 @@ class AditionalserviceTranslations extends Seeder
         DB::table('additionalservicetranslations')->insert([[
             'id' => 1,
             'additionalservice_id'=>1,
-            'name'=>'perfuming',
+            'name'=>'Perfuming',
             'locale'=>'en',
         ],[
             'id' => 2,
@@ -28,7 +28,7 @@ class AditionalserviceTranslations extends Seeder
         ],[
         'id' => 3,
         'additionalservice_id'=>2,
-        'name'=>'folding',
+        'name'=>'Folding',
         'locale'=>'en',
         ],[
             'id' => 4,

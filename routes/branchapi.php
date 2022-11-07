@@ -52,6 +52,8 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
        Route::get('branch/update/service{service_id?}','updateservicestatus');
        Route::get('branch/update/additionalservice{branchitem_id?&additionalservice_id}','updateadditionalservicestatus');
        Route::get('get/branch/edit/services','edit');
+       Route::get('get/branch/edit/category/service{service_id?}','getcategory');
+       Route::get('get/branch/edit/category/additional{additionalservice_id?}','getcategory');
     });
     Route::controller(AuthController::class)->group(function () {
         Route::get('branch/logout','logout');
