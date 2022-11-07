@@ -30,6 +30,23 @@ class ServiceController extends Controller
          $data['services']= $services;
          return response()->json(['status'=>true,'message'=>'get services succefully','data'=>$data]);
     }
+    public function getcategoryitem(Request $request){
+        $category_id=$request->category_id;
+        $categoryitems=Item::where('category_id',$category_id)->get();
+        $data['status']=true;
+        $data['message']='get category items';
+        $data['data']['categoryitems']=$categoryitems;
+        return response()->json($data);
+    }
+    public function additionalserviceitem(Request $request){
+        $category_id=$request->category_id;
+        $branch_id=Auth::guard('branch-api')->user()->id;
+        $categoryitems=Branchitem::select('id')->where('category_id',$category_id)->where('branch_id',$branch_id)->get();
+        $data['status']=true;
+        $data['message']='get category items';
+        $data['data']['categoryitems']=$categoryitems;
+        return response()->json($data);
+    }
     public function setitemprice(Request $request){
        // dd($request->services[0]->categories[0]);
         $branchid=$request->branch_id;
