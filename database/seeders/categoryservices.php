@@ -42,6 +42,16 @@ class categoryservices extends Seeder
             'category_id'=>1,
             'service_id'=>4,
         ]
+
+        ,[
+            'id' => 7,
+            'category_id'=>3,
+            'service_id'=>1,
+        ],[
+            'id' => 8,
+            'category_id'=>4,
+            'service_id'=>1,
+        ]
     ]);
     }
 }

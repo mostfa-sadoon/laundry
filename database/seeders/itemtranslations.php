@@ -56,6 +56,28 @@ class itemtranslations extends Seeder
             'item_id'=>4,
             'name'=>'سجاد فاخر',
             'locale'=>'ar',
-        ]]);
+        ],[
+            'id' => 9,
+            'item_id'=>5,
+            'name'=>'home furniture',
+            'locale'=>'ar',
+        ],[
+            'id' => 10,
+            'item_id'=>5,
+            'name'=>'مفروشات منزليه',
+            'locale'=>'en',
+        ],[
+            'id' => 11,
+            'item_id'=>6,
+            'name'=>'car 1',
+            'locale'=>'ar',
+        ],[
+            'id' => 12,
+            'item_id'=>6,
+            'name'=>'عربيه واحد ',
+            'locale'=>'en',
+        ]
+
+        ]);
     }
 }
