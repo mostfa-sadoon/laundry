@@ -19,7 +19,7 @@ class serviceresource extends JsonResource
             'status'=>true,
             'message'=>'get category id',
             'data' => [
-            'service_id' => $this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'categories'=>categoryresource::collection($this->categories),
         ]];
