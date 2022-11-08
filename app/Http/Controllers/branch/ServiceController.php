@@ -216,9 +216,8 @@ class ServiceController extends Controller
                     'additionalservice_id'=>$aditionalservice,
             ]);
             }
-           // return response()->json(['status'=>true,'message'=>count($request->itemprices)]);
-            return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
         }
+        return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
  }
     public function branchservices(Request $request){
       $lang=$request->header('lang');
@@ -272,6 +271,7 @@ class ServiceController extends Controller
         }else{
             $data['status']=false;
             $data['message']='this item not fount';
+            return response()->json($data);
         }
         $data['status']=true;
         $data['message']='service updated succefully';
