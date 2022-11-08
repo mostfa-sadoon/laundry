@@ -14,10 +14,21 @@ class itemprice extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'item_price_id' => $this->id,
-            'service_id'=>$this->service_id,
-            'price' => $this->price,
-        ];
+
+         if($this->service_id!=null){
+            return [
+                'item_price_id' => $this->id,
+                'service_id'=>$this->service_id,
+                'price' => $this->price,
+                ];
+         }
+         if($this->additionalservice_id!=null){
+            return [
+                'item_price_id' => $this->id,
+                'additionalservice_id'=>$this->additionalservice_id,
+                'price' => $this->price,
+                ];
+         }
+
     }
 }

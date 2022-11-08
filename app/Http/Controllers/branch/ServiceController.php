@@ -205,18 +205,14 @@ class ServiceController extends Controller
                             'category_id'=>$itemprice['category_id'],
                             'price'=>$itemprice['price'],
                             ]);
+
+                            branchAdditionalservice::create([
+                                'branchitem_id'=>$baranchitem->id,
+                                'branch_id'=>$branchid,
+                                'additionalservice_id'=>$itemprice['additionalservice_id'],
+                        ]);
             }
             }
-        foreach($request->aditionalservices as  $aditionalservice){
-            $branchAdditionalservice=branchAdditionalservice::where('branch_id',$request->branch_id)->where('additionalservice_id',$aditionalservice)->first();
-            if($branchAdditionalservice==null){
-                branchAdditionalservice::create([
-                    'branchitem_id'=>$baranchitem->id,
-                    'branch_id'=>$branchid,
-                    'additionalservice_id'=>$aditionalservice,
-            ]);
-            }
-        }
         return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
  }
     public function branchservices(Request $request){
@@ -311,10 +307,18 @@ class ServiceController extends Controller
         return new  serviceresource($service);
        // return response()->json($services);
     }
-    public function getaditionalservicecategory(){
-        // $branch_id=Auth::guard('branch-api')->user()->id;
-        // $service_id=$request->service_id;
-        dd($request->all());
+    public function getaditionalservicecategory(Request $request){
+        $branch_id=Auth::guard('branch-api')->user()->id;
+        $additionalservice_id=$request->additionalservice_id;
+        $additionalservices=Additionalservice::select('id')->listsTranslations('name')->with(['categories.branchitems'=>function($q)use($additionalservice_id,$branch_id){
+            $q->with(['branchitemprice'=>function($q)use($additionalservice_id,$branch_id){
+                $q->where('additionalservice_id',$additionalservice_id)->where('branch_id',$branch_id)->get();
+            }])->get();
+        }])->find($additionalservice_id)->makehidden('translations');
+      //return response()->json($additionalservices);
+
+        return new  serviceresource($additionalservices);
+        dd($additionalservices);
     }
     public function updateprice(Request $request){
        foreach($request->branchitemprices as $itrmprice){
