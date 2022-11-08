@@ -50,16 +50,15 @@ Route::controller(ServiceController::class)->group(function () {
 
 Route::group(['middleware' => 'branchApiAuth'],function(){
     Route::controller(ServiceController::class)->group(function () {
-
-
-        Route::get('get/branch/additionalservice/category/item{category_id?}','additionalserviceitem');
-
+       Route::get('get/branch/additionalservice/category/item{category_id?}','additionalserviceitem');
        Route::get('get/branch/services','branchservices');
        Route::get('branch/update/service{service_id?}','updateservicestatus');
        Route::get('branch/update/additionalservice{branchitem_id?&additionalservice_id}','updateadditionalservicestatus');
        Route::get('get/branch/edit/services','edit');
        Route::get('get/branch/edit/category/service{service_id?}','getcategory');
-       Route::get('get/branch/edit/category/additional{additionalservice_id?}','getcategory');
+       Route::get('get/branch/edit/category/additional{additionalservice_id?}','getaditionalservicecategory');
+
+       Route::POST('branch/update/item/price','updateprice');
     });
     Route::controller(AuthController::class)->group(function () {
         Route::get('branch/logout','logout');
