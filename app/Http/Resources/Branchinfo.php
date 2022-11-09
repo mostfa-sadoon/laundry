@@ -15,6 +15,7 @@ class Branchinfo extends JsonResource
     public function toArray($request)
     {
         return [
+
             'id' => $this->id,
             'phone' => $this->phone,
             'name' => $this->name,

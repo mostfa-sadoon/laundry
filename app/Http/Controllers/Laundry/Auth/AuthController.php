@@ -94,8 +94,10 @@ class AuthController extends Controller
        $data = [
         'status' => true,
         'message' => 'All branches fetched successfully',
+
        ];
-       return Branchinfo::collection($branches)->additional($data);
-      // return response()->json(['branches'=>$branches]);
+       $data['data']['branches']=$branches;
+       //return Branchinfo::collection($branches)->additional($data);
+       return response()->json($data);
     }
 }
