@@ -17,6 +17,7 @@ class Branchinfo extends JsonResource
         return [
             'id' => $this->id,
             'phone' => $this->phone,
+            'name' => $this->name,
             'open_time'=>$this->open_time,
             'closed_time'=>$this->closed_time,
             'address'=>$this->address,
