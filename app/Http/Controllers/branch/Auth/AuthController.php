@@ -59,7 +59,7 @@ class AuthController extends Controller
             'long'=>'required',
             'open_time'=>'required',
             'closed_time'=>'required',
-            'laundry_id'=>'required|exists:App\Models\Laundry\Laundry,id',
+           // 'laundry_id'=>'required|exists:App\Models\Laundry\Laundry,id',
           ]);
           if ($validator->fails()) {
            return response()->json([

@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
-use Astrotomic\Translatable\Translatable;
+// use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+// use Astrotomic\Translatable\Translatable;
 
-class branch extends Authenticatable implements JWTSubject,TranslatableContract
+class branch extends Authenticatable implements JWTSubject
 {
-    use HasFactory,Translatable;
+    use HasFactory;
     protected $guarded=[];
     protected $table="branchs";
     public $translatedAttributes = ['name'];

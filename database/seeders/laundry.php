@@ -21,6 +21,7 @@ class laundry extends Seeder
              'id'=>1,
              'email'=>'laundry@laundry.com',
              'phone'=>'0552342385',
+             'name'=>'nazifaa',
              'country_code'=>'011',
              'status'=>'true',
              'branch'=>'one',

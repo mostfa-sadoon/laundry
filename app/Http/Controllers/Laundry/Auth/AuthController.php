@@ -8,6 +8,7 @@ use Auth;
 use App\Traits\GeneralTrait;
 use App\Models\Laundry\branch;
 use App\Models\Laundry\Laundry;
+use App\Models\Laundry\LaunbryTranslation;
 use App\Traits\fileTrait;
 use App\Http\Resources\Branchinfo;
 use Validator;
@@ -32,10 +33,10 @@ class AuthController extends Controller
     }
 
     public function registration(Request $request){
-      // dd($request->all());
+      //dd($request->all());
       //return response()->json($request->all());
       $validator =Validator::make($request->all(), [
-         'name'=>'required|unique:laundry_translations',
+         'name'=>'required|unique:laundries',
          'email'=>'required|unique:laundries',
          'country_code'=>'required',
          'password'=> 'required|min:6|max:50|confirmed',
@@ -57,7 +58,9 @@ class AuthController extends Controller
        if($request->logo){
         $logo=$this->MoveImage($request->file('logo'),'uploads/laundry/logos');
        }
+      // dd($request->name);
       $laundry= Laundry::create([
+        'name'=>$request->name,
         'phone'=>$request->phone,
         'country_code'=>$request->country_code,
         'email'=>$request->email,
@@ -67,6 +70,7 @@ class AuthController extends Controller
         'logo'=>$logo,
         'password' => Hash::make($request->password),
        ]);
+
        if(!$laundry){
         return response()->json(['some thing rong'],500);
        }
@@ -90,12 +94,15 @@ class AuthController extends Controller
        $lang=$request->header('lang');
        App::setLocale($lang);
        $laundry_id=Auth::guard('laundry_api')->user()->id;
-       $branches=branch::select('address','id','open_time','closed_time','closed_time','phone')->where('laundry_id',$laundry_id)->get()->makehidden('translations');
+       $laundry=Laundry::select('branch')->find($laundry_id);
+       $branches=branch::select('address','id','open_time','closed_time','closed_time','phone','username')->where('laundry_id',$laundry_id)->get()->makehidden('translations');
+       $branchcount=$branches->count();
        $data = [
         'status' => true,
         'message' => 'All branches fetched successfully',
-
        ];
+       $data['data']['laundry branch status']=$laundry->branch;
+       $data['data']['branchcount']=$branchcount;
        $data['data']['branches']=$branches;
        //return Branchinfo::collection($branches)->additional($data);
        return response()->json($data);
