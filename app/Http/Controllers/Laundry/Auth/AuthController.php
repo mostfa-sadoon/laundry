@@ -90,7 +90,7 @@ class AuthController extends Controller
        $lang=$request->header('lang');
        App::setLocale($lang);
        $laundry_id=Auth::guard('laundry_api')->user()->id;
-       $branches=branch::select('address','id','open_time','closed_time','closed_time')->where('laundry_id',$laundry_id)->get()->makehidden('translations');
+       $branches=branch::select('address','id','open_time','closed_time','closed_time','phone')->where('laundry_id',$laundry_id)->get()->makehidden('translations');
        $data = [
         'status' => true,
         'message' => 'All branches fetched successfully',
