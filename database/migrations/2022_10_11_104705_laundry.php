@@ -21,7 +21,7 @@ class Laundry extends Migration
             $table->string('phone')->unique();
             $table->string('password');
             $table->string('name')->unique();
-            $table->enum('status',['true','false'])->default('false');
+            $table->enum('status',['true','false'])->default('true');
             $table->enum('branch',['one','many']);
             $table->string('companyregister');
             $table->string('taxcard');
