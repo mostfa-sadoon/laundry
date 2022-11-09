@@ -47,6 +47,7 @@ class AuthController extends Controller
         ]);
     }
     public function registration(Request $request){
+        $laundry_id=Auth::guard('lundryApiAuth')->user()->id;
         $validator =Validator::make($request->all(), [
             'username'=>'required|unique:branchs',
             'country_code'=>'required',
@@ -78,7 +79,7 @@ class AuthController extends Controller
                     'open_time'=>$request->open,
                     'closed_time'=>$request->closed,
                     'address'=>$request->address,
-                    'laundry_id'=>$request->laundry_id,
+                    'laundry_id'=>$laundry_id,
                     'password' => Hash::make($request->password),
                   ]);
                   foreach($request->closeing_daies as $closeingday){
