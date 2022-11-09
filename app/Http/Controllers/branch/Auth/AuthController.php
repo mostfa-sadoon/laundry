@@ -47,7 +47,7 @@ class AuthController extends Controller
         ]);
     }
     public function registration(Request $request){
-        $laundry_id=Auth::guard('lundryApiAuth')->user()->id;
+        $laundry_id=Auth::guard('laundry_api')->user()->id;
         $validator =Validator::make($request->all(), [
             'username'=>'required|unique:branchs',
             'country_code'=>'required',
@@ -67,7 +67,7 @@ class AuthController extends Controller
            ],403);
            }
 
-           DB::transaction(function()use(&$branch,$request)
+           DB::transaction(function()use(&$branch,$laundry_id,$request)
            {
                 $branch=branch::create([
                     'username'=>$request->username,
