@@ -16,13 +16,13 @@ class delivery_type extends Seeder
     public function run()
     {
         //
-        DB::table('delivery_types')->insert(
+        DB::table('delivery_types')->insert([
               [
                  "id"=>1,
               ],[
                 "id"=>2,
               ]
-        );
+        ]);
 
     }
 }

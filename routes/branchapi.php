@@ -66,6 +66,7 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
     Route::controller(OrderController::class)->group(function () {
         Route::get('order/services','getservice');
         Route::get('order/item/detailes{item_id?}','itemdetailes');
+        Route::get('order/info','orderinfo');
     });
 });
 

@@ -16,7 +16,7 @@ class payment_method_trnasltions extends Seeder
     public function run()
     {
         //
-        DB::table('payment_method_translations')->insert(
+        DB::table('payment_method_translations')->insert([
             [
                "id"=>1,
                "payment_method_id"=>1,
@@ -29,27 +29,27 @@ class payment_method_trnasltions extends Seeder
                 "name"=>"cash",
             ],[
                 "id"=>3,
-                "payment_method_id"=>1,
+                "payment_method_id"=>2,
                 "locale"=>"ar",
                 "name"=>"فيزا",
             ],
             [
                 "id"=>4,
-               "payment_method_id"=>1,
+               "payment_method_id"=>2,
                "locale"=>"en",
                "name"=>"credit",
              ],[
                 "id"=>5,
-                "payment_method_id"=>1,
+                "payment_method_id"=>3,
                 "locale"=>"ar",
                 "name"=>"محفظه اليكترونيه",
             ],
             [
                 "id"=>6,
-               "payment_method_id"=>1,
+               "payment_method_id"=>3,
                "locale"=>"en",
                "name"=>"wallet",
              ]
-      );
+            ]);
     }
 }

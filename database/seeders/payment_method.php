@@ -16,7 +16,7 @@ class payment_method extends Seeder
     public function run()
     {
         //
-        DB::table('payment_methods')->insert(
+        DB::table('payment_methods')->insert([
             [
                "id"=>1,
             ],[
@@ -24,6 +24,6 @@ class payment_method extends Seeder
             ],[
                 "id"=>3
             ]
-      );
+      ]);
     }
 }

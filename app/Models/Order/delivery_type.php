@@ -5,7 +5,13 @@ namespace App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class delivery_type extends Model
+use Astrotomic\Translatable\Contracts\Translatable as TranslatableContract;
+use Astrotomic\Translatable\Translatable;
+
+class delivery_type extends Model  implements TranslatableContract
 {
+    use HasFactory,Translatable;
     use HasFactory;
+    protected $guarded=[];
+    public $translatedAttributes = ['name'];
 }

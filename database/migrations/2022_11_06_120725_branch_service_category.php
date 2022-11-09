@@ -14,7 +14,7 @@ class BranchServiceCategory extends Migration
     public function up()
     {
         //
-        Schema::create('brnach_category_service', function (Blueprint $table) {
+        Schema::create('brnach_services', function (Blueprint $table) {
             $table->id();
             $table->enum('status',['on','off'])->default('off');
             $table->unsignedBigInteger('branch_id');

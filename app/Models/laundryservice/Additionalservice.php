@@ -21,4 +21,14 @@ class Additionalservice extends Model implements TranslatableContract
     public function categories(){
         return $this->belongsToMany(Category::class);
     }
+
+    public function branchadditionalservice()
+    {
+        return $this->hasMany(branchAdditionalservice::class);
+    }
+
+    public function itemprices()
+    {
+        return $this->hasMany(Serviceitemprice::class);
+    }
 }
