@@ -29,6 +29,11 @@ class DatabaseSeeder extends Seeder
         $this->call(itemtranslations::class);
         $this->call(closeingday::class);
         $this->call(closeingdaytranslation::class);
+
+        $this->call(delivery_type::class);
+        $this->call(delivery_type_trnaslations::class);
+        $this->call(payment_method::class);
+        $this->call(payment_method_trnasltions::class);
         // \App\Models\User::factory(10)->create();
     }
 }

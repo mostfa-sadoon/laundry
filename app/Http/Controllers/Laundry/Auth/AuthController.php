@@ -77,7 +77,7 @@ class AuthController extends Controller
         return response()->json(['error' => 'Your Branch username or password maybe incorrect, please try agian'], 401);
         }
         $data=[];
-        $data['status']=true;   
+        $data['status']=true;
         $data['message']='laundery added succesffuly';
         $data['data']['laundry_id']=$laundry->id;
         $data['data']['token']=$token;
@@ -91,7 +91,11 @@ class AuthController extends Controller
        App::setLocale($lang);
        $laundry_id=Auth::guard('laundry_api')->user()->id;
        $branches=branch::select('address','id','open_time','closed_time','closed_time')->where('laundry_id',$laundry_id)->get()->makehidden('translations');
-    //   return Branchinfo::collection($branches);
-       return response()->json(['branches'=>$branches]);
+       $data = [
+        'status' => true,
+        'message' => 'All customers fetched successfully',
+       ];
+       return Branchinfo::collection($branches)->additional($data);
+      // return response()->json(['branches'=>$branches]);
     }
 }
