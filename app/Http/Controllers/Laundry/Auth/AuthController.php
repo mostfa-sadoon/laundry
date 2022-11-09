@@ -93,7 +93,7 @@ class AuthController extends Controller
        $branches=branch::select('address','id','open_time','closed_time','closed_time')->where('laundry_id',$laundry_id)->get()->makehidden('translations');
        $data = [
         'status' => true,
-        'message' => 'All customers fetched successfully',
+        'message' => 'All branches fetched successfully',
        ];
        return Branchinfo::collection($branches)->additional($data);
       // return response()->json(['branches'=>$branches]);
