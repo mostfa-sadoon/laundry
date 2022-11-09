@@ -64,7 +64,8 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
        Route::POST('branch/update/item/price','updateprice');
     });
     Route::controller(OrderController::class)->group(function () {
-        Route::get('branch/logout','logout');
+        Route::get('order/services','getservice');
+        Route::get('order/item/detailes{item_id?}','itemdetailes');
     });
 });
 

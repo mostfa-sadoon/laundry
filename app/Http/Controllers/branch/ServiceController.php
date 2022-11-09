@@ -305,7 +305,7 @@ class ServiceController extends Controller
             }])->get();
         }])->find($service_id)->makehidden('translations');
 
-          return response()->json($service);
+          //return response()->json($service);
         return new  serviceresource($service);
 
     }
