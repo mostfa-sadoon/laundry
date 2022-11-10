@@ -33,7 +33,9 @@ class AuthController extends Controller
 
             return response()->json($data,401);
         }
-        $data['token']=$token;
+        $data['status']=true;
+        $data['message']="login succesfully";       
+        $data['data']['token']=$token;
         return response()->json($data);
        // return response()->json(['message'=>'login success','branch'=>$branch,'token'=>$token]);
        return $this->returnData('data', $data, $msg = "login success",200);
