@@ -34,7 +34,7 @@ class AuthController extends Controller
             return response()->json($data,401);
         }
         $data['status']=true;
-        $data['message']="login succesfully";       
+        $data['message']="login succesfully";
         $data['data']['token']=$token;
         return response()->json($data);
        // return response()->json(['message'=>'login success','branch'=>$branch,'token'=>$token]);
@@ -45,7 +45,7 @@ class AuthController extends Controller
         Auth::guard('branch-api')->logout();
         return response()->json([
             'status' => true,
-            'msg'=>'logout success',
+            'message'=>'logout success',
         ]);
     }
     public function registration(Request $request){

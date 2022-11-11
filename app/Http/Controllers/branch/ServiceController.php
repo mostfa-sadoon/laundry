@@ -304,7 +304,6 @@ class ServiceController extends Controller
                 $q->where('service_id',$service_id)->where('branch_id',$branch_id)->get();
             }])->get();
         }])->find($service_id)->makehidden('translations');
-
           //return response()->json($service);
         return new  serviceresource($service);
 

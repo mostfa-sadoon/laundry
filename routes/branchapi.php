@@ -24,9 +24,6 @@ use  App\Http\Controllers\branch\OrderController;
 Route::controller(AuthController::class)->group(function () {
         Route::post('branch/login','login');
 });
-
-
-
 Route::group(['middleware' => 'lundryApiAuth'],function(){
     Route::controller(AuthController::class)->group(function () {
     Route::post('branch/register','registration');
@@ -45,10 +42,6 @@ Route::controller(ServiceController::class)->group(function () {
     Route::get('get/branch/category/item{category_id?}','getcategoryitem');
 
 });
-
-
-
-
 Route::group(['middleware' => 'branchApiAuth'],function(){
     Route::controller(AuthController::class)->group(function () {
         Route::get('branch/logout','logout');
@@ -66,8 +59,7 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
     Route::controller(OrderController::class)->group(function () {
         Route::get('order/services','getservice');
         Route::get('order/item/detailes{item_id?}','itemdetailes');
-        Route::get('order/info','orderinfo');
+        Route::get('order/info{order_id?}','orderinfo');
+        Route::post('order/submit','submitorder');
     });
 });
-
-
