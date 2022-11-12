@@ -58,43 +58,20 @@ class OrderController extends Controller
         App::setLocale($lang);
         $deliverytype=delivery_type::select('id')->get()->makehidden('translations');
         $paymentmethods=payment_method::select('id')->get()->makehidden('translations');
-        // $order=Order::with(['orderdetailes'=>function($q){
-        //     $q->where('service_id','!=',null)->get();
-        // }])->find($order_id);
-         $orderdetailes=orderdetailes::select('service_id','quantity','price')
-         ->with(['service'=>function($q){
-            $q->select('id')->get();
-         }])
-         ->where('order_id',$order_id)
-         ->get()
-         ->groupBy('service_id');
-
-         $orderdetailes= DB::select('select sum(price) , service_id
-         from order_detailes where order_id = :id
-         group By service_id
-         inner join servicetranslations
-         on
-          servicetranslations.service_id =order_detailes.service_id
-         and
-         servicetranslations.locale=:lang
-
-         ', ['id' => $order_id,
-             'lang'=>$lang
-         ]);
-
-        // $orderdetailes = DB::table('order_detailes')
-        // ->join('services','services.id','=','order_detailes.service_id')
-        // ->select('price','service_id')
-        // ->where('service_id','!=',null)
-        // ->get()
-        // ->groupBy('service_id')
-        //  ->sum(DB::raw('price'))
-        ;
-
-
-
-        //   $orderdetailes=orderdetailes::select('price')->get()->groupby('service_id');
-
+         $orderdetailes= DB::select('select service.name, sum(price) as price ,sum(service.quantity) as quantity
+         from(select
+          order_detailes.service_id ,servicetranslations.name ,price, quantity
+          from order_detailes
+          INNER   join servicetranslations
+          ON
+          order_detailes.service_id =servicetranslations.service_id
+          where order_detailes.order_id = :id
+          And
+          servicetranslations.locale=:lang) as service
+          group by service_id
+           ',['id' => $order_id,
+           'lang'=>$lang
+          ]);
         $data['status']=true;
         $data['message']="return order info succeffuly";
         $data['data']['deliverytype']=$deliverytype;
@@ -103,12 +80,12 @@ class OrderController extends Controller
         return response()->json($data);
     }
     public function submitorder(Request $request){
-       // dd($request->all());
+       //dd($request->all());
        try{
         $branchid=Auth::guard('branch-api')->user()->id;
         DB::transaction(function()use(&$order,$request,$branchid)
         {
-     $order=order::create([
+        $order=order::create([
            'branch_id'=>$branchid,
            'customer_name'=>$request->customer_name,
            'customer_phone'=>$request->customer_phone,
@@ -125,21 +102,18 @@ class OrderController extends Controller
                 'service_id'=>$serviceprice['service_id'],
                 'quantity'=>$serviceprice['quantity']
               ]);
-            foreach($serviceprice['additionalservice'] as $additionalservice){
-                $brnchitemprice=Serviceitemprice::select('price')->where('branchitem_id',$serviceprice['branchitem_id'])->where('additionalservice_id',$additionalservice)->first();
-
-                $price=$brnchitemprice->price*$serviceprice['quantity'];
-
-                orderdetailes::create([
-                    'order_id'=>$order->id,
-                    'branchitem_id'=>$serviceprice['branchitem_id'],
-                    'service_id'=>$serviceprice['service_id'],
-                    'price'=>$price,
-                    'additionalservice_id'=>$additionalservice,
-                    'quantity'=>$serviceprice['quantity']
-                  ]);
-            }
         }
+        foreach($request->additionalservices as $additionalservice){
+            orderdetailes::create([
+                'order_id'=>$order->id,
+                'branchitem_id'=>$serviceprice['branchitem_id'],
+                'service_id'=>$serviceprice['service_id'],
+                'price'=>$price,
+                'additionalservice_id'=>$additionalservice['additionalservice_id'],
+                'quantity'=>$serviceprice['quantity']
+              ]);
+        }
+
     });
 } catch (Throwable $e) {
     report($e);
