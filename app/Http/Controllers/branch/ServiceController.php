@@ -222,7 +222,7 @@ class ServiceController extends Controller
        $branchservices=DB::table('brnachservices')
        ->join('services','services.id','=','brnachservices.service_id')
        ->join('servicetranslations','servicetranslations.service_id','=','services.id')->where('locale',$lang)
-       ->select('status','brnachservices.service_id','name')->distinct()->get();
+       ->select('status','brnachservices.service_id','name')->where('branch_id', $branch_id)->distinct()->get();
       if($branchservices->count()==0){
         return response()->json(['status'=>false,'message'=>'no services yet']);
       }
