@@ -229,7 +229,9 @@ class ServiceController extends Controller
       if($branchservices->count()==0){
         return response()->json(['status'=>false,'message'=>'no services yet']);
       }
-     $Branchitem=Branchitem::select('id')->with(['itemadditionalservice.additionalservice'])
+     $Branchitem=Branchitem::select('id')
+     ->whereHas('itemadditionalservice')
+     ->with(['itemadditionalservice.additionalservice'])
     ->where('branch_id', $branch_id)
      ->get()->makehidden('translations');
       $data=[];
@@ -284,6 +286,8 @@ class ServiceController extends Controller
         $data['data']['additionalservice']['status']=$branchAdditionalservice->status;
         return response()->json($data);
     }
+
+    // start edit api
     public $category=[];
     public $service_ids=[];
     public $additionalservice_ids=[];
@@ -300,16 +304,16 @@ class ServiceController extends Controller
             array_push($this->additionalservice_ids,$branchservice->additionalservice_id);
         }
         $additionalservices=Additionalservice::with('categories')->wherein('id',$this->additionalservice_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
-return[
-    'status'=>true,
-    'message'=>'get all pranch services successfully',
-    'data'=>
-    [
-        'services'=> serviceresource::collection($services),
-        'additionalservices'=>  serviceresource::collection($additionalservices),
-    ]
-   ];
-}
+        return[
+            'status'=>true,
+            'message'=>'get all pranch services successfully',
+            'data'=>
+            [
+                'services'=> serviceresource::collection($services),
+                'additionalservices'=>  serviceresource::collection($additionalservices),
+            ]
+        ];
+        }
     public function getcategory(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
         $service_id=$request->service_id;
@@ -356,8 +360,7 @@ return[
        $data['message']="item updates succeffult";
        return response()->json($data);
     }
-
-
+    // end edit api
     public function updateargent(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
         $branch=branch::find($branch_id);
