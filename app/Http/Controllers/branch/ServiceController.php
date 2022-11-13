@@ -130,6 +130,12 @@ class ServiceController extends Controller
         $branchid=$request->branch_id;
         $laundry_id=Auth::guard('laundry_api')->user()->id;
         $branch=branch::where('id',$branchid)->where('laundry_id',$laundry_id)->first();
+        if($branch==null){
+            return response()->json([
+                'status'=>false,
+                'message'=>'you haven not access in this branch or not found',
+            ]);
+        }
             foreach($request->itemprices as $itemprice){
                  $baranchitem= Branchitem::where('item_id',$itemprice['item_id'])->where('branch_id',$request->branch_id)->first();
                     if($baranchitem!=null){
