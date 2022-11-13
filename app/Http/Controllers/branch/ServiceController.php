@@ -54,7 +54,7 @@ class ServiceController extends Controller
     public function setitemprice(Request $request){
         $branchid=$request->branch_id;
         $laundry_id=Auth::guard('laundry_api')->user()->id;
-        $branch=branch::where('baranch_id',$branchid)->where('laundry_id',$laundry_id)->first();
+        $branch=branch::where('id',$branchid)->where('laundry_id',$laundry_id)->first();
         if($branch==null){
             return response()->json([
                 'status'=>false,
