@@ -15,8 +15,9 @@ use App\Models\laundryservice\Additionalservice;
 use App\Models\laundryservice\Serviceitemprice;
 use App\Models\Laundry\branchservice;
 use App\Models\laundryservice\branchAdditionalservice;
-use App\Http\Resources\categoryresource;
+use App\Http\Resources\editservice\categoryresource;
 use App\Http\Resources\editservice\serviceresource;
+use App\Http\Resources\editservice\branchitem as branchitemresource;
 use App\Models\Laundry\branch;
 use App;
 use Auth;
@@ -274,6 +275,9 @@ class ServiceController extends Controller
             $data['message']='this item not fount';
             return response()->json($data);
         }
+
+
+
         $data['status']=true;
         $data['message']='service updated succefully';
         $data['data']['branchitem_id']['id']=$request->branchitem_id;
@@ -284,50 +288,63 @@ class ServiceController extends Controller
     public $service_ids=[];
     public $additionalservice_ids=[];
     public function edit(Request $request){
+      //   return response()->json($gf);
         $branch_id=Auth::guard('branch-api')->user()->id;
         $branchservices=Serviceitemprice::select('service_id')->where('branch_id',$branch_id)->where('service_id','!=',null)->distinct()->get();
         foreach($branchservices as $branchservice){
             array_push($this->service_ids,$branchservice->service_id);
         }
-        $services=Service::wherein('id',$this->service_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
+        $services=Service::select('id')->with(['categories'])->wherein('id',$this->service_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
         $branchservices=Serviceitemprice::select('additionalservice_id')->where('branch_id',$branch_id)->where('additionalservice_id','!=',null)->distinct()->get();
         foreach($branchservices as $branchservice){
             array_push($this->additionalservice_ids,$branchservice->additionalservice_id);
         }
-        $additionalservices=Additionalservice::wherein('id',$this->additionalservice_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
-        $data['status']=true;
-        $data['message']="get pranch services succefully";
-        $data['data']['services']=$services;
-        $data['data']['additionalservices']=$additionalservices;
-        return response()->json($data);
-    }
+        $additionalservices=Additionalservice::with('categories')->wherein('id',$this->additionalservice_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
+return[
+    'status'=>true,
+    'message'=>'get all pranch services successfully',
+    'data'=>
+    [
+        'services'=> serviceresource::collection($services),
+        'additionalservices'=>  serviceresource::collection($additionalservices),
+    ]
+   ];
+}
     public function getcategory(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
         $service_id=$request->service_id;
-        $service=Service::select('id')->listsTranslations('name')->with([
-            'categories.branchitems'=>function($q)use($service_id,$branch_id){
-            $q->with(['branchitemprice'=>function($q)use($service_id,$branch_id){
-                $q->where('service_id',$service_id)->where('branch_id',$branch_id)->get();
-            }])->get();
-        }])->find($service_id)->makehidden('translations');
-          //return response()->json($service);
-        return new  serviceresource($service);
-
+        $category_id=$request->category_id;
+        $brnchitem=Branchitem::whereHas('branchitemprice',function($q)use($service_id,$branch_id,$category_id){
+            $q->where('service_id',$service_id)->where('branch_id',$branch_id)->where('category_id',$category_id);
+        })->with(['branchitemprice'=>function($q)use($service_id,$branch_id,$category_id){
+            $q->where('service_id',$service_id)->where('branch_id',$branch_id)->where('category_id',$category_id)->get();
+        }])->get();
+        return[
+        'status'=>true,
+        'message'=>'get all pranch item price successfully',
+        'data'=>
+        [
+            'branchitem'=> branchitemresource::collection($brnchitem),
+        ]
+        ];
     }
     public function getaditionalservicecategory(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
         $additionalservice_id=$request->additionalservice_id;
-        $additionalservices=Additionalservice::select('id')->listsTranslations('name')->with(['categories.branchitems'=>function($q)use($additionalservice_id,$branch_id){
-            $q->with(['branchitemprice'=>function($q)use($additionalservice_id,$branch_id){
-                $q->where('additionalservice_id',$additionalservice_id)->where('branch_id',$branch_id)->get();
-            }])->whereHas('branchitemprice',function($q){
-                $q->where('additionalservice_id','!=',null);
-            })->get();
-        }])->find($additionalservice_id)->makehidden('translations');
-      //return response()->json($additionalservices);
-
-        return new  serviceresource($additionalservices);
-        dd($additionalservices);
+        $category_id=$request->category_id;
+        $brnchitem=Branchitem::whereHas('branchitemprice',function($q)use($additionalservice_id,$branch_id,$category_id){
+            $q->where('additionalservice_id',$additionalservice_id)->where('branch_id',$branch_id)->where('category_id',$category_id);
+        })->with(['branchitemprice'=>function($q)use($additionalservice_id,$branch_id,$category_id){
+            $q->where('additionalservice_id',$additionalservice_id)->where('branch_id',$branch_id)->where('category_id',$category_id)->get();
+        }])->get();
+        return[
+        'status'=>true,
+        'message'=>'get additional service price successfully',
+        'data'=>
+        [
+            'branchitem'=> branchitemresource::collection($brnchitem),
+        ]
+        ];
     }
     public function updateprice(Request $request){
        foreach($request->branchitemprices as $itrmprice){

@@ -14,7 +14,6 @@ class itemprice extends JsonResource
      */
     public function toArray($request)
     {
-
          if($this->service_id!=null){
             return [
                 'item_price_id' => $this->id,

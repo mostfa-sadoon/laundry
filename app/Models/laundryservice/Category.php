@@ -34,7 +34,7 @@ class Category extends Model implements TranslatableContract
     }
 
     public function itemprice(){
-        return $this->hasMany(Serviceitemprice::class)->select('branchitem_id','price','category_id','service_id');
+        return $this->hasMany(Serviceitemprice::class)->select('branchitem_id','price','category_id','service_id','branch_id');
     }
 
     public function branchitems(){

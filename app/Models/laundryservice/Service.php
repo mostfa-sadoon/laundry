@@ -21,4 +21,8 @@ class Service extends Model implements TranslatableContract
     public function categories(){
         return $this->belongsToMany(Category::class);
     }
+
+    public function serviceprice(){
+        return $this->hasMany(Serviceitemprice::class);
+    }
 }

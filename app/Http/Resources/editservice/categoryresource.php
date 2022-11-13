@@ -17,7 +17,7 @@ class categoryresource extends JsonResource
         return [
             'category_id' => $this->id,
             'name' => $this->name,
-            'branchitems'=>branchitem::collection($this->branchitems),
+            //'branchitems'=>branchitem::collection($this->branchitems),
         ];
     }
 }
