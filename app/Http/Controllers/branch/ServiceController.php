@@ -51,62 +51,16 @@ class ServiceController extends Controller
         $data['data']['categoryitems']=$categoryitems;
         return response()->json($data);
     }
-    // public function setitemprice(Request $request){
-    //    // dd($request->services[0]->categories[0]);
-    //     $branchid=$request->branch_id;
-    //     DB::transaction(function()use($request,$branchid)
-    //     {
-    //        foreach($request->services as $service){
-    //             foreach($service['categories'] as $category){
-    //                  foreach($category['items'] as $item){
-    //                     $baranchitem=Branchitem::where('branch_id',$branchid)->where('category_id',$category['category_id'])->where('item_id',$item['item_id'])->first();
-    //                    if($baranchitem==null){
-    //                     $baranchitem= Branchitem::create([
-    //                         'category_id'=>$category['category_id'],
-    //                         'item_id'=>$item['item_id'],
-    //                         'branch_id'=>$branchid
-    //                      ]);
-    //                      $mainitem=Item::where('id',$item['item_id'])->first();
-    //                      foreach(config('translatable.locales') as $locale){
-    //                             BranchitemTranslation::create([
-    //                                 'name'=>$mainitem->translate($locale)->name,
-    //                                 'locale'=>$locale,
-    //                                 'branchitem_id'=>$baranchitem->id,
-    //                             ]);
-    //                         }
-    //                    }
-    //                  }
-    //             }
-    //             $branchservices=branchservice::where('service_id',$service['service_id'])->where('branch_id',$branchid)->first();
-    //             branchservice::create([
-    //                 'service_id'=>$service['service_id'],
-    //                 'branch_id'=>$branchid
-    //             ]);
-    //        }
-    //        foreach($request->services as $service){
-    //         foreach($service['categories'] as $category){
-    //              foreach($category['items'] as $item){
-    //                 $Branchitem=Branchitem::where('branch_id',$branchid)->where('item_id',$item['item_id'])->first();
-    //                 $serviceitemprice= Serviceitemprice::where('service_id',$service['service_id'])->where('branchitem_id',$Branchitem->id)->first();
-    //                 if($serviceitemprice==null){
-    //                     $serviceitemprice=Serviceitemprice::create([
-    //                         'branchitem_id'=>$Branchitem->id,
-    //                         'category_id'=>$category['category_id'],
-    //                         'branch_id'=>$branchid,
-    //                         'service_id'=>$service['service_id'],
-    //                         'price'=>$item['price'],
-    //                      ]);
-    //                 }
-    //              }
-    //          }
-    //         }
-    //     });
-    //     return response()->json(['status'=>true,'message'=>'service prices added successfully']);
-    // }
-
-
     public function setitemprice(Request $request){
         $branchid=$request->branch_id;
+        $laundry_id=Auth::guard('laundry_api')->user()->id;
+        $branch=branch::where('baranch_id',$branchid)->where('laundry_id',$laundry_id)->first();
+        if($branch==null){
+            return response()->json([
+                'status'=>false,
+                'message'=>'you haven not access in this branch or not found',
+            ]);
+        }
         DB::transaction(function()use($request,$branchid)
         {
         foreach($request->itemprices as $itemprice){
@@ -174,6 +128,8 @@ class ServiceController extends Controller
     }
     public function setaditionalserviceprice(Request $request){
         $branchid=$request->branch_id;
+
+
     //     foreach($request->aditionalservices as $service){
     //         foreach($service['categories'] as $category){
     //              foreach($category['items'] as $item){
