@@ -141,7 +141,7 @@ class ServiceController extends Controller
                     if($baranchitem!=null){
                         $serviceitemprice=Serviceitemprice::where('branchitem_id',$baranchitem->id)
                         ->where('additionalservice_id',$itemprice['additionalservice_id'])
-                        ->where('branch_id',$branch_id)->first();
+                        ->where('branch_id',$branchid)->first();
                         if($serviceitemprice==null){
                             $serviceitemprice=Serviceitemprice::create([
                                 'branchitem_id'=>$baranchitem->id,
