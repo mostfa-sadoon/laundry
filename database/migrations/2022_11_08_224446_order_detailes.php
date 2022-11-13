@@ -26,6 +26,7 @@ class OrderDetailes extends Migration
             $table->foreign('additionalservice_id')->references('id')->on('additionalservices')->onDelete('cascade');
             $table->double('price');
             $table->integer('quantity')->nullable();
+            $table->integer('argentquantity');
             // $table->unsignedBigInteger('items_price_id');
             // $table->foreign('items_price_id')->references('id')->on('serviceitems_price')->onDelete('cascade');
             $table->timestamps();

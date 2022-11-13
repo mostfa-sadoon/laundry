@@ -333,4 +333,6 @@ class ServiceController extends Controller
        $data['message']="item updates succeffult";
        return response()->json($data);
     }
+
+  
 }

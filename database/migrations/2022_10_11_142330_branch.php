@@ -19,6 +19,7 @@ class branch extends Migration
             $table->string('username')->unique();
             $table->string('country_code');
             $table->string('phone')->unique();
+            $table->boolean('argent')->default(true);
             $table->string('lat');
             $table->string('long');
             $table->string('password');

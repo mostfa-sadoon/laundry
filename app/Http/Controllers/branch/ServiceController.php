@@ -17,6 +17,7 @@ use App\Models\Laundry\branchservice;
 use App\Models\laundryservice\branchAdditionalservice;
 use App\Http\Resources\categoryresource;
 use App\Http\Resources\editservice\serviceresource;
+use App\Models\Laundry\branch;
 use App;
 use Auth;
 class ServiceController extends Controller
@@ -218,7 +219,8 @@ class ServiceController extends Controller
     public function branchservices(Request $request){
       $lang=$request->header('lang');
       App::setLocale($lang);
-      $branch_id=Auth::guard('branch-api')->user()->id;
+       $branch_id=Auth::guard('branch-api')->user()->id;
+       $branch=branch::select('argent')->find($branch_id);
        $branchservices=DB::table('brnachservices')
        ->join('services','services.id','=','brnachservices.service_id')
        ->join('servicetranslations','servicetranslations.service_id','=','services.id')->where('locale',$lang)
@@ -232,6 +234,7 @@ class ServiceController extends Controller
       $data=[];
       $data['status']=true;
       $data['message']="get All services succesfully";
+      $data['data']['argent']=$branch->argent;
       $data['data']['branchservices']=$branchservices;
       $data['data']['Branchitem']=$Branchitem;
       return response()->json($data);
@@ -335,5 +338,24 @@ class ServiceController extends Controller
        $data['status']=true;
        $data['message']="item updates succeffult";
        return response()->json($data);
+    }
+
+
+    public function updateargent(Request $request){
+        $branch_id=Auth::guard('branch-api')->user()->id;
+        $branch=branch::find($branch_id);
+        if($branch->argent==0){
+           $branch->update([
+              'argent'=>true
+           ]);
+        }else{
+            $branch->update([
+                'argent'=>false
+             ]);
+        }
+        $data['status']=true;
+        $data['message']="update argent succesfully";
+        $data['data']['argent']=$branch->argent;
+        return response()->json($data);
     }
 }
