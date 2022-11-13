@@ -226,7 +226,9 @@ class ServiceController extends Controller
       if($branchservices->count()==0){
         return response()->json(['status'=>false,'message'=>'no services yet']);
       }
-     $Branchitem=Branchitem::select('id')->with(['itemadditionalservice.additionalservice'])->get()->makehidden('translations');
+     $Branchitem=Branchitem::select('id')->with(['itemadditionalservice.additionalservice'])
+     ->where('branch_id', $branch_id)
+     ->get()->makehidden('translations');
       $data=[];
       $data['status']=true;
       $data['message']="get All services succesfully";
