@@ -139,19 +139,27 @@ class ServiceController extends Controller
             foreach($request->itemprices as $itemprice){
                  $baranchitem= Branchitem::where('item_id',$itemprice['item_id'])->where('branch_id',$request->branch_id)->first();
                     if($baranchitem!=null){
-                        $serviceitemprice=Serviceitemprice::create([
-                            'branchitem_id'=>$baranchitem->id,
-                            'branch_id'=>$branchid,
-                            'additionalservice_id'=>$itemprice['additionalservice_id'],
-                            'category_id'=>$itemprice['category_id'],
-                            'price'=>$itemprice['price'],
-                            ]);
-
-                            branchAdditionalservice::create([
+                        $serviceitemprice=Serviceitemprice::where('branchitem_id',$baranchitem->id)
+                        ->where('additionalservice_id',$itemprice['additionalservice_id'])
+                        ->where('branch_id',$branch_id)->first();
+                        if($serviceitemprice==null){
+                            $serviceitemprice=Serviceitemprice::create([
                                 'branchitem_id'=>$baranchitem->id,
                                 'branch_id'=>$branchid,
                                 'additionalservice_id'=>$itemprice['additionalservice_id'],
-                        ]);
+                                'category_id'=>$itemprice['category_id'],
+                                'price'=>$itemprice['price'],
+                                ]);
+
+                                branchAdditionalservice::create([
+                                    'branchitem_id'=>$baranchitem->id,
+                                    'branch_id'=>$branchid,
+                                    'additionalservice_id'=>$itemprice['additionalservice_id'],
+                            ]);
+                        }
+
+
+
             }
             }
         return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
