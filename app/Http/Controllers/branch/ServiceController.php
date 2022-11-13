@@ -245,7 +245,9 @@ class ServiceController extends Controller
         foreach($branchservices as $branchservice){
             array_push($this->service_ids,$branchservice->service_id);
         }
-        $services=Service::select('id')->with(['categories'])->wherein('id',$this->service_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
+        $services=Service::select('id')->with(['categories'=>function($q){
+            $q->whereHas('branchitems');
+        }])->wherein('id',$this->service_ids)->select('id')->get()->makehidden(['created_at','updated_at']);
         $branchservices=Serviceitemprice::select('additionalservice_id')->where('branch_id',$branch_id)->where('additionalservice_id','!=',null)->distinct()->get();
         foreach($branchservices as $branchservice){
             array_push($this->additionalservice_ids,$branchservice->additionalservice_id);
