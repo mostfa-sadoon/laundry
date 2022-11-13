@@ -128,31 +128,8 @@ class ServiceController extends Controller
     }
     public function setaditionalserviceprice(Request $request){
         $branchid=$request->branch_id;
-
-
-    //     foreach($request->aditionalservices as $service){
-    //         foreach($service['categories'] as $category){
-    //              foreach($category['items'] as $item){
-    //                 $baranchitem= Branchitem::where('item_id',$item['item_id'])->where('branch_id',$request->branch_id)->first();
-    //                 if($baranchitem!=null){
-    //                     $serviceitemprice=Serviceitemprice::create([
-    //                         'branchitem_id'=>$baranchitem->id,
-    //                         'branch_id'=>$branchid,
-    //                         'additionalservice_id'=>$service['additionalservice_id'],
-    //                         'category_id'=>$category['category_id'],
-    //                         'price'=>$item['price'],
-    //                      ]);
-
-    //                      branchAdditionalservice::create([
-    //                         'branchitem_id'=>$baranchitem->id,
-    //                         'branch_id'=>$branchid,
-    //                         'additionalservice_id'=>$service['additionalservice_id'],
-    //                 ]);
-    //                 }
-    //              }
-    //         }
-    //    }
-    //    return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
+        $laundry_id=Auth::guard('laundry_api')->user()->id;
+        $branch=branch::where('id',$branchid)->where('laundry_id',$laundry_id)->first();
             foreach($request->itemprices as $itemprice){
                  $baranchitem= Branchitem::where('item_id',$itemprice['item_id'])->where('branch_id',$request->branch_id)->first();
                     if($baranchitem!=null){
