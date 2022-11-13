@@ -227,7 +227,7 @@ class ServiceController extends Controller
         return response()->json(['status'=>false,'message'=>'no services yet']);
       }
      $Branchitem=Branchitem::select('id')->with(['itemadditionalservice.additionalservice'])
-     ->where('branch_id', $branch_id)
+    ->where('branch_id', $branch_id)
      ->get()->makehidden('translations');
       $data=[];
       $data['status']=true;
@@ -301,7 +301,8 @@ class ServiceController extends Controller
     public function getcategory(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
         $service_id=$request->service_id;
-        $service=Service::select('id')->listsTranslations('name')->with(['categories.branchitems'=>function($q)use($service_id,$branch_id){
+        $service=Service::select('id')->listsTranslations('name')->with([
+            'categories.branchitems'=>function($q)use($service_id,$branch_id){
             $q->with(['branchitemprice'=>function($q)use($service_id,$branch_id){
                 $q->where('service_id',$service_id)->where('branch_id',$branch_id)->get();
             }])->get();
@@ -316,7 +317,9 @@ class ServiceController extends Controller
         $additionalservices=Additionalservice::select('id')->listsTranslations('name')->with(['categories.branchitems'=>function($q)use($additionalservice_id,$branch_id){
             $q->with(['branchitemprice'=>function($q)use($additionalservice_id,$branch_id){
                 $q->where('additionalservice_id',$additionalservice_id)->where('branch_id',$branch_id)->get();
-            }])->get();
+            }])->whereHas('branchitemprice',function($q){
+                $q->where('additionalservice_id','!=',null);
+            })->get();
         }])->find($additionalservice_id)->makehidden('translations');
       //return response()->json($additionalservices);
 
