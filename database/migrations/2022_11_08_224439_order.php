@@ -17,6 +17,7 @@ class Order extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->enum("status",['payied','unpaied'])->default('unpaied');
+            $table->enum('progress',['indelivery','inprogress','completed'])->default('inprogress');
             $table->boolean('checked')->default(false);
             $table->string('customer_name');
             $table->string('customer_phone');

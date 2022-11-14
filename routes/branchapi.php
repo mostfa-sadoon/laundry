@@ -62,5 +62,7 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
         Route::get('order/item/detailes{item_id?}','itemdetailes');
         Route::get('order/info{order_id?}','orderinfo');
         Route::post('order/submit','submitorder');
+        Route::get('order/cancel{order_id?}','cancelorder');
+        Route::get('order/check{order_id?}','checkorder');
     });
 });
