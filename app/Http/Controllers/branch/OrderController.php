@@ -133,20 +133,29 @@ class OrderController extends Controller
         App::setLocale($lang);
         $deliverytype=delivery_type::select('id')->get()->makehidden('translations');
         $paymentmethods=payment_method::select('id')->get()->makehidden('translations');
-         $orderdetailes= DB::select('select service.name, sum(price) as price ,sum(service.quantity) as quantity
-         from(select
-          order_detailes.service_id ,servicetranslations.name ,price, quantity
-          from order_detailes
-          INNER   join servicetranslations
-          ON
-          order_detailes.service_id =servicetranslations.service_id
-          where order_detailes.order_id = :id
-          And
-          servicetranslations.locale=:lang) as service
-          group by service_id
-           ',['id' => $order_id,
-           'lang'=>$lang
-          ]);
+        //  $orderdetailes= DB::select('select service.name, sum(price) as price ,sum(service.quantity) as quantity
+        //  from(select
+        //   order_detailes.service_id ,servicetranslations.name ,price, quantity
+        //   from order_detailes
+        //   INNER   join servicetranslations
+        //   ON
+        //   order_detailes.service_id =servicetranslations.service_id
+        //   where order_detailes.order_id = :id
+        //   And
+        //   servicetranslations.locale=:lang) as service
+        //   group by service_id
+        //    ',['id' => $order_id,
+        //    'lang'=>$lang
+        //   ]);
+          $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
+          ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
+          ->selectRaw('sum(price) as total')
+          ->where('order_detailes.order_id',$order_id)
+          ->where('servicetranslations.locale',$lang)
+          ->groupBy('servicetranslations.service_id')
+          ->get()
+          ;
+
         $argentprice=Argent::where('order_id',$order_id)->sum('price');
         $data['status']=true;
         $data['message']="return order info succeffuly";
