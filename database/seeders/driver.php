@@ -26,14 +26,14 @@ class driver extends Seeder
                 "id"=>2,
                 "name"=>'nada',
                 "email"=>'nada@gmail.com',
-                "phone"=>'05525566552',
+                "phone"=>'01154894535',
                 "country_code"=>'011',
                 "status"=>'online'
              ], [
                 "id"=>3,
                 "name"=>'mubarak',
                 "email"=>'mubark@gmail.com',
-                "phone"=>'055652334',
+                "phone"=>'01066074066',
                 "country_code"=>'011',
                 "status"=>'online'
              ], [

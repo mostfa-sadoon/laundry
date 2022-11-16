@@ -16,7 +16,7 @@ class driverController extends Controller
     $driver_id=Auth::guard('driver_api')->user()->id;
         $driver=Driver::find($driver_id);
         if($driver->status=='online'){
-           $driver->update(['status'=>'ofline']);
+           $driver->update(['status'=>'offline']);
         }else{
             $driver->update(['status'=>'online']);
         }
@@ -47,13 +47,14 @@ class driverController extends Controller
                'message'=>$validator->messages()->first()
            ],403);
            }
-
-        if($request->phone==$driver->phone){
-            $driver->update(request(['name','email']));
+           $driver->update([
+            'name'=>$request->name,
+            'email'=>$request->email
+        ]);
             $data['status']=true;
             $data['message']="profile info updated successfully";
             return response()->json($data);
-        }else{
+            if($request->phone!=$driver->phone){
             $driver->update([
                 'otp'=>1234,
               ]);

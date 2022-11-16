@@ -11,7 +11,9 @@ class AuthController extends Controller
 {
     //
     public function login(Request $request){
+      
        $driver=Driver::where('phone',$request->phone)->first();
+
        if($driver==null){
           $data['status']=false;
           $data['message']="some thing is wrong";
