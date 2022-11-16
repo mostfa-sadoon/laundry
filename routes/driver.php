@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::controller(AuthController::class)->group(function () {
     Route::post('login','login');
-    Route::post('sendtoken','sendtoken');
+    Route::post('sendtotp','sendtotp');
 });
 
 Route::group(['middleware' => 'driverApiAuth'],function(){

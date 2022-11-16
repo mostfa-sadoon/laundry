@@ -5,6 +5,8 @@ namespace App\Http\Controllers\driver;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Driver\Driver;
+use Validator;
+
 use Auth;
 
 class driverController extends Controller
@@ -26,15 +28,26 @@ class driverController extends Controller
     public function driverinfo()
     {
         $driver_id=Auth::guard('driver_api')->user()->id;
-        $driver=Driver::select('name','email','phone')->find($driver_id);
+        $driver=Driver::select('name','email','phone','id')->find($driver_id);
         $data['status']=true;
         $data['message']="get driver info";
         $data['data']['driver']=$driver;
         return response()->json($data);
     }
     public function updateinfo(Request $request){
-        dd($request->all);
+        $driver_id=Auth::guard('driver_api')->user()->id;
         $driver=Driver::select('name','email','phone')->find($driver_id);
+        $validator =Validator::make($request->all(),[
+            'name'=>'required|unique:drivers',
+            'email'=>'required|unique:drivers,email,'.$driver_id,
+            'phone'=>'required|unique:drivers,phone,'.$driver_id,
+          ]);
+          if ($validator->fails()) {
+           return response()->json([
+               'message'=>$validator->messages()->first()
+           ],403);
+           }
+
         if($request->phone==$driver->phone){
             $driver->update(request(['name','email']));
             $data['status']=true;

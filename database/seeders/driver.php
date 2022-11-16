@@ -42,7 +42,7 @@ class driver extends Seeder
                 "email"=>'ahmed@gmail.com',
                 "phone"=>'05525222233',
                 "country_code"=>'011',
-                "status"=>'ofline'
+                "status"=>'offline'
              ], [
                 "id"=>5,
                 "name"=>'Hamdey',

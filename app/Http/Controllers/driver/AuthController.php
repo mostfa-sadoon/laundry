@@ -26,7 +26,7 @@ class AuthController extends Controller
         return response()->json($data);
        }
     }
-    public function sendtoken(Request $request){
+    public function sendtotp(Request $request){
        $driver=Driver::where('otp',$request->otp)->where('phone',$request->phone)->first();
        if($driver==null){
         $data['status']=false;
@@ -36,9 +36,12 @@ class AuthController extends Controller
        if (!$token = auth()->guard('driver_api')->tokenById($driver->id)) {
         return response()->json(['message' => 'token is false'], 401);
        }
-       if($driver->status=='ofline'){
+       if($driver->status=='offline'){
         $driver->update([
-            'status'=>'ofline'
+            'status'=>'online'
+        ]);
+        $driver->update([
+            'upt'=>null
         ]);
        }
        $data['status']=true;
