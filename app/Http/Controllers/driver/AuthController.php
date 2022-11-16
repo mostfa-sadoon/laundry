@@ -40,10 +40,10 @@ class AuthController extends Controller
         $driver->update([
             'status'=>'online'
         ]);
-        $driver->update([
-            'upt'=>null
-        ]);
        }
+       $driver->update([
+        'otp'=>null
+        ]);
        $data['status']=true;
        $data['message']="login succesfully";
        $data['data']['token']=$token;

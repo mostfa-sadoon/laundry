@@ -58,8 +58,29 @@ class driverController extends Controller
                 'otp'=>1234,
               ]);
               $data['status']=true;
-              $data['message']="please send otp in the next request";
+              $data['message']="please send otp in the next request with phone number";
               return response()->json($data);
         }
+    }
+
+    public function updatephone(Request $request){
+        $driver=Driver::where('otp',$request->otp)->first();
+        if($driver==null){
+         $data['status']=false;
+         $data['message']="some thing is wrong";
+         return response()->json($data,401);
+        }
+        if (!$token = auth()->guard('driver_api')->tokenById($driver->id)) {
+         return response()->json(['message' => 'token is false'], 401);
+        }
+         $driver->update([
+             'otp'=>null
+         ]);
+        $driver->update([
+           'phone'=>$request->phone
+        ]);
+        $data['status']=true;
+        $data['message']="profile info updated successfully";
+        return response()->json($data);
     }
 }
