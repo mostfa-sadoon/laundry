@@ -29,5 +29,7 @@ Route::group(['middleware' => 'driverApiAuth'],function(){
     });
     Route::controller(driverController::class)->group(function () {
         Route::get('update/status','updatestatus');
+        Route::get('get/driverinfo','driverinfo');
+        
     });
 });
