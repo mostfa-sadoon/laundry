@@ -31,8 +31,6 @@ class AuthController extends Controller
        $password=$request->otp;
        $credentials = request(['otp','phone']);
        $driver=Driver::where('otp',$request->otp)->first();
-
-       //dd($driver->id);
        if (!$token = auth()->guard('branch-api')->fromUser($driver)) {
         return response()->json(['message' => 'token is false'], 401);
        }
