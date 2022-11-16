@@ -22,8 +22,7 @@ class AuthController extends Controller
           'password'=>Hash::make(1234)
         ]);
         $data['status']=false;
-        $data['message']="some thing is wrong";
-        $data['data']['otp']=1234;
+        $data['message']="please send otp in the next request";
         return response()->json($data);
        }
     }
