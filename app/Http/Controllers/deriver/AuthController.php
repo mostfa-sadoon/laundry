@@ -34,9 +34,15 @@ class AuthController extends Controller
        if (!$token = auth()->guard('branch-api')->fromUser($driver)) {
         return response()->json(['message' => 'token is false'], 401);
        }
+       if($driver->status=='ofline'){
+        $driver->update([
+            'status'=>'ofline'
+        ]);
+       }
        $data['status']=true;
        $data['message']="login succesfully";
        $data['data']['token']=$token;
+       $data['driver']['name']=$driver->name;
        return response()->json($data);
     }
 }
