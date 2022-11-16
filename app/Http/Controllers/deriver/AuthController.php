@@ -31,7 +31,7 @@ class AuthController extends Controller
        $password=$request->otp;
        $credentials = request(['otp','phone']);
        $driver=Driver::where('otp',$request->otp)->first();
-       if (!$token = auth()->guard('branch-api')->fromUser($driver)) {
+       if (!$token = auth()->guard('driver_api  ')->fromUser($driver)) {
         return response()->json(['message' => 'token is false'], 401);
        }
        if($driver->status=='ofline'){
@@ -44,5 +44,12 @@ class AuthController extends Controller
        $data['data']['token']=$token;
        $data['data']['name']=$driver->name;
        return response()->json($data);
+    }
+    public function logout(){
+        Auth::guard('branch-api')->logout();
+        return response()->json([
+            'status' => true,
+            'message'=>'logout success',
+        ]);
     }
 }

@@ -22,3 +22,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('login','login');
     Route::post('sendtoken','sendtoken');
 });
+
+Route::group(['middleware' => 'driverApiAuth'],function(){
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('driver/logout','logout');
+    });
+});
