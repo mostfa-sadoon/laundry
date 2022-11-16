@@ -18,7 +18,7 @@ class AuthController extends Controller
           return response()->json($data,401);
        }else{
         $driver->update([
-          'otp'=>123456,
+          'otp'=>1234,
           'password'=>Hash::make(1234)
         ]);
         $data['status']=false;
