@@ -23,4 +23,13 @@ class driverController extends Controller
         $data['data']['driver_status']=$driver->status;
         return response()->json($data);
     }
+    public function driverinfo()
+    {
+        $driver_id=Auth::guard('driver_api')->user()->id;
+        $driver=Driver::select('name','email','phone')->find($driver_id);
+        $data['status']=true;
+        $data['message']="get driver info";
+        $data['data']['driver']=$driver;
+        return response()->json($data);
+    }
 }
