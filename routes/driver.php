@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\deriver\AuthController;
-
+use App\Http\Controllers\driver\AuthController;
+use App\Http\Controllers\driver\driverController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,5 +26,8 @@ Route::controller(AuthController::class)->group(function () {
 Route::group(['middleware' => 'driverApiAuth'],function(){
     Route::controller(AuthController::class)->group(function () {
         Route::get('logout','logout');
+    });
+    Route::controller(driverController::class)->group(function () {
+        Route::get('update/status','updatestatus');
     });
 });
