@@ -24,7 +24,7 @@ use App;
 
 class OrderController extends Controller
 {
-    //
+    // test
     public $service_ids=[];
     public function getservice(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
@@ -133,7 +133,7 @@ class OrderController extends Controller
         App::setLocale($lang);
         $deliverytype=delivery_type::select('id')->get()->makehidden('translations');
         $paymentmethods=payment_method::select('id')->get()->makehidden('translations');
-        //  $orderdetailes= DB::select('select service.name, sum(price) as price ,sum(service.quantity) as quantity
+        //  $orderdetailes= DB::select('select service.name
         //  from(select
         //   order_detailes.service_id ,servicetranslations.name ,price, quantity
         //   from order_detailes
@@ -144,15 +144,39 @@ class OrderController extends Controller
         //   And
         //   servicetranslations.locale=:lang) as service
         //   group by service_id
-        //    ',['id' => $order_id,
-        //    'lang'=>$lang
+        //   ',['id' => $order_id,
+        //   'lang'=>$lang
         //   ]);
-          $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
+
+
+        //   $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
+        //   ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
+        //   ->selectRaw('sum(price) as total')
+        //   ->where('order_detailes.order_id',$order_id)
+        //   ->where('servicetranslations.locale',$lang)
+        //   ->groupBy('servicetranslations.service_id')
+        //   ->get()
+        //   ;
+
+
+        //          $orderdetailes= DB::table('order_detailes')
+        //   ->selectRaw('sum(price) as total',)
+        //   ->selectRaw('sum(quantity) as quantity')
+        //   ->where('order_id',$order_id)
+        //   ->groupBy('order_detailes.service_id')
+        //   ->get();
+
+
+            $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
           ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
           ->selectRaw('sum(price) as total')
+          ->selectRaw('sum(quantity) as quantity')
+          ->selectRaw('servicetranslations.name')
           ->where('order_detailes.order_id',$order_id)
           ->where('servicetranslations.locale',$lang)
+          ->where('order_detailes.additionalservice_id','=',null)
           ->groupBy('servicetranslations.service_id')
+          ->groupBy('servicetranslations.name')
           ->get()
           ;
 

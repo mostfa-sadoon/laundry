@@ -48,6 +48,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'laundries',
         ],
+        'driver_api' => [
+            'driver' => 'jwt',
+            'provider' => 'drivers',
+        ],
     ],
 
     /*
@@ -79,6 +83,10 @@ return [
         'branchs' => [
             'driver' => 'eloquent',
             'model' => App\Models\Laundry\branch::class,
+        ],
+        'drivers' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Driver\Driver::class,
         ],
 
         // 'users' => [

@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(driver::class);
         $this->call(service::class);
         $this->call(servicetranslation::class);
         $this->call(Aditionalservice::class);
@@ -29,8 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(itemtranslations::class);
         $this->call(closeingday::class);
         $this->call(closeingdaytranslation::class);
-
-
         $this->call(payment_method::class);
         $this->call(payment_method_trnasltions::class);
         $this->call(delivery_type::class);
