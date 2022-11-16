@@ -42,7 +42,7 @@ class AuthController extends Controller
        $data['status']=true;
        $data['message']="login succesfully";
        $data['data']['token']=$token;
-       $data['driver']['name']=$driver->name;
+       $data['data']['name']=$driver->name;
        return response()->json($data);
     }
 }
