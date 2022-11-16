@@ -19,7 +19,7 @@ class AuthController extends Controller
        }else{
         $driver->update([
           'otp'=>123456,
-          'password'=>Hash::make(123456)
+          'password'=>Hash::make(1234)
         ]);
         $data['status']=false;
         $data['message']="some thing is wrong";
