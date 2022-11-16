@@ -23,7 +23,7 @@ class AuthController extends Controller
         ]);
         $data['status']=false;
         $data['message']="some thing is wrong";
-        $data['data']['otp']=123456;
+        $data['data']['otp']=1234;
         return response()->json($data);
        }
     }
