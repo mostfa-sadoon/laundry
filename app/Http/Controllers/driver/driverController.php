@@ -37,8 +37,16 @@ class driverController extends Controller
         $driver=Driver::select('name','email','phone')->find($driver_id);
         if($request->phone==$driver->phone){
             $driver->update(request(['name','email']));
+            $data['status']=true;
+            $data['message']="profile info updated successfully";
+            return response()->json($data);
         }else{
-            
+            $driver->update([
+                'otp'=>1234,
+              ]);
+              $data['status']=true;
+              $data['message']="please send otp in the next request";
+              return response()->json($data);
         }
     }
 }
