@@ -4,6 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Auth;
+use JWTAuth;
+use Exception;
 
 class driverApiAuth
 {
@@ -17,7 +20,7 @@ class driverApiAuth
     public function handle(Request $request, Closure $next)
     {
         if ($request->header('Authorization')) {
-            if (Auth::guard('driver-api')->check()) {
+            if (Auth::guard('driver_api')->check()) {
                 try {
                     JWTAuth::parseToken()->authenticate();
                 } catch (Exception $exception) {

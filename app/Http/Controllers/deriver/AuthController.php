@@ -27,11 +27,13 @@ class AuthController extends Controller
        }
     }
     public function sendtoken(Request $request){
-       //dd($request->all());
-       $password=$request->otp;
-       $credentials = request(['otp','phone']);
-       $driver=Driver::where('otp',$request->otp)->first();
-       if (!$token = auth()->guard('branch-api')->fromUser($driver)) {
+       $driver=Driver::where('otp',$request->otp)->where('phone',$request->phone)->first();
+       if($driver==null){
+        $data['status']=false;
+        $data['message']="some thing is wrong";
+        return response()->json($data,401);
+       }
+       if (!$token = auth()->guard('driver_api')->tokenById($driver->id)) {
         return response()->json(['message' => 'token is false'], 401);
        }
        if($driver->status=='ofline'){
@@ -46,7 +48,7 @@ class AuthController extends Controller
        return response()->json($data);
     }
     public function logout(){
-        Auth::guard('branch-api')->logout();
+        Auth::guard('driver_api')->logout();
         return response()->json([
             'status' => true,
             'message'=>'logout success',

@@ -25,6 +25,6 @@ Route::controller(AuthController::class)->group(function () {
 
 Route::group(['middleware' => 'driverApiAuth'],function(){
     Route::controller(AuthController::class)->group(function () {
-        Route::get('driver/logout','logout');
+        Route::get('logout','logout');
     });
 });

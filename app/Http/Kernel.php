@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'assign.guard' => \App\Http\Middleware\AssignGuard::class,
         'lundryApiAuth' => \App\Http\Middleware\lundryApiAuth::class,
         'branchApiAuth' => \App\Http\Middleware\branchApiAuth::class,
+        'driverApiAuth' => \App\Http\Middleware\driverApiAuth::class,
     ];
 }
