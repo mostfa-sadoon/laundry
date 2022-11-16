@@ -32,4 +32,13 @@ class driverController extends Controller
         $data['data']['driver']=$driver;
         return response()->json($data);
     }
+    public function updateinfo(Request $request){
+        dd($request->all);
+        $driver=Driver::select('name','email','phone')->find($driver_id);
+        if($request->phone==$driver->phone){
+            $driver->update(request(['name','email']));
+        }else{
+            
+        }
+    }
 }
