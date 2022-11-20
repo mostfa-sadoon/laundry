@@ -51,6 +51,19 @@ class OrderController extends Controller
         $driver_id=Auth::guard('driver_api')->user()->id;
         $lang=$request->header('lang');
         App::setLocale($lang);
+        $order=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
+        ->join('orders','orders.id','=','order_detailes.order_id')
+        ->selectRaw('orders.id')
+        ->selectRaw('sum(order_detailes.price) as price')
+        ->groupBy('orders.id')
+        ->first();
+        $orderargentprice=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
+        ->join('orders','orders.id','=','order_detailes.order_id')
+        ->join('argent','orders.id','=','argent.order_id')
+        ->selectRaw('sum(argent.price) as argentprice')
+         ->groupBy('argent.id')
+         ->first();
+         $order->price=$order->price+$orderargentprice->argentprice;
         // this query get services with count of item in it
         $services=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
         ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
@@ -112,12 +125,21 @@ class OrderController extends Controller
        ->where('branchitemtranslations.locale',$lang)
         ->get();
 
+       $argents=db::table('argent')->where('order_id',$order_id)->get();
+
+
 
            foreach($items as $key=>$item){
             $item->additonalservice=[];
             foreach($additionals as $additional){
                 if($item->item_id==$additional->item_id){
                     array_push($item->additonalservice,$additional);
+                }
+             }
+             foreach($argents as $argent){
+                $item->argent=0;
+                if($item->item_id==$argent->branchitem_id){
+                    $item->argent=$argent->quantity;
                 }
              }
            }
@@ -138,7 +160,9 @@ class OrderController extends Controller
 
         $data['status']=true;
         $data['message']="get new orders suceesfully";
+        $data['data']['order']=$order;
         $data['data']['serives']=$services;
+
         return response()->json($data);
     }
 }
