@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Order\order;
 use App\Models\Order\orderdetailes;
 use App\Models\laundryservice\Serviceitemprice;
+use App\Models\Order\OrderDriveryStatus;
 use App\Models\Laundry\branch;
 use Auth;
 use App;
@@ -69,6 +70,11 @@ class OrderController extends Controller
             'lat'=>$request->lat,
             'long'=>$request->long,
             'driver_id'=>1,
+         ]);
+         OrderDriveryStatus::create([
+            'order_id'=>$order->id,
+            'driver_id'=>1,
+            'order_status'=>'pick_up_laundy'
          ]);
          foreach($request->serviceprices as  $serviceprice){
              $price=$serviceprice['quantity']*$serviceprice['price'];

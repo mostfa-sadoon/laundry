@@ -40,5 +40,6 @@ Route::group(['middleware' => 'driverApiAuth'],function(){
         Route::get('acceptorder/order{order_id?}','confirmorder');
         Route::get('reject/order{order_id?}','rejectorder');
         Route::get('order/info{order_id?}','orderinfo');
+        Route::get('order/inprogress','inprogressorder');
     });
 });
