@@ -20,6 +20,8 @@ class Deliver extends Migration
             $table->string('country_code');
             $table->string('phone')->uniqe();
             $table->string('email')->uniqe();
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
             $table->enum('status',['online','offline']);
             $table->string('otp')->nullable();
             $table->string('password')->nullable();

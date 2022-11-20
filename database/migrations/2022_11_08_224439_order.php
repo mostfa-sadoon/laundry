@@ -18,12 +18,15 @@ class Order extends Migration
             $table->id();
             $table->enum("status",['payied','unpaied'])->default('unpaied');
             $table->enum('progress',['indelivery','inprogress','completed'])->default('inprogress');
+            $table->enum('delivery_status',['inprogress','completed'])->nullable();
+            $table->unsignedBigInteger('driver_id')->nullable();
+            $table->foreign('driver_id')->references('id')->on('drivers')->onDelete('cascade');
             $table->boolean('checked')->default(false);
             $table->string('customer_name');
             $table->string('customer_phone');
             $table->string('customer_location');
-            $table->string('lat');
-            $table->string('long');
+            $table->string('lat')->nullable();
+            $table->string('long')->nullable();
             $table->unsignedBigInteger('branch_id');
             $table->foreign('branch_id')->references('id')->on('branchs')->onDelete('cascade');
             $table->unsignedBigInteger('delivery_type_id')->nullable();

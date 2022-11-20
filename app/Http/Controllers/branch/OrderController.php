@@ -68,6 +68,7 @@ class OrderController extends Controller
             'customer_location'=>$request->customer_location,
             'lat'=>$request->lat,
             'long'=>$request->long,
+            'driver_id'=>1,
          ]);
          foreach($request->serviceprices as  $serviceprice){
              $price=$serviceprice['quantity']*$serviceprice['price'];

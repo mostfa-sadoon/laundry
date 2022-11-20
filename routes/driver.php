@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\driver\AuthController;
 use App\Http\Controllers\driver\driverController;
+use App\Http\Controllers\driver\OrderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,5 +33,12 @@ Route::group(['middleware' => 'driverApiAuth'],function(){
         Route::get('get/driverinfo','driverinfo');
         Route::post('update/info','updateinfo');
         Route::post('update/phone','updatephone');
+    });
+
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('new/order','getneworder');
+        Route::get('acceptorder/order{order_id?}','confirmorder');
+        Route::get('reject/order{order_id?}','rejectorder');
+        Route::get('order/info{order_id?}','orderinfo');
     });
 });
