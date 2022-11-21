@@ -101,11 +101,11 @@ class OrderController extends Controller
          foreach($request->additionalservices as $additionalservice){
              orderdetailes::create([
                  'order_id'=>$order->id,
-                 'branchitem_id'=>$serviceprice['branchitem_id'],
-                 'service_id'=>$serviceprice['service_id'],
+                 'branchitem_id'=>$additionalservice['branchitem_id'],
+                 'service_id'=>$additionalservice['service_id'],
                  'price'=>$price,
                  'additionalservice_id'=>$additionalservice['additionalservice_id'],
-                 'quantity'=>$serviceprice['quantity']
+                 'quantity'=>$additionalservice['quantity']
                ]);
          }
 
