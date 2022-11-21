@@ -37,9 +37,10 @@ Route::group(['middleware' => 'driverApiAuth'],function(){
 
     Route::controller(OrderController::class)->group(function () {
         Route::get('new/order','getneworder');
-        Route::get('acceptorder/order{order_id?}','confirmorder');
+        Route::get('acceptorder/order{order_id?}','Acceptorder');
         Route::get('reject/order{order_id?}','rejectorder');
         Route::get('order/info{order_id?}','orderinfo');
         Route::get('order/inprogress','inprogressorder');
+        Route::get('order/confirm/pickup/{order_id?&confirm_type}','confirmorder');
     });
 });

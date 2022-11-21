@@ -23,7 +23,7 @@ class OrderController extends Controller
         $data['data']['orders']=$orders;
         return response()->json($data);
     }
-    public function confirmorder(Request $request){
+    public function Acceptorder(Request $request){
        $order_id=$request->order_id;
        $driver_id=Auth::guard('driver_api')->user()->id;
        $order=order::where('driver_id',$driver_id)->where('id',$order_id)->first();
@@ -36,9 +36,9 @@ class OrderController extends Controller
         $data['message']="this order not found";
         return response()->json($data);
        }
-       $OrderDriveryStatus=OrderDriveryStatus::where('order_id',$order_id)->first()->update([
-          'confirmation'=>true
-       ]);
+    //    $OrderDriveryStatus=OrderDriveryStatus::where('order_id',$order_id)->first()->update([
+    //       'confirmation'=>true
+    //    ]);
        $data['status']=true;
        $data['message']="confirm order suceesfully";
        return response()->json($data);
@@ -202,17 +202,49 @@ class OrderController extends Controller
         ->groupBy('order_delivery_status.order_status')
         ->get();
         foreach($orders as $key=>$order){
+            $key=0;
             $order->item=[];
-           foreach($items as $key=>$item){
+           foreach($items as $item){
              if($item['order_id']==$order->id){
                  $order->item[$key]['quantity']=$item['quantity'];
                  $order->item[$key]['name']=$item['name'];
+                 $key++;
              }
            }
         }
         $data['status']=true;
         $data['message']="get in progress orders suceesfully";
         $data['data']['orders']=$orders;
+        return response()->json($data);
+     }
+     public function confirmorder(Request $request){
+        $order_id=$request->order_id;
+        $confirm_type=$request->confirm_type;
+        $driver_id=Auth::guard('driver_api')->user()->id;
+        $orderstatus=OrderDriveryStatus::where('order_id',$order_id)->first();
+        if($confirm_type=='pick_up_laundy'){
+            $orderstatus->update([
+                'confirmation'=>true
+            ]);
+            OrderDriveryStatus::create([
+               'order_id'=>$order_id,
+                'driver_id'=>$driver_id,
+               'order_status'=>'drop_of_home'
+            ]);
+            $data['status']=true;
+            $data['message']='confirm pick up from laundry success';
+        }
+        if($confirm_type=='drop_of_home'){
+            $orderstatus->update([
+                'confirmation'=>true
+            ]);
+            order::find($order_id)->update([
+               'progress'=>'completed',
+               'delivery_status'=>'completed',
+            ]);
+            $data['status']=true;
+            $data['message']='drop of the order to home successfuly';
+        }
         return response()->json($data);
      }
 }
