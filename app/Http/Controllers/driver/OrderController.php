@@ -195,7 +195,7 @@ class OrderController extends Controller
         ->where('orders.driver_id',$driver_id)
         ->where('delivery_status','inprogress')
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
-        ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.created_at')
+        ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.id')
         ->join('order_detailes','order_detailes.order_id','=','orders.id')
         ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
         ->groupBy('order_detailes.order_id')
