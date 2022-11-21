@@ -200,6 +200,7 @@ class OrderController extends Controller
         ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
         ->groupBy('order_detailes.order_id')
         ->groupBy('order_delivery_status.order_status')
+        ->groupBy('order_delivery_status.id')
         ->get();
         foreach($orders as $key=>$order){
             $key=0;
