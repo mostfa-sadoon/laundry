@@ -248,4 +248,30 @@ class OrderController extends Controller
         }
         return response()->json($data);
      }
+     public function latestorder(Request $request){
+        $driver_id=Auth::guard('driver_api')->user()->id;
+        $Acitveorder=DB::table('orders')
+        ->select('orders.id','orders.customer_name','orders.customer_phone','orders.customer_location')
+        ->selectRaw('sum(order_detailes.quantity) as quantity')
+        ->where('orders.driver_id',$driver_id)
+        ->where('progress','!=','completed')
+        ->join('order_detailes','order_detailes.order_id','=','orders.id')
+        ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
+        ->groupBy('order_detailes.order_id')
+        ->get();
+        $completedorder=DB::table('orders')
+        ->select('orders.id','orders.customer_name','orders.customer_phone','orders.customer_location')
+        ->selectRaw('sum(order_detailes.quantity) as quantity')
+        ->where('orders.driver_id',$driver_id)
+        ->where('progress','=','completed')
+        ->join('order_detailes','order_detailes.order_id','=','orders.id')
+        ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
+        ->groupBy('order_detailes.order_id')
+        ->get();
+        $data['status']=true;
+        $data['message']="get new orders suceesfully";
+        $data['data']['Acitveorder']=$Acitveorder;
+        $data['data']['completedorder']=$completedorder;
+        return response()->json($data);
+     }
 }
