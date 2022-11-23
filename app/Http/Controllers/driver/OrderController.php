@@ -182,6 +182,7 @@ class OrderController extends Controller
         $orders=DB::table('orders')
         ->select('orders.id','orders.customer_name','orders.customer_phone','orders.customer_location','branchitemtranslations.name')
         ->selectRaw('sum(order_detailes.quantity) as quantity')
+
         ->where('orders.driver_id',$driver_id)
         ->where('delivery_status','inprogress')
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
@@ -203,15 +204,19 @@ class OrderController extends Controller
         $orders=DB::table('orders')
         ->select('orders.id','orders.customer_name','orders.customer_phone','orders.customer_location','order_delivery_status.order_status')
         ->selectRaw('sum(order_detailes.quantity) as quantity')
+        ->selectRaw('sum(argent.price +order_detailes.price) as price')
         ->where('orders.driver_id',$driver_id)
         ->where('delivery_status','inprogress')
+        ->join('argent','orders.id','=','argent.order_id')
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
         ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.id')
+        ->where('order_delivery_status.confirmation',false)
         ->join('order_detailes','order_detailes.order_id','=','orders.id')
         ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
         ->groupBy('order_detailes.order_id')
         ->groupBy('order_delivery_status.order_status')
         ->groupBy('order_delivery_status.id')
+        ->groupBy('argent.order_id')
         ->get();
         foreach($orders as $key=>$order){
             $key=0;
