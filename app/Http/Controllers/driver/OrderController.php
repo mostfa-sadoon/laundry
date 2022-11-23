@@ -415,7 +415,7 @@ class OrderController extends Controller
         ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
         ->groupBy('orders.delivery_status')->groupBy('orders.created_at')
         ->groupBy('order_detailes.order_id')
-        ->paginate(1);
+        ->paginate(3);
         foreach($allorders as $allorder){
             $allorder->created_at=date('Y-m-d', strtotime($allorder->created_at));
             $allorder->time=date('h:m a', strtotime($allorder->created_at));
