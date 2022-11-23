@@ -17,7 +17,17 @@ class OrderController extends Controller
     //
     public function getneworder(){
         $driver_id=Auth::guard('driver_api')->user()->id;
-        $orders=order::select('id','customer_name','customer_phone','customer_location')->where('driver_id',$driver_id)->where('delivery_status','=',null)->get();
+        $orders=DB::table('orders')->where('orders.driver_id',$driver_id)->where('orders.delivery_status','=',null)
+        ->select('orders.id','customer_name','customer_phone','customer_location','order_delivery_status.order_status')
+        ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
+        ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.id')
+        ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
+        ->groupBy('order_delivery_status.order_status')
+        ->groupBy('order_delivery_status.id')
+        ->get();
+        foreach($orders as $order){
+            $order->distance=5;
+        }
         $data['status']=true;
         $data['message']="get new orders suceesfully";
         $data['data']['orders']=$orders;
