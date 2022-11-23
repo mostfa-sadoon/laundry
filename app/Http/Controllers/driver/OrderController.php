@@ -10,12 +10,14 @@ use App\Models\Order\orderdetailes;
 use Illuminate\Support\Facades\DB;
 use App\Models\Order\OrderDriveryStatus;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
+use App\Traits\queries\serviceTrait;
 use Validator;
 use Auth;
 use App;
 class OrderController extends Controller
 {
     //
+    use serviceTrait;
     public function getneworder(){
         $driver_id=Auth::guard('driver_api')->user()->id;
         $orders=DB::table('orders')->where('orders.driver_id',$driver_id)->where('orders.delivery_status','=',null)
@@ -86,62 +88,11 @@ class OrderController extends Controller
          ->first();
          $order->price=$order->price+$orderargentprice->argentprice;
         // this query get services with count of item in it
-        $services=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
-        ->join('orders','orders.id','=','order_detailes.order_id')
-        ->join('branchitems','branchitems.id','=','order_detailes.branchitem_id')
-        ->join('branchitemtranslations','branchitemtranslations.branchitem_id','=','branchitems.id')
-        ->selectRaw('sum(quantity) as quantity')
-        ->selectRaw('servicetranslations.name as service')
-        ->selectRaw('servicetranslations.service_id as service_id')
-        ->where('order_detailes.order_id',$order_id)
-        ->where('servicetranslations.locale',$lang)
-        ->where('branchitemtranslations.locale',$lang)
-        ->where('order_detailes.additionalservice_id','=',null)
-        ->groupBy('servicetranslations.service_id')
-        ->groupBy('servicetranslations.name')
-        ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
-        ->get();
+        $services=$this->serive($order_id,$driver_id,$lang);
          // this query get items with count of item in it
-        $items=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
-        ->join('orders','orders.id','=','order_detailes.order_id')
-        ->join('branchitems','branchitems.id','=','order_detailes.branchitem_id')
-        ->join('branchitemtranslations','branchitemtranslations.branchitem_id','=','branchitems.id')
-        ->selectRaw('branchitemtranslations.name')
-        ->selectRaw('sum(quantity) as quantity')
-        ->selectRaw('branchitemtranslations.branchitem_id as item_id')
-        ->selectRaw('servicetranslations.service_id')
-        ->where('order_detailes.order_id',$order_id)
-        ->where('servicetranslations.locale',$lang)
-        ->where('branchitemtranslations.locale',$lang)
-        ->where('order_detailes.additionalservice_id','=',null)
-        ->groupBy('servicetranslations.service_id')
-        ->groupBy('servicetranslations.name')
-        ->groupBy('branchitemtranslations.name')
-        ->groupBy('branchitemtranslations.branchitem_id')
-        ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
-        ->get();
+        $items=$this->items($order_id,$driver_id,$lang);
          // this query to get additional service
-        $additionals=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        ->join('orders','orders.id','=','order_detailes.order_id')
-        ->join('additionalservicetranslations','additionalservicetranslations.additionalservice_id','=','order_detailes.additionalservice_id')
-        ->join('branchitemtranslations','branchitemtranslations.branchitem_id','=','order_detailes.branchitem_id')
-        ->selectRaw('order_detailes.service_id')
-        ->selectRaw('sum(quantity) as quantity')
-        ->selectRaw('branchitemtranslations.name as item')
-        ->selectRaw('branchitemtranslations.branchitem_id as item_id')
-        ->selectRaw('additionalservicetranslations.name')
-        ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
-        ->where('order_detailes.additionalservice_id','!=',null)
-        ->groupBy('additionalservicetranslations.additionalservice_id')
-        ->groupBy('additionalservicetranslations.name')
-        ->groupBy('branchitemtranslations.name')
-        ->groupBy('branchitemtranslations.branchitem_id')
-        ->groupBy('order_detailes.service_id')
-        ->where('additionalservicetranslations.locale',$lang)
-        ->where('branchitemtranslations.locale',$lang)
-        ->get();
+        $additionals=$this->additionals($order_id,$driver_id,$lang);
           $argents=db::table('argent')->where('order_id',$order_id)->get();
             // but additional service in the item
            foreach($items as $key=>$item){
@@ -316,79 +267,28 @@ class OrderController extends Controller
          ->first();
          $order->price=$order->price+$orderargentprice->argentprice;
         // this query get services with count of item in it
-        $services=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
-        ->join('orders','orders.id','=','order_detailes.order_id')
-        ->join('branchitems','branchitems.id','=','order_detailes.branchitem_id')
-        ->join('branchitemtranslations','branchitemtranslations.branchitem_id','=','branchitems.id')
-        ->selectRaw('sum(quantity) as quantity')
-        ->selectRaw('servicetranslations.name as service')
-        ->selectRaw('servicetranslations.service_id as service_id')
-        ->where('order_detailes.order_id',$order_id)
-        ->where('servicetranslations.locale',$lang)
-        ->where('branchitemtranslations.locale',$lang)
-        ->where('order_detailes.additionalservice_id','=',null)
-        ->groupBy('servicetranslations.service_id')
-        ->groupBy('servicetranslations.name')
-        ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
-        ->get();
+        $services=$this->serive($order_id,$driver_id,$lang);
          // this query get items with count of item in it
-        $items=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
-        ->join('orders','orders.id','=','order_detailes.order_id')
-        ->join('branchitems','branchitems.id','=','order_detailes.branchitem_id')
-        ->join('branchitemtranslations','branchitemtranslations.branchitem_id','=','branchitems.id')
-        ->selectRaw('branchitemtranslations.name')
-        ->selectRaw('sum(quantity) as quantity')
-        ->selectRaw('branchitemtranslations.branchitem_id as item_id')
-        ->selectRaw('servicetranslations.service_id')
-        ->where('order_detailes.order_id',$order_id)
-        ->where('servicetranslations.locale',$lang)
-        ->where('branchitemtranslations.locale',$lang)
-        ->where('order_detailes.additionalservice_id','=',null)
-        ->groupBy('servicetranslations.service_id')
-        ->groupBy('servicetranslations.name')
-        ->groupBy('branchitemtranslations.name')
-        ->groupBy('branchitemtranslations.branchitem_id')
-        ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
-        ->get();
+         $items=$this->items($order_id,$driver_id,$lang);
          // this query to get additional service
-        $additionals=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        ->join('orders','orders.id','=','order_detailes.order_id')
-        ->join('additionalservicetranslations','additionalservicetranslations.additionalservice_id','=','order_detailes.additionalservice_id')
-        ->join('branchitemtranslations','branchitemtranslations.branchitem_id','=','order_detailes.branchitem_id')
-        ->selectRaw('order_detailes.service_id')
-        ->selectRaw('sum(quantity) as quantity')
-        ->selectRaw('branchitemtranslations.name as item')
-        ->selectRaw('branchitemtranslations.branchitem_id as item_id')
-        ->selectRaw('additionalservicetranslations.name')
-        ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
-        ->where('order_detailes.additionalservice_id','!=',null)
-        ->groupBy('additionalservicetranslations.additionalservice_id')
-        ->groupBy('additionalservicetranslations.name')
-        ->groupBy('branchitemtranslations.name')
-        ->groupBy('branchitemtranslations.branchitem_id')
-        ->groupBy('order_detailes.service_id')
-        ->where('additionalservicetranslations.locale',$lang)
-        ->where('branchitemtranslations.locale',$lang)
-        ->get();
-          $argents=db::table('argent')->where('order_id',$order_id)->get();
-            // but additional service in the item
-           foreach($items as $key=>$item){
-            $item->additonalservice=[];
-            foreach($additionals as $additional){
-                if($item->item_id==$additional->item_id){
-                    array_push($item->additonalservice,$additional);
-                }
-             }
-             //but argent inside item
-             foreach($argents as $argent){
-                $item->argent=0;
-                if($item->item_id==$argent->branchitem_id){
-                    $item->argent=$argent->quantity;
-                }
-             }
-           }
+         $additionals=$this->additionals($order_id,$driver_id,$lang);
+        $argents=db::table('argent')->where('order_id',$order_id)->get();
+        // but additional service in the item
+        foreach($items as $key=>$item){
+        $item->additonalservice=[];
+        foreach($additionals as $additional){
+            if($item->item_id==$additional->item_id){
+                array_push($item->additonalservice,$additional);
+            }
+            }
+            //but argent inside item
+            foreach($argents as $argent){
+            $item->argent=0;
+            if($item->item_id==$argent->branchitem_id){
+                $item->argent=$argent->quantity;
+            }
+            }
+        }
             //but argent inside item
           foreach($services as $key=>$service){
             $service->item=[];
@@ -420,25 +320,11 @@ class OrderController extends Controller
             $allorder->created_at=date('Y-m-d', strtotime($allorder->created_at));
             $allorder->time=date('h:m a', strtotime($allorder->created_at));
         }
-        //  $allorders->getCollection()->transform(function ($value) {
-        //     return
-        //         [
-
-
-        //                 'orders'=>$value
-
-        //           ];
-        // });
-
-
-      $allorders->appends(['sort' => 'votes'])->render();
-
         $data['status']=true;
         $data['message']="get new orders suceesfully";
         $data['data']=$allorders;
         $allorders->status=true;
         $allorders->message='fvdv';
-       // $data['data']['completedorder']=$completedorder;
         return response()->json($allorders);
      }
 }
