@@ -293,8 +293,20 @@ class OrderController extends Controller
         // ->get();
         $data['status']=true;
         $data['message']="get new orders suceesfully";
-        $data['data']['order']=$latestorders;
+        $data['data']['orders']=$latestorders;
        // $data['data']['completedorder']=$completedorder;
         return response()->json($data);
+     }
+     public function latestorderinfo(Request $request){
+        dd($request->all());
+        $driver_id=Auth::guard('driver_api')->user()->id;
+        $order_id=$request->order_id;
+        DB::table('orders')
+        ->join('order_detailes','order_detailes.order_id','=','order.id')
+        ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
+        ->where('order_delivery_status.confirmation',false)
+        ->where('orders.id',$order_id)
+        ->groupBy('orders.id')
+        ->get();
      }
 }
