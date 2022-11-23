@@ -220,6 +220,7 @@ class OrderController extends Controller
         ->groupBy('argent.order_id')
         ->get();
         foreach($orders as $key=>$order){
+            $order->distance=5;
             $key=0;
             $order->item=[];
            foreach($items as $item){
@@ -401,5 +402,27 @@ class OrderController extends Controller
         $data['data']['order']=$order;
         $data['data']['serives']=$services;
         return response()->json($data);
+     }
+     public function allorder(Request $request){
+        $driver_id=Auth::guard('driver_api')->user()->id;
+        $allorders=DB::table('orders')
+        ->select('orders.id','orders.customer_name','orders.customer_phone','orders.customer_location','delivery_status','orders.created_at')
+        ->selectRaw('sum(order_detailes.quantity) as quantity')
+        ->where('orders.driver_id',$driver_id)
+        ->where('orders.delivery_status','!=',null)
+        ->join('order_detailes','order_detailes.order_id','=','orders.id')
+        ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
+        ->groupBy('orders.delivery_status')->groupBy('orders.created_at')
+        ->groupBy('order_detailes.order_id')
+        ->onEachSide(1)->links();
+        foreach($allorders as $allorder){
+            $allorder->created_at=date('Y-m-d', strtotime($allorder->created_at));
+            $allorder->time=date('h:m a', strtotime($allorder->created_at));
+        }
+        $data['status']=true;
+        $data['message']="get new orders suceesfully";
+        $data['data']['orders']=$allorders;
+       // $data['data']['completedorder']=$completedorder;
+        return response()->json($allorders);
      }
 }
