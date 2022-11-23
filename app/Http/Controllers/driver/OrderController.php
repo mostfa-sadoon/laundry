@@ -257,6 +257,7 @@ class OrderController extends Controller
         ->groupBy('orders.id')
         ->groupBy('orders.delivery_status')
         ->groupBy('order_delivery_status.order_id')
+        ->groupBy('order_delivery_status.id')
         ->groupBy('order_delivery_status.order_status')
         ->first();
         $orderargentprice=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
