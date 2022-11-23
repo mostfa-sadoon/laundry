@@ -9,6 +9,7 @@ use App\Models\Order\order;
 use App\Models\Order\orderdetailes;
 use Illuminate\Support\Facades\DB;
 use App\Models\Order\OrderDriveryStatus;
+use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Validator;
 use Auth;
 use App;
@@ -414,14 +415,29 @@ class OrderController extends Controller
         ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
         ->groupBy('orders.delivery_status')->groupBy('orders.created_at')
         ->groupBy('order_detailes.order_id')
-        ->onEachSide(1)->links();
+        ->paginate(1);
         foreach($allorders as $allorder){
             $allorder->created_at=date('Y-m-d', strtotime($allorder->created_at));
             $allorder->time=date('h:m a', strtotime($allorder->created_at));
         }
+        //  $allorders->getCollection()->transform(function ($value) {
+        //     return
+        //         [
+
+
+        //                 'orders'=>$value
+
+        //           ];
+        // });
+
+
+      $allorders->appends(['sort' => 'votes'])->render();
+
         $data['status']=true;
         $data['message']="get new orders suceesfully";
-        $data['data']['orders']=$allorders;
+        $data['data']=$allorders;
+        $allorders->status=true;
+        $allorders->message='fvdv';
        // $data['data']['completedorder']=$completedorder;
         return response()->json($allorders);
      }
