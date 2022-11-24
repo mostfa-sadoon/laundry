@@ -254,7 +254,6 @@ class OrderController extends Controller
         ->selectRaw('orders.id')
         ->selectRaw('order_delivery_status.order_status')
         ->selectRaw('sum(order_detailes.price) as price')
-        ->groupBy('orders.created_at')
         ->groupBy('orders.id')
         ->groupBy('orders.customer_location')
         ->groupBy('orders.created_at')
@@ -262,7 +261,7 @@ class OrderController extends Controller
         ->groupBy('order_delivery_status.order_id')
         ->groupBy('order_delivery_status.id')
         ->groupBy('order_delivery_status.order_status')
-        ->get();
+        ->first();
         $order->created_at=date('Y-m-d', strtotime($order->created_at));
         $order->time=date('h:m a', strtotime($order->created_at));
         $orderargentprice=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
