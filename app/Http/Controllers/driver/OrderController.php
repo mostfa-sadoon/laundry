@@ -247,7 +247,7 @@ class OrderController extends Controller
         App::setLocale($lang);
         $order=DB::table('orders')
         ->select('orders.delivery_status','orders.customer_location')
-        ->join('orders','orders.id','=','order_detailes.order_id')
+        ->join('order_detailes','order_detailes.order_id','=','orders.order_id')
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
         ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.id')
         ->where('order_delivery_status.confirmation',false)
