@@ -250,7 +250,7 @@ class OrderController extends Controller
         ->join('order_detailes','order_detailes.order_id','=','orders.id')
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
         ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.id')
-        ->where('order_delivery_status.confirmation',false)
+      //  ->where('order_delivery_status.confirmation',false)
         ->where('orders.id',$order_id)
         ->where('order_detailes.order_id',$order_id)
         ->selectRaw('orders.created_at')
