@@ -245,7 +245,7 @@ class OrderController extends Controller
         $driver_id=Auth::guard('driver_api')->user()->id;
         $lang=$request->header('lang');
         App::setLocale($lang);
-        $order=DB::table('order_detailes')
+        $order=DB::table('orders')
         ->select('orders.delivery_status','orders.customer_location')
         ->join('orders','orders.id','=','order_detailes.order_id')
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
