@@ -260,8 +260,8 @@ class OrderController extends Controller
         ->groupBy('order_delivery_status.id')
         ->groupBy('order_delivery_status.order_status')
         ->first();
-        $latestorder->created_at=date('Y-m-d', strtotime($latestorder->created_at));
-        $latestorder->time=date('h:m a', strtotime($latestorder->created_at));
+        $order->created_at=date('Y-m-d', strtotime($latestorder->created_at));
+        $order->time=date('h:m a', strtotime($latestorder->created_at));
         $orderargentprice=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
         ->join('orders','orders.id','=','order_detailes.order_id')
         ->join('argent','orders.id','=','argent.order_id')
