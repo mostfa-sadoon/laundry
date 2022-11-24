@@ -251,7 +251,6 @@ class OrderController extends Controller
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
         ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.id')
         ->where('order_delivery_status.confirmation',false)
-        ->selectRaw('orders.id')
         ->selectRaw('order_delivery_status.order_status')
         ->selectRaw('sum(order_detailes.price) as price')
         ->groupBy('orders.id')
