@@ -263,7 +263,7 @@ class OrderController extends Controller
         ->groupBy('order_delivery_status.order_id')
         ->groupBy('order_delivery_status.id')
         ->groupBy('order_delivery_status.order_status')
-        ->first();
+        ->last();
       //  dd($order);
         $order->created_at=date('Y-m-d', strtotime($order->created_at));
         $order->time=date('h:m a', strtotime($order->created_at));
