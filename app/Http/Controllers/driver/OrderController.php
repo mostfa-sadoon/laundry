@@ -245,18 +245,19 @@ class OrderController extends Controller
         $driver_id=Auth::guard('driver_api')->user()->id;
         $lang=$request->header('lang');
         App::setLocale($lang);
-        $order=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
+        $order=DB::table('order_detailes')
         ->select('orders.delivery_status','orders.created_at','orders.customer_location')
         ->join('orders','orders.id','=','order_detailes.order_id')
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
         ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.id')
         ->where('order_delivery_status.confirmation',false)
         ->where('orders.id',$order_id)
+        ->where('order_detailes.order_id',$order_id)
         ->selectRaw('order_delivery_status.order_status')
         ->selectRaw('sum(order_detailes.price) as price')
         ->groupBy('orders.id')
         ->groupBy('orders.customer_location')
-        ->groupBy('orders.created_at')
+      //  ->groupBy('orders.created_at')
         ->groupBy('orders.delivery_status')
         ->groupBy('order_delivery_status.order_id')
         ->groupBy('order_delivery_status.id')
