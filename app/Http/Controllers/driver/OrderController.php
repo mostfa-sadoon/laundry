@@ -258,12 +258,12 @@ class OrderController extends Controller
         ->selectRaw('sum(order_detailes.price) as price')
         ->groupBy('orders.id')
         ->groupBy('orders.customer_location')
-      //  ->groupBy('orders.created_at')
+        ->groupBy('orders.created_at')
         ->groupBy('orders.delivery_status')
         ->groupBy('order_delivery_status.order_id')
         ->groupBy('order_delivery_status.id')
         ->groupBy('order_delivery_status.order_status')
-        ->orderBy('order_delivery_status.created_at', 'desc')
+        ->orderBy('order_delivery_status.created_at','desc')
         ->first();
       //  dd($order);
         $order->created_at=date('Y-m-d', strtotime($order->created_at));
