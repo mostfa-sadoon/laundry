@@ -254,6 +254,7 @@ class OrderController extends Controller
         ->selectRaw('orders.id')
         ->selectRaw('order_delivery_status.order_status')
         ->selectRaw('sum(order_detailes.price) as price')
+        ->groupBy('orders.created_at')
         ->groupBy('orders.id')
         ->groupBy('orders.customer_location')
         ->groupBy('orders.created_at')
