@@ -91,11 +91,6 @@ class AuthController extends Controller
                     ]);
                   }
            });
-            //    $credentials = ['username'=>$branch->username,
-            //                   'password'=>$request->password];
-            //    if (!$token = auth()->guard('branch-api')->attempt($credentials)) {
-            //        return response()->json(['message' => 'Unauthorized'], 401);
-            //    }
             $data=[];
             $data['status']=true;
             $data['message']="branch added successfully";
@@ -103,8 +98,6 @@ class AuthController extends Controller
             $data['data']['branch_id']=$branch->id;
             return response()->json($data,200);
     }
-
-
     public function test(){
            dd('gfgf');
     }

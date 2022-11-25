@@ -6,6 +6,7 @@ use App\Http\Controllers\branch\Auth\AuthController;
 use App\Http\Controllers\branch\ServiceController;
 use  App\Http\Controllers\branch\closeingdaycontroller;
 use  App\Http\Controllers\branch\OrderController;
+use  App\Http\Controllers\branch\driverController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -64,5 +65,11 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
         Route::post('order/submit','submitorder');
         Route::get('order/cancel{order_id?}','cancelorder');
         Route::get('order/check{order_id?}','checkorder');
+    });
+
+    Route::controller(driverController::class)->group(function () {
+        Route::get('avilable/driver','avilabledriver');
+        Route::get('assign/order/{order_id?&driver_id?}','assignorder');
+        Route::POST('assign/orders','assignorders');
     });
 });

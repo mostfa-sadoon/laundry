@@ -105,7 +105,6 @@ class ServiceController extends Controller
         return response()->json(['status'=>true,'message'=>'service prices added successfully']);
     }
 
-
     public $item_id=[];
     public function getaditionalservices(Request $request){
         $lang=$request->header('lang');
@@ -157,10 +156,7 @@ class ServiceController extends Controller
                                     'additionalservice_id'=>$itemprice['additionalservice_id'],
                             ]);
                         }
-
-
-
-            }
+              }
             }
         return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
  }

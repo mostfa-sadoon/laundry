@@ -192,7 +192,7 @@ class OrderController extends Controller
         $order_id=$request->order_id;
         $confirm_type=$request->confirm_type;
         $driver_id=Auth::guard('driver_api')->user()->id;
-        $orderstatus=OrderDriveryStatus::where('order_id',$order_id)->first();
+        $orderstatus=OrderDriveryStatus::where('order_id',$order_id)->latest('id')->first();
         if($confirm_type=='pick_up_laundy'){
             $orderstatus->update([
                 'confirmation'=>true

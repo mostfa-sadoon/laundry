@@ -25,9 +25,9 @@ use App;
 
 class OrderController extends Controller
 {
-    // test
-    public $service_ids=[];
-    public function getservice(Request $request){
+    #Reigon[this is create ordder cycle]
+        public $service_ids=[];
+        public function getservice(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
         $branch=branch::find($branch_id);
         $lang=$request->header('lang');
@@ -41,23 +41,22 @@ class OrderController extends Controller
         $data['services']= $services;
         $data['branchargent']=$branch->argent;
         return response()->json(['status'=>true,'message'=>'get services succefully','data'=>$data]);
-    }
-    public function itemdetailes(Request $request){
-     $lang=$request->header('lang');
-     App::setLocale($lang);
-     $item_id=$request->item_id;
-     $itemadditionalservice=Additionalservice::select('id')->whereHas('branchadditionalservice',function(Builder $query)use($item_id){
-        $query->where('branchitem_id',$item_id)->where('status','on');
-     })->with(['itemprices'=>function($q)use($item_id){
-            $q->select('additionalservice_id','price','id as item_price_id')->where('branchitem_id',$item_id)->get();
-     }])->get();
-     $data['status']=true;
-     $data['message']="return avavilable additional service of this item";
-     $data['data']['additionalservices']=$itemadditionalservice;
-     return response()->json($data);
-    }
-    public function submitorder(Request $request){
-       // dd($request->all());
+       }
+        public function itemdetailes(Request $request){
+        $lang=$request->header('lang');
+        App::setLocale($lang);
+        $item_id=$request->item_id;
+        $itemadditionalservice=Additionalservice::select('id')->whereHas('branchadditionalservice',function(Builder $query)use($item_id){
+            $query->where('branchitem_id',$item_id)->where('status','on');
+        })->with(['itemprices'=>function($q)use($item_id){
+                $q->select('additionalservice_id','price','id as item_price_id')->where('branchitem_id',$item_id)->get();
+        }])->get();
+        $data['status']=true;
+        $data['message']="return avavilable additional service of this item";
+        $data['data']['additionalservices']=$itemadditionalservice;
+        return response()->json($data);
+        }
+        public function submitorder(Request $request){
         try{
          $branchid=Auth::guard('branch-api')->user()->id;
          DB::transaction(function()use(&$order,$request,$branchid)
@@ -108,33 +107,32 @@ class OrderController extends Controller
                  'quantity'=>$additionalservice['quantity']
                ]);
          }
-
-     });
-    } catch (Throwable $e) {
-        report($e);
-        return false;
-    }
-        $data['status']=true;
-        $data['message']='order added succefully';
-        $data['data']['order']=$order->id;
-        return response()->json($data);
-    }
-    public function cancelorder(Request $request){
-      $order_id=$request->order_id;
-      $branchid=Auth::guard('branch-api')->user()->id;
-      $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
-      if($order==null){
-        $data['status']=false;
-        $data['message']='order not found';
-        return response()->json($data,405);
-      }else{
-        $order->delete();
-        $data['status']=true;
-        $data['message']='order cancel succefully';
-        return response()->json($data);
-      }
-    }
-    public function orderinfo(Request $request){
+        });
+        } catch (Throwable $e) {
+            report($e);
+            return false;
+        }
+            $data['status']=true;
+            $data['message']='order added succefully';
+            $data['data']['order']=$order->id;
+            return response()->json($data);
+        }
+        public function cancelorder(Request $request){
+        $order_id=$request->order_id;
+        $branchid=Auth::guard('branch-api')->user()->id;
+        $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
+        if($order==null){
+            $data['status']=false;
+            $data['message']='order not found';
+            return response()->json($data,405);
+        }else{
+            $order->delete();
+            $data['status']=true;
+            $data['message']='order cancel succefully';
+            return response()->json($data);
+        }
+        }
+        public function orderinfo(Request $request){
         $lang=$request->header('lang');
         $order_id=$request->order_id;
         App::setLocale($lang);
@@ -154,26 +152,6 @@ class OrderController extends Controller
         //   ',['id' => $order_id,
         //   'lang'=>$lang
         //   ]);
-
-
-        //   $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        //   ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
-        //   ->selectRaw('sum(price) as total')
-        //   ->where('order_detailes.order_id',$order_id)
-        //   ->where('servicetranslations.locale',$lang)
-        //   ->groupBy('servicetranslations.service_id')
-        //   ->get()
-        //   ;
-
-
-        //          $orderdetailes= DB::table('order_detailes')
-        //   ->selectRaw('sum(price) as total',)
-        //   ->selectRaw('sum(quantity) as quantity')
-        //   ->where('order_id',$order_id)
-        //   ->groupBy('order_detailes.service_id')
-        //   ->get();
-
-
             $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
           ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
           ->selectRaw('sum(price) as total')
@@ -184,27 +162,25 @@ class OrderController extends Controller
           ->where('order_detailes.additionalservice_id','=',null)
           ->groupBy('servicetranslations.service_id')
           ->groupBy('servicetranslations.name')
-          ->get()
-          ;
-
-        $argentprice=Argent::where('order_id',$order_id)->sum('price');
-        $data['status']=true;
-        $data['message']="return order info succeffuly";
-        $data['data']['deliverytype']=$deliverytype;
-        $data['data']['paymentmethods']=$paymentmethods;
-        $data['data']['orderdetailes']=$orderdetailes;
-        $data['data']['argentprice']= $argentprice;
-        return response()->json($data);
-    }
-    public function checkorder(Request $request){
-        $order_id=$request->order_id;
-        $branchid=Auth::guard('branch-api')->user()->id;
-        $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
-        if($order==null){
+          ->get();
+            $argentprice=Argent::where('order_id',$order_id)->sum('price');
+            $data['status']=true;
+            $data['message']="return order info succeffuly";
+            $data['data']['deliverytype']=$deliverytype;
+            $data['data']['paymentmethods']=$paymentmethods;
+            $data['data']['orderdetailes']=$orderdetailes;
+            $data['data']['argentprice']= $argentprice;
+            return response()->json($data);
+           }
+            public function checkorder(Request $request){
+            $order_id=$request->order_id;
+            $branchid=Auth::guard('branch-api')->user()->id;
+            $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
+            if($order==null){
             $data['status']=false;
             $data['message']='order not found';
             return response()->json($data,405);
-          }else{
+           }else{
             $order->update([
                'checked'=>true
             ]);
@@ -212,5 +188,17 @@ class OrderController extends Controller
             $data['message']='order checled  succefully';
             return response()->json($data);
           }
-    }
+         }
+    #EndReigon
+    #Reigon[this is show order cycle]
+        public function inprogressorder(Request $request){
+
+        }
+        public function completedorder(Request $request){
+
+        }
+        public function indeliveryorder(Request $request){
+
+        }
+    #EndReigon
 }
