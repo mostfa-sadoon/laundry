@@ -65,6 +65,7 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
         Route::post('order/submit','submitorder');
         Route::get('order/cancel{order_id?}','cancelorder');
         Route::get('order/check{order_id?}','checkorder');
+        Route::get('order/completedorder','completedorder');
     });
 
     Route::controller(driverController::class)->group(function () {

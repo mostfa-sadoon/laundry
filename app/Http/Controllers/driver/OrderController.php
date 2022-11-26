@@ -193,19 +193,23 @@ class OrderController extends Controller
         $confirm_type=$request->confirm_type;
         $driver_id=Auth::guard('driver_api')->user()->id;
         $orderstatus=OrderDriveryStatus::where('order_id',$order_id)->latest('id')->first();
+      //  dd($orderstatus);
         if($confirm_type=='pick_up_laundy'){
-            $orderstatus->update([
-                'confirmation'=>true
-            ]);
-            OrderDriveryStatus::create([
-               'order_id'=>$order_id,
-                'driver_id'=>$driver_id,
-               'order_status'=>'drop_of_home'
-            ]);
+            if($orderstatus->order_status=='pick_up_laundy'){
+                $orderstatus->update([
+                    'confirmation'=>true
+                ]);
+                OrderDriveryStatus::create([
+                   'order_id'=>$order_id,
+                    'driver_id'=>$driver_id,
+                   'order_status'=>'drop_of_home'
+                ]);
+            }
             $data['status']=true;
             $data['message']='confirm pick up from laundry success';
         }
         if($confirm_type=='drop_of_home'){
+            if($orderstatus->order_status=='drop_of_home'){
             $orderstatus->update([
                 'confirmation'=>true
             ]);
@@ -213,6 +217,7 @@ class OrderController extends Controller
                'progress'=>'completed',
                'delivery_status'=>'completed',
             ]);
+            }
             $data['status']=true;
             $data['message']='drop of the order to home successfuly';
         }

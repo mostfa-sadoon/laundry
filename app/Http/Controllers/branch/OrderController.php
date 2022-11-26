@@ -192,10 +192,25 @@ class OrderController extends Controller
     #EndReigon
     #Reigon[this is show order cycle]
         public function inprogressorder(Request $request){
-
+          $orders=DB::table('orders')
+          ->join('order_detailes','order_detailes.order_id','=','orders.id')
+          ->where('orders.progress','indelivery')->paginate(20);
+          $data['status']=true;
+          $date['message']='get completed order successfully';
+          $data['data']['orders']=$orders;
+          return response()->json($data);
         }
         public function completedorder(Request $request){
-
+            $orders=DB::table('orders')
+            ->select('orders.id','orders.customer_name')
+            ->join('order_detailes','order_detailes.order_id','=','orders.id')
+            ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
+            ->where('orders.progress','completed')->paginate(20);
+            // tomoro i will get service and put it under it
+            $data['status']=true;
+            $date['message']='get completed order successfully';
+            $data['data']['orders']=$orders;
+            return response()->json($orders);
         }
         public function indeliveryorder(Request $request){
 
