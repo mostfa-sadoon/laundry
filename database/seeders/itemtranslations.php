@@ -60,22 +60,22 @@ class itemtranslations extends Seeder
             'id' => 9,
             'item_id'=>5,
             'name'=>'home furniture',
-            'locale'=>'ar',
+            'locale'=>'en',
         ],[
             'id' => 10,
             'item_id'=>5,
             'name'=>'مفروشات منزليه',
-            'locale'=>'en',
+            'locale'=>'ar',
         ],[
             'id' => 11,
             'item_id'=>6,
             'name'=>'car 1',
-            'locale'=>'ar',
+            'locale'=>'en',
         ],[
             'id' => 12,
             'item_id'=>6,
             'name'=>'عربيه واحد ',
-            'locale'=>'en',
+            'locale'=>'ar',
         ]
 
         ]);
