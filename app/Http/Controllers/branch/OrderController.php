@@ -246,7 +246,7 @@ class OrderController extends Controller
                 }
             }
             $data['status']=true;
-            $date['message']='get inprogress order successfully';
+            $data['message']="get inprogress order successfully";
             $data['data']['orders']=$orders;
             return response()->json($data);
         }
@@ -303,7 +303,7 @@ class OrderController extends Controller
                 }
             }
             $data['status']=true;
-            $date['message']='get completed order successfully';
+            $data['message']='get completed order successfully';
             $data['data']['orders']=$orders;
             return response()->json($orders);
         }
@@ -407,7 +407,7 @@ class OrderController extends Controller
                 }
             }
             $data['status']=true;
-            $date['message']='get completed order successfully';
+            $data['message']='get completed order successfully';
             $data['data']['drivers']=$drivers;
             return response()->json($data);
    }
@@ -487,7 +487,7 @@ class OrderController extends Controller
               }
         }
       $data['status']=true;
-      $date['message']='get completed order successfully';
+      $data['message']='get completed order successfully';
       $data['data']['driver']=$driver;
       $data['data']['orders']=$orders;
       return response()->json($data);
