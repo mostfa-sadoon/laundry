@@ -334,8 +334,14 @@ class OrderController extends Controller
             foreach($drivers as $driver){
                 array_push($this->drivers_id,$driver->driver_id);
             }
-            $orders=DB::table('orders')->wherein('driver_id',$this->drivers_id)
-            ->select('orders.id as order_id','driver_id')->where('delivery_status','inprogress')->latest()->get();
+            $orders=[];
+            foreach($drivers as $driver){
+                $order=DB::table('orders')->where('driver_id',$driver->driver_id)
+                ->select('orders.id as order_id','driver_id')->where('delivery_status','inprogress')
+                ->latest('orders.id')
+                ->first();
+                array_push($orders,$order);
+            }
             $orderscount=Order::select('driver_id','id as order_id')->where('branch_id',$branch_id)->where('delivery_status','inprogress')
             ->groupBy('orders.driver_id')
             ->groupBy('orders.id')
@@ -393,6 +399,8 @@ class OrderController extends Controller
                     }
                   }
             }
+
+      //     return response()->json($orders);
             foreach($drivers as $driver){
                 $driver->order=[];
                 foreach($orders as $order){
