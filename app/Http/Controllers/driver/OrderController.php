@@ -246,7 +246,7 @@ class OrderController extends Controller
         return response()->json($data);
      }
      public function latestorderinfo(Request $request){
-           $order_id=$request->order_id;
+        $order_id=$request->order_id;
         $driver_id=Auth::guard('driver_api')->user()->id;
         $lang=$request->header('lang');
         App::setLocale($lang);
