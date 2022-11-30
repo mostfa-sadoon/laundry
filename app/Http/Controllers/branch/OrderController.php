@@ -178,24 +178,25 @@ class OrderController extends Controller
             return response()->json($data);
            }
            public function checkorder(Request $request){
-            //dd($request->all());
+
             $order_id=$request->order_id;
             $branchid=Auth::guard('branch-api')->user()->id;
             $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
-            $order->update([
-               'day'=>$request->day,
-               'from'=>$request->from,
-               'to'=>$request->to,
-            ]);
+
             if($order==null){
             $data['status']=false;
             $data['message']='order not found';
             return response()->json($data,405);
            }else{
-            $order->update([
-               'checked'=>true
-            ]);
             // if order found
+
+            DB::transaction(function()use(&$order,$request)
+            {
+                $order->update([
+                    'day'=>$request->day,
+                    'from'=>$request->from,
+                    'to'=>$request->to,
+                 ]);
             if($request->delivery_type=='bydelivery'){
                 OrderDriveryStatus::create([
                     'order_id'=>$order->id,
@@ -228,7 +229,16 @@ class OrderController extends Controller
                  }else{
                     return response()->json(['message'=>'the way delivery input is false'],403);
                  }
+            }elseif($request->delivery_type=='self_delivery'){
+
             }
+            $order->update([
+                'checked'=>true
+             ]);
+
+
+            });
+
             $data['status']=true;
             $data['message']='order checled  succefully';
             return response()->json($data);
@@ -243,6 +253,7 @@ class OrderController extends Controller
             $orders=DB::table('orders')
             ->select('orders.id','orders.customer_name')
             ->where('orders.progress','inprogress')
+            ->where('checked',true)
             ->where('branch_id',$branch_id)
             ->get();
             // get service and put it under order
@@ -260,6 +271,7 @@ class OrderController extends Controller
             $orders=DB::table('orders')
             ->select('orders.id','orders.customer_name')
             ->where('orders.progress','completed')
+            ->where('checked',true)
             ->where('branch_id',$branch_id)
             ->paginate(20);
             // get service and put it under order
@@ -300,6 +312,7 @@ class OrderController extends Controller
             foreach($drivers as $driver){
                 $order=DB::table('orders')->where('driver_id',$driver->driver_id)
                 ->select('orders.id as order_id','driver_id')->where('delivery_status','inprogress')
+                ->where('checked',true)
                 ->latest('orders.id')
                 ->first();
                 array_push($orders,$order);
@@ -489,7 +502,7 @@ class OrderController extends Controller
             ->groupBy('order_delivery_status.order_status')
             ->orderBy('order_delivery_status.created_at','desc')
             ->first();
-            //  dd($order);
+             //return response()->json($driver);
             $order->created_at=date('Y-m-d', strtotime($order->created_at));
             $order->time=date('h:m a', strtotime($order->created_at));
             $orderargentprice=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
