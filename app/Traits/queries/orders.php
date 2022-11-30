@@ -34,7 +34,7 @@ trait orders
           $service->additionalservice=[];
           foreach($additionalservices as $additionalservice){
               if($service->service_id == $additionalservice->service_id){
-                 array_push($service->additionalservice,$additionalservice->quantity);
+                 array_push($service->additionalservice,$additionalservice);
               }
           }
        }
