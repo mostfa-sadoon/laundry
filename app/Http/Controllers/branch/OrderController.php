@@ -273,7 +273,7 @@ class OrderController extends Controller
             ->where('orders.progress','completed')
             ->where('checked',true)
             ->where('branch_id',$branch_id)
-            ->paginate(20);
+            ->paginate(1);
             // get service and put it under order
             $orders=$this->orderwithservice($orders,$lang);
             $data['status']=true;
