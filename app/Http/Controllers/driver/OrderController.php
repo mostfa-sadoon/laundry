@@ -193,9 +193,10 @@ class OrderController extends Controller
         $confirm_type=$request->confirm_type;
         $driver_id=Auth::guard('driver_api')->user()->id;
         $orderstatus=OrderDriveryStatus::where('order_id',$order_id)->latest('id')->first();
-      //  dd($orderstatus);
-        if($confirm_type=='pick_up_laundy'){
-            if($orderstatus->order_status=='pick_up_laundy'){
+        // pick_up_home--->drop_of_laundry--->pick_up_laundry--->drop_of_home
+        //  pick_up_laundy status
+        if($confirm_type=='pick_up_laundry'){
+            if($orderstatus->order_status=='pick_up_laundry'){
                 $orderstatus->update([
                     'confirmation'=>true
                 ]);
@@ -208,6 +209,7 @@ class OrderController extends Controller
             $data['status']=true;
             $data['message']='confirm pick up from laundry success';
         }
+        // drop of home status
         if($confirm_type=='drop_of_home'){
             if($orderstatus->order_status=='drop_of_home'){
             $orderstatus->update([
@@ -217,6 +219,36 @@ class OrderController extends Controller
                'progress'=>'completed',
                'delivery_status'=>'completed',
             ]);
+            }
+            $data['status']=true;
+            $data['message']='drop of the order to home successfuly';
+        }
+         //pick_up_home status
+        if($confirm_type=='pick_up_home'){
+            if($orderstatus->order_status=='pick_up_home'){
+            $orderstatus->update([
+                'confirmation'=>true
+            ]);
+            OrderDriveryStatus::create([
+                'order_id'=>$order_id,
+                 'driver_id'=>$driver_id,
+                'order_status'=>'drop_of_laundry'
+             ]);
+            }
+            $data['status']=true;
+            $data['message']='drop of the order to home successfuly';
+        }
+        // drop of laundry status
+        if($confirm_type=='drop_of_laundry'){
+            if($orderstatus->order_status=='drop_of_laundry'){
+            $orderstatus->update([
+                'confirmation'=>true
+            ]);
+            OrderDriveryStatus::create([
+                'order_id'=>$order_id,
+                 'driver_id'=>$driver_id,
+                'order_status'=>'pick_up_laundry'
+             ]);
             }
             $data['status']=true;
             $data['message']='drop of the order to home successfuly';
