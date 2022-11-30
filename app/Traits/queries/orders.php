@@ -31,10 +31,10 @@ trait orders
       ->groupBy('order_detailes.additionalservice_id')
       ->get();
        foreach($services as $service){
-          $service->additionalservice='';
+          $service->additionalservice=[];
           foreach($additionalservices as $additionalservice){
               if($service->service_id == $additionalservice->service_id){
-                  $service->additionalservice=$additionalservice->quantity;
+                 array_push($service->additionalservice,$additionalservice->quantity);
               }
           }
        }
