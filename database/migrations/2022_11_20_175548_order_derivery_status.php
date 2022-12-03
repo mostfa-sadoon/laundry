@@ -20,7 +20,7 @@ class OrderDeriveryStatus extends Migration
             $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
             $table->unsignedBigInteger('driver_id')->nullable();
             $table->foreign('driver_id')->references('id')->on('drivers')->onDelete('cascade');
-            $table->enum('order_status',['pick_up_laundy','drop_of_laundry','pick_up_home','drop_of_home'])->nullable();
+            $table->enum('order_status',['pick_up_laundry','drop_of_laundry','pick_up_home','drop_of_home'])->nullable();
             $table->boolean('confirmation')->default(false);
             $table->timestamps();
         });

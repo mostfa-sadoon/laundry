@@ -189,7 +189,6 @@ class OrderController extends Controller
             return response()->json($data,405);
            }else{
             // if order found
-
             DB::transaction(function()use(&$order,$request)
             {
                 $order->update([
@@ -197,13 +196,13 @@ class OrderController extends Controller
                     'from'=>$request->from,
                     'to'=>$request->to,
                  ]);
-            if($request->delivery_type=='bydelivery'){
+              if($request->delivery_type=='bydelivery'){
                 OrderDriveryStatus::create([
                     'order_id'=>$order->id,
                     'driver_id'=>1,
                     'order_status'=>'pick_up_home'
                  ]);
-            }elseif($request->delivery_type=='on_way_delivery'){
+              }elseif($request->delivery_type=='on_way_delivery'){
                 // start validate way of delivery
                   $validator =Validator::make($request->all(), [
                     'way_delivery'=>'required',
@@ -229,14 +228,12 @@ class OrderController extends Controller
                  }else{
                     return response()->json(['message'=>'the way delivery input is false'],403);
                  }
-            }elseif($request->delivery_type=='self_delivery'){
+                }elseif($request->delivery_type=='self_delivery'){
 
-            }
-            $order->update([
-                'checked'=>true
-             ]);
-
-
+                }
+                $order->update([
+                    'checked'=>true
+                ]);
             });
 
             $data['status']=true;
@@ -273,7 +270,7 @@ class OrderController extends Controller
             ->where('orders.progress','completed')
             ->where('checked',true)
             ->where('branch_id',$branch_id)
-            ->paginate(1);
+            ->paginate(3);
             // get service and put it under order
             $orders=$this->orderwithservice($orders,$lang);
             $data['status']=true;

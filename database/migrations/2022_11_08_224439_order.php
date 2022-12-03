@@ -33,6 +33,9 @@ class Order extends Migration
             $table->foreign('delivery_type_id')->references('id')->on('delivery_types')->onDelete('cascade');
             $table->unsignedBigInteger('payment_method_id')->nullable();
             $table->foreign('payment_method_id')->references('id')->on('payment_methods')->onDelete('cascade');
+            $table->date('day')->nullable();
+            $table->time('from')->nullable();
+            $table->time('to')->nullable();
             $table->timestamps();
         });
     }

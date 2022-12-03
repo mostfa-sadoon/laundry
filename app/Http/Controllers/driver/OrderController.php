@@ -44,7 +44,7 @@ class OrderController extends Controller
        if($order!=null)
        $order->update([
           'delivery_status'=>'inprogress',
-          'progress'=>'indelivery',
+          'progress'=>'inprogress',
        ]);else{
         $data['status']=false;
         $data['message']="this order not found";
@@ -193,18 +193,29 @@ class OrderController extends Controller
         $confirm_type=$request->confirm_type;
         $driver_id=Auth::guard('driver_api')->user()->id;
         $orderstatus=OrderDriveryStatus::where('order_id',$order_id)->latest('id')->first();
+        $order=order::where('driver_id',$driver_id)->where('id',$order_id)->first();
+        if($order==null){
+            $data['status']=false;
+            $data['message']='this order not avilable';
+            return response()->json($data);
+        }
         // pick_up_home--->drop_of_laundry--->pick_up_laundry--->drop_of_home
         //  pick_up_laundy status
         if($confirm_type=='pick_up_laundry'){
             if($orderstatus->order_status=='pick_up_laundry'){
                 $orderstatus->update([
-                    'confirmation'=>true
+                    'confirmation'=>true,
                 ]);
                 OrderDriveryStatus::create([
                    'order_id'=>$order_id,
                     'driver_id'=>$driver_id,
                    'order_status'=>'drop_of_home'
                 ]);
+
+                $order->update([
+                    'delivery_status'=>'inprogress',
+                    'progress'=>'indelivery',
+                 ]);
             }
             $data['status']=true;
             $data['message']='confirm pick up from laundry success';
@@ -234,9 +245,13 @@ class OrderController extends Controller
                  'driver_id'=>$driver_id,
                 'order_status'=>'drop_of_laundry'
              ]);
+             $order->update([
+                'delivery_status'=>'inprogress',
+                'progress'=>'indelivery',
+             ]);
             }
             $data['status']=true;
-            $data['message']='drop of the order to home successfuly';
+            $data['message']='pick up order from home successfuly';
         }
         // drop of laundry status
         if($confirm_type=='drop_of_laundry'){
@@ -248,6 +263,10 @@ class OrderController extends Controller
                 'order_id'=>$order_id,
                  'driver_id'=>$driver_id,
                 'order_status'=>'pick_up_laundry'
+             ]);
+             $order->update([
+                'delivery_status'=>'inprogress',
+                'progress'=>'inprogress',
              ]);
             }
             $data['status']=true;
