@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
         $this->call(payment_method_trnasltions::class);
         $this->call(delivery_type::class);
         $this->call(delivery_type_trnaslations::class);
+        $this->call(notificationtype::class);
+        $this->call(notificationtypetranslations::class);
         // \App\Models\User::factory(10)->create();
     }
 }

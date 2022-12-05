@@ -80,11 +80,10 @@ class OrderController extends Controller
         ->selectRaw('sum(order_detailes.price) as price')
         ->groupBy('orders.id')
         ->first();
-        $orderargentprice=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        ->join('orders','orders.id','=','order_detailes.order_id')
-        ->join('argent','orders.id','=','argent.order_id')
+        $orderargentprice=DB::table('orders')->where('orders.id',$order_id)
+        ->leftjoin('argent','orders.id','=','argent.order_id')
         ->selectRaw('sum(argent.price) as argentprice')
-         ->groupBy('argent.id')
+         ->groupBy('argent.order_id')
          ->first();
          $order->price=$order->price+$orderargentprice->argentprice;
         // this query get services with count of item in it
@@ -134,13 +133,14 @@ class OrderController extends Controller
         $orders=DB::table('orders')
         ->select('orders.id','orders.customer_name','orders.customer_phone','orders.customer_location','branchitemtranslations.name')
         ->selectRaw('sum(order_detailes.quantity) as quantity')
-
         ->where('orders.driver_id',$driver_id)
         ->where('delivery_status','inprogress')
+        ->where('order_delivery_status.confirmation',false)
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
         ->join('order_detailes','order_detailes.order_id','=','orders.id')
         ->join('branchitemtranslations','branchitemtranslations.branchitem_id','=','order_detailes.branchitem_id')
         ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
+        ->groupBy('order_detailes.quantity')
         ->groupBy('order_detailes.order_id')
         ->groupBy('branchitemtranslations.name')
         ->where('branchitemtranslations.locale',$lang)
@@ -152,24 +152,35 @@ class OrderController extends Controller
             $items[$key]['name']=$order->name;
             $items[$key]['quantity']=$order->quantity;
         }
+
         // orders with out item
         $orders=DB::table('orders')
         ->select('orders.id','orders.customer_name','orders.customer_phone','orders.customer_location','order_delivery_status.order_status','lat','long')
         ->selectRaw('sum(order_detailes.quantity) as quantity')
-        ->selectRaw('sum(argent.price +order_detailes.price) as price')
+        ->selectRaw('sum(order_detailes.price) as price')
         ->where('orders.driver_id',$driver_id)
         ->where('delivery_status','inprogress')
-        ->join('argent','orders.id','=','argent.order_id')
-        ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
+        ->leftjoin('order_delivery_status','order_delivery_status.order_id','=','orders.id')
         ->where('order_delivery_status.driver_id',$driver_id)->latest('order_delivery_status.id')
         ->where('order_delivery_status.confirmation',false)
         ->join('order_detailes','order_detailes.order_id','=','orders.id')
         ->groupBy('orders.id')->groupBy('orders.customer_name')->groupBy('orders.customer_phone')->groupBy('orders.customer_location')
         ->groupBy('orders.lat') ->groupBy('orders.long')
-        ->groupBy('order_detailes.order_id')
         ->groupBy('order_delivery_status.order_status')
-        ->groupBy('order_delivery_status.id')
-        ->groupBy('argent.order_id')
+        ->groupBy('order_detailes.order_id')
+       //  ->groupBy('order_detailes.quantity')
+        // ->groupBy('argent.quantity')
+         ->groupBy('order_delivery_status.id')
+       //  ->groupBy('argent.order_id')
+        // ->groupBy('argent.id')
+        // ->groupBy('argent.price')
+
+        ->get();
+        $argentprices=DB::table('orders')
+        ->join('argent','orders.id','=','argent.order_id')
+        ->select('orders.id')
+        ->selectRaw('sum(price) as argentprice')
+        ->groupBy('orders.id')
         ->get();
         foreach($orders as $key=>$order){
             $order->distance=5;
@@ -181,6 +192,12 @@ class OrderController extends Controller
                  $order->item[$key]['name']=$item['name'];
                  $key++;
              }
+           }
+
+           foreach($argentprices as $argent){
+              if($argent->id==$order->id){
+                $order->price+=$argent->argentprice;
+              }
            }
         }
         $data['status']=true;
@@ -324,11 +341,10 @@ class OrderController extends Controller
       //  dd($order);
         $order->created_at=date('Y-m-d', strtotime($order->created_at));
         $order->time=date('h:m a', strtotime($order->created_at));
-        $orderargentprice=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-        ->join('orders','orders.id','=','order_detailes.order_id')
-        ->join('argent','orders.id','=','argent.order_id')
+        $orderargentprice=DB::table('orders')->where('orders.id',$order_id)
+        ->leftjoin('argent','orders.id','=','argent.order_id')
         ->selectRaw('sum(argent.price) as argentprice')
-         ->groupBy('argent.id')
+         ->groupBy('argent.order_id')
          ->first();
          $order->price=$order->price+$orderargentprice->argentprice;
         // this query get services with count of item in it

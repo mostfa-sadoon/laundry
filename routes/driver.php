@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\driver\AuthController;
 use App\Http\Controllers\driver\driverController;
 use App\Http\Controllers\driver\OrderController;
+use App\Http\Controllers\driver\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,4 +47,10 @@ Route::group(['middleware' => 'driverApiAuth'],function(){
         Route::get('latest/latestorderinfo/{order_id?}','latestorderinfo');
         Route::get('allorder','allorder');
     });
+
+    Route::controller(NotificationController::class)->group(function () {
+        Route::get('getnotification','getnotification');
+        Route::get('update/notification/{notification_id?}','updatenotification');
+    });
+
 });

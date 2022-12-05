@@ -7,6 +7,8 @@ use App\Http\Controllers\branch\ServiceController;
 use  App\Http\Controllers\branch\closeingdaycontroller;
 use  App\Http\Controllers\branch\OrderController;
 use  App\Http\Controllers\branch\driverController;
+use  App\Http\Controllers\branch\NotificationController;
+use  App\Http\Controllers\branch\HomeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -72,10 +74,16 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
         Route::get('order/ordersummary','ordersummary');
         Route::post('order/search','serachorder');
     });
-
+    Route::controller(NotificationController::class)->group(function () {
+        Route::get('getnotification','getnotification');
+        Route::get('update/notification/{notification_id?}','updatenotification');
+    });
     Route::controller(driverController::class)->group(function () {
         Route::get('avilable/driver','avilabledriver');
         Route::get('assign/order/{order_id?&driver_id?}','assignorder');
         Route::POST('assign/orders','assignorders');
+    });
+    Route::controller(HomeController::class)->group(function () {
+        Route::get('balance','getpalance');
     });
 });
