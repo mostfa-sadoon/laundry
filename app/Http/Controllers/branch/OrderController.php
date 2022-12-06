@@ -21,6 +21,7 @@ use App\Models\Order\orderdetailes;
 use App\Models\laundryservice\Serviceitemprice;
 use App\Models\Order\OrderDriveryStatus;
 use App\Traits\queries\serviceTrait;
+use App\Traits\response;
 use App\Traits\queries\orders;
 use App\Models\Laundry\branch;
 use Validator;
@@ -29,7 +30,7 @@ use App;
 
 class OrderController extends Controller
 {
-    use serviceTrait,orders;
+    use serviceTrait,orders,response;
     #Reigon[this is create ordder cycle]
         public $service_ids=[];
         public function getservice(Request $request){
@@ -189,38 +190,38 @@ class OrderController extends Controller
             // if order found
             DB::transaction(function()use(&$order,$request)
             {
+                // delvivery consisit of threemain type(self delivery - one way delivery - by delivery)
               if($request->delivery_type=='bydelivery'){
                 $delivery_type_id=2;
                  $order_status='pick_up_home';
               }
               elseif($request->delivery_type=='on_way_delivery')
               {
-                     //dd($request->wa);
                      //start validate way of delivery
-                      $delivery_type_id=3;
-                     //   $validator =Validator::make($request->all(), [
-                     //     'way_delivery'=>'required',
-                      //   ]);
-                        // if($validator->fails()) {
-                        // return response()->json([
-                        //     'message'=>$validator->messages()->first()
-                        // ],403);
-                        // }
+                     $delivery_type_id=3;
+                       $validator =Validator::make($request->all(), [
+                         'way_delivery'=>'required',
+                        ]);
+                        if($validator->fails()){
+                        return response()->json([
+                            'message'=>$validator->messages()->first()
+                        ],403);
+                        }
                        //  end validate way of delivery
                         if($request->way_delivery=='home_drop_of'){
                             $order_status='pick_up_laundry';
-                        }elseif($request->way_delivery=='self_drop_of'){
+                        }
+                        elseif($request->way_delivery=='self_drop_of'){
                             $order_status='pick_up_home';
-                        }else{
+                        }
+                       else{
                             return response()->json(['message'=>'the way delivery input is false'],403);
                         }
-
                     }
                     elseif($request->delivery_type=='self_delivery'){
                         $delivery_type_id=1;
                         $order_status=null;
                     }
-
                     OrderDriveryStatus::create([
                         'order_id'=>$order->id,
                         'driver_id'=>1,
@@ -233,8 +234,6 @@ class OrderController extends Controller
                         'delivery_type_id'=>$delivery_type_id,
                         'checked'=>true
                     ]);
-
-
             });
             $data['status']=true;
             $data['message']='order checled  succefully';
@@ -585,10 +584,10 @@ class OrderController extends Controller
             ->latest()
             ->get();
             $orders=$this->orderwithservice($orders,$lang);
-            $data['status']=true;
-            $data['message']="get inprogress order successfully";
-            $data['data']['orders']=$orders;
-            return response()->json($data);
+            if($orders->isEmpty()){
+                return $this->response(true,'this order not found');
+            }
+            return $this->response(true,'return orders success',$orders);
    }
    #EndReigon
 }

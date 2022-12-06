@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Order\order;
 use App\Traits\response;
+use App\Traits\queries\serviceTrait;
+use App\Traits\queries\orders;
 use Auth;
 use App;
 
 class indeliveryorderController extends Controller
 {
     //
-    use response;
+    use response,serviceTrait,orders;
     public $orders_id=[];
     public function driverorder(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
@@ -85,7 +87,13 @@ class indeliveryorderController extends Controller
         $branch_id=Auth::guard('branch-api')->user()->id;
         $lang=$request->header('lang');
         App::setLocale($lang);
-
-        return $this->response(true,'get balance success');
+        $orders=DB::table('orders')
+        ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
+        ->select('orders.id','orders.customer_name')
+        ->where('order_delivery_status.order_status','drop_of_laundry')
+        ->where('orders.delivery_type_id',3)->get();
+        $orders=$this->orderwithservice($orders,$lang);
+        $data['orders']=$orders;
+        return $this->response(true,'get balance success',$orders);
     }
 }
