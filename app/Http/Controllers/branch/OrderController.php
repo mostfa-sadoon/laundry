@@ -192,19 +192,21 @@ class OrderController extends Controller
               if($request->delivery_type=='bydelivery'){
                 $delivery_type_id=2;
                  $order_status='pick_up_home';
-                 }
-              elseif($request->delivery_type=='on_way_delivery'){
-                // start validate way of delivery
-                   $delivery_type_id=3;
-                  $validator =Validator::make($request->all(), [
-                    'way_delivery'=>'required',
-                  ]);
-                        if($validator->fails()) {
-                        return response()->json([
-                            'message'=>$validator->messages()->first()
-                        ],403);
-                        }
-                       // end validate way of delivery
+              }
+              elseif($request->delivery_type=='on_way_delivery')
+              {
+                     //dd($request->wa);
+                     //start validate way of delivery
+                      $delivery_type_id=3;
+                     //   $validator =Validator::make($request->all(), [
+                     //     'way_delivery'=>'required',
+                      //   ]);
+                        // if($validator->fails()) {
+                        // return response()->json([
+                        //     'message'=>$validator->messages()->first()
+                        // ],403);
+                        // }
+                       //  end validate way of delivery
                         if($request->way_delivery=='home_drop_of'){
                             $order_status='pick_up_laundry';
                         }elseif($request->way_delivery=='self_drop_of'){
@@ -212,23 +214,27 @@ class OrderController extends Controller
                         }else{
                             return response()->json(['message'=>'the way delivery input is false'],403);
                         }
+
                     }
-                elseif($request->delivery_type=='self_delivery'){
-                    $delivery_type_id=1;
-                    $order_status=null;
-                }
-                OrderDriveryStatus::create([
-                    'order_id'=>$order->id,
-                    'driver_id'=>1,
-                    'order_status'=>$order_status
-                 ]);
-                $order->update([
-                    'day'=>$request->day,
-                    'from'=>$request->from,
-                    'to'=>$request->to,
-                    'delivery_type_id'=>$delivery_type_id,
-                    'checked'=>true
-                 ]);
+                    elseif($request->delivery_type=='self_delivery'){
+                        $delivery_type_id=1;
+                        $order_status=null;
+                    }
+
+                    OrderDriveryStatus::create([
+                        'order_id'=>$order->id,
+                        'driver_id'=>1,
+                        'order_status'=>$order_status
+                    ]);
+                    $order->update([
+                        'day'=>$request->day,
+                        'from'=>$request->from,
+                        'to'=>$request->to,
+                        'delivery_type_id'=>$delivery_type_id,
+                        'checked'=>true
+                    ]);
+
+
             });
             $data['status']=true;
             $data['message']='order checled  succefully';
@@ -453,8 +459,6 @@ class OrderController extends Controller
                         }
                     }
                 }
-
-
             // but additional service inside service
             foreach($services as $service){
                 $service->additionalservice=[];
@@ -533,10 +537,10 @@ class OrderController extends Controller
             $argents=db::table('argent')->where('order_id',$order_id)->get();
             // but additional service in the item
             foreach($items as $key=>$item){
-            $item->additonalservice='';
+            $item->additonalservice=[];
             foreach($additionals as $additional){
                 if($item->item_id==$additional->item_id){
-                    $item->additonalservice=$additional->name;
+                    array_push($item->additonalservice,$additional->name);
                 }
                 }
                 //but argent inside item
