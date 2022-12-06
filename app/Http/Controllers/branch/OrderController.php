@@ -401,7 +401,8 @@ class OrderController extends Controller
             App::setLocale($lang);
             $driver=Driver::select('id','name')->find($driver_id);
             $orders=DB::table('orders')
-            ->select('orders.id as order_id','driver_id')
+            ->select('orders.id as order_id','orders.driver_id','order_delivery_status.order_status as order_status')
+            ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
             ->where('branch_id',$branch_id)
             ->where('drivers.id',$driver_id)
             ->join('drivers','drivers.id','=','orders.driver_id')
@@ -443,6 +444,17 @@ class OrderController extends Controller
             ->groupBy('order_detailes.service_id')
             ->groupBy('order_detailes.additionalservice_id')
             ->get();
+            $argents=db::table('argent')->wherein('order_id',$this->orders_id)->get();
+                foreach($services as $service){
+                    foreach($argents as $argent){
+                        $service->argent=0;
+                        if($service->service_id==$argent->service_id&&$service->order_id == $argent->order_id){
+                            $service->argent=$argent->quantity;
+                        }
+                    }
+                }
+
+
             // but additional service inside service
             foreach($services as $service){
                 $service->additionalservice=[];
