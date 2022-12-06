@@ -22,10 +22,13 @@ trait orders
       ->get();
        // get additoional service to put it under service
       $additionalservices=DB::table('order_detailes')
-      ->select('order_id','order_detailes.service_id','order_detailes.additionalservice_id')
+      ->select('order_id','order_detailes.service_id','order_detailes.additionalservice_id','additionalservicetranslations.name as name')
+      ->join('additionalservicetranslations','additionalservicetranslations.additionalservice_id','=','additionalservicetranslations.additionalservice_id')
       ->selectRaw('sum(quantity) as quantity')
       ->wherein('order_detailes.order_id',$this->orders_id)
       ->where('order_detailes.additionalservice_id','!=',null)
+      ->where('additionalservicetranslations.locale',$lang)
+      ->groupBy('additionalservicetranslations.name')
       ->groupBy('order_detailes.order_id')
       ->groupBy('order_detailes.service_id')
       ->groupBy('order_detailes.additionalservice_id')
