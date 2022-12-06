@@ -38,6 +38,15 @@ trait orders
               }
           }
        }
+       $argents=db::table('argent')->wherein('order_id',$this->orders_id)->get();
+       foreach($services as $service){
+        foreach($argents as $argent){
+            $service->argent=0;
+            if($service->service_id==$argent->service_id&&$service->order_id == $argent->order_id){
+                $service->argent=$argent->quantity;
+            }
+        }
+       }
       foreach($orders as $order){
           $order->services=[];
           foreach($services as $service){

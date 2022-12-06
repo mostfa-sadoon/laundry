@@ -278,7 +278,6 @@ class OrderController extends Controller
             App::setLocale($lang);
             $branch_id=Auth::guard('branch-api')->user()->id;
             // get driver that have order
-
             // $drivers=DB::table('drivers')
             // ->select('drivers.id as driver_id','drivers.name','orders.id as order_id')
             // ->where('branch_id',$branch_id)
@@ -288,7 +287,6 @@ class OrderController extends Controller
             //     $q->from('orders')->groupBy('orders.driver_id')->selectRaw('MAX(orders.id)')
             //     ->distinct()->get();
             // })->get();
-
             $drivers=DB::table('drivers')
             ->select('drivers.id as driver_id','drivers.name')->where('branch_id',$branch_id)
             ->join('orders','drivers.id','=','orders.driver_id')
@@ -311,7 +309,7 @@ class OrderController extends Controller
                 ->first();
                 array_push($orders,$order);
             }
-         //   return response()->json($orders);
+            //return response()->json($orders);
             $orderscount=Order::select('driver_id','id as order_id')->where('branch_id',$branch_id)->where('delivery_status','inprogress')
             ->groupBy('orders.driver_id')
             ->groupBy('orders.id')
@@ -377,10 +375,6 @@ class OrderController extends Controller
                     }
                   }
             }
-
-
-
-
             foreach($drivers as $driver){
                 $driver->orderstatus='';
                 $driver->order=[];
