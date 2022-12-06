@@ -159,16 +159,16 @@ class OrderController extends Controller
         //   'lang'=>$lang
         //   ]);
             $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
-          ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
-          ->selectRaw('sum(price) as total')
-          ->selectRaw('sum(quantity) as quantity')
-          ->selectRaw('servicetranslations.name')
-          ->where('order_detailes.order_id',$order_id)
-          ->where('servicetranslations.locale',$lang)
-          ->where('order_detailes.additionalservice_id','=',null)
-          ->groupBy('servicetranslations.service_id')
-          ->groupBy('servicetranslations.name')
-          ->get();
+            ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
+            ->selectRaw('sum(price) as total')
+            ->selectRaw('sum(quantity) as quantity')
+            ->selectRaw('servicetranslations.name')
+            ->where('order_detailes.order_id',$order_id)
+            ->where('servicetranslations.locale',$lang)
+            ->where('order_detailes.additionalservice_id','=',null)
+            ->groupBy('servicetranslations.service_id')
+            ->groupBy('servicetranslations.name')
+            ->get();
             $argentprice=Argent::where('order_id',$order_id)->sum('price');
             $data['status']=true;
             $data['message']="return order info succeffuly";
@@ -241,6 +241,10 @@ class OrderController extends Controller
           }
          }
     #EndReigon
+     ###################################################################################################################
+     ###################################################################################################################
+     ###################################################################################################################
+     ###################################################################################################################
     #Reigon[this is show order cycle]
         public function inprogressorder(Request $request){
             $branch_id=Auth::guard('branch-api')->user()->id;
@@ -568,26 +572,26 @@ class OrderController extends Controller
             return response()->json($data);
 
         }
-   public function serachorder(Request $request){
-            //dd($request->all());
-            $branch_id=Auth::guard('branch-api')->user()->id;
-            $lang=$request->header('lang');
-            App::setLocale($lang);
-            $type=gettype($request->key);
-            $search_type=$request->search_type;
-            ($type=='integer')? $serach_key='id' : $serach_key='customer_name';
-            $orders=DB::table('orders')
-            ->select('orders.id','orders.customer_name')
-            ->where('orders.progress',$search_type)
-            ->where('branch_id',$branch_id)
-            ->where($serach_key,$request->key)
-            ->latest()
-            ->get();
-            $orders=$this->orderwithservice($orders,$lang);
-            if($orders->isEmpty()){
-                return $this->response(true,'this order not found');
-            }
-            return $this->response(true,'return orders success',$orders);
-   }
-   #EndReigon
+        public function serachorder(Request $request){
+                    //dd($request->all());
+                    $branch_id=Auth::guard('branch-api')->user()->id;
+                    $lang=$request->header('lang');
+                    App::setLocale($lang);
+                    $type=gettype($request->key);
+                    $search_type=$request->search_type;
+                    ($type=='integer')? $serach_key='id' : $serach_key='customer_name';
+                    $orders=DB::table('orders')
+                    ->select('orders.id','orders.customer_name')
+                    ->where('orders.progress',$search_type)
+                    ->where('branch_id',$branch_id)
+                    ->where($serach_key,$request->key)
+                    ->latest()
+                    ->get();
+                    $orders=$this->orderwithservice($orders,$lang);
+                    if($orders->isEmpty()){
+                        return $this->response(true,'this order not found');
+                    }
+                    return $this->response(true,'return orders success',$orders);
+        }
+    #EndReigon
 }

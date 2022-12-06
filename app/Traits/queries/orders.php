@@ -33,6 +33,35 @@ trait orders
       ->groupBy('order_detailes.service_id')
       ->groupBy('order_detailes.additionalservice_id')
       ->get();
+
+
+
+$services=DB::table('order_detailes')
+            ->select('servicetranslations.name','order_id','order_detailes.service_id')
+            ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
+            ->selectRaw('sum(quantity) as quantity')
+            ->wherein('order_detailes.order_id',$this->orders_id)
+            ->where('order_detailes.additionalservice_id','=',null)
+            ->where('servicetranslations.locale',$lang)
+            ->groupBy('order_detailes.order_id')
+            ->groupBy('order_detailes.service_id')
+            ->groupBy('servicetranslations.service_id')
+            ->groupBy('servicetranslations.name')
+            ->get();
+            $additionalservices=DB::table('order_detailes')
+            ->select('order_id','order_detailes.service_id','order_detailes.additionalservice_id','additionalservicetranslations.name')
+            ->join('additionalservicetranslations','additionalservicetranslations.additionalservice_id','=','order_detailes.additionalservice_id')
+            ->selectRaw('sum(quantity) as quantity')
+            ->wherein('order_detailes.order_id',$this->orders_id)
+            ->where('order_detailes.additionalservice_id','!=',null)
+            ->where('additionalservicetranslations.locale',$lang)
+            ->groupBy('additionalservicetranslations.name')
+            ->groupBy('order_detailes.order_id')
+            ->groupBy('order_detailes.service_id')
+            ->groupBy('order_detailes.additionalservice_id')
+            ->get();
+
+
        foreach($services as $service){
           $service->additionalservice=[];
           foreach($additionalservices as $additionalservice){
@@ -41,6 +70,7 @@ trait orders
               }
           }
        }
+       //get addtional service to put it in services
        $argents=db::table('argent')->wherein('order_id',$this->orders_id)->get();
        foreach($services as $service){
         foreach($argents as $argent){
