@@ -67,7 +67,6 @@ class driverController extends Controller
 
     public function updatephone(Request $request){
         $driver=Driver::where('otp',$request->otp)->where('phone',$request->old_phone)->first();
-
         // check of driver
         if($driver==null){
          $data['status']=false;

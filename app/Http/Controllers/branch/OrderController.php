@@ -178,11 +178,9 @@ class OrderController extends Controller
             return response()->json($data);
            }
            public function checkorder(Request $request){
-
             $order_id=$request->order_id;
             $branchid=Auth::guard('branch-api')->user()->id;
             $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
-
             if($order==null){
             $data['status']=false;
             $data['message']='order not found';
@@ -191,51 +189,47 @@ class OrderController extends Controller
             // if order found
             DB::transaction(function()use(&$order,$request)
             {
+              if($request->delivery_type=='bydelivery'){
+                $delivery_type_id=2;
+                 $order_status='pick_up_home';
+                 }
+              elseif($request->delivery_type=='on_way_delivery'){
+                // start validate way of delivery
+                   $delivery_type_id=3;
+                  $validator =Validator::make($request->all(), [
+                    'way_delivery'=>'required',
+                  ]);
+                        if($validator->fails()) {
+                        return response()->json([
+                            'message'=>$validator->messages()->first()
+                        ],403);
+                        }
+                       // end validate way of delivery
+                        if($request->way_delivery=='home_drop_of'){
+                            $order_status='pick_up_laundry';
+                        }elseif($request->way_delivery=='self_drop_of'){
+                            $order_status='pick_up_home';
+                        }else{
+                            return response()->json(['message'=>'the way delivery input is false'],403);
+                        }
+                    }
+                elseif($request->delivery_type=='self_delivery'){
+                    $delivery_type_id=1;
+                    $order_status=null;
+                }
+                OrderDriveryStatus::create([
+                    'order_id'=>$order->id,
+                    'driver_id'=>1,
+                    'order_status'=>$order_status
+                 ]);
                 $order->update([
                     'day'=>$request->day,
                     'from'=>$request->from,
                     'to'=>$request->to,
-                 ]);
-              if($request->delivery_type=='bydelivery'){
-                OrderDriveryStatus::create([
-                    'order_id'=>$order->id,
-                    'driver_id'=>1,
-                    'order_status'=>'pick_up_home'
-                 ]);
-              }elseif($request->delivery_type=='on_way_delivery'){
-                // start validate way of delivery
-                  $validator =Validator::make($request->all(), [
-                    'way_delivery'=>'required',
-                  ]);
-                  if ($validator->fails()) {
-                   return response()->json([
-                       'message'=>$validator->messages()->first()
-                   ],403);
-                   }
-                // end validate way of delivery
-                 if($request->way_delivery=='home_drop_of'){
-                    OrderDriveryStatus::create([
-                        'order_id'=>$order->id,
-                        'driver_id'=>1,
-                        'order_status'=>'pick_up_laundry'
-                     ]);
-                 }elseif($request->way_delivery=='self_drop_of'){
-                    OrderDriveryStatus::create([
-                        'order_id'=>$order->id,
-                        'driver_id'=>1,
-                        'order_status'=>'pick_up_home'
-                     ]);
-                 }else{
-                    return response()->json(['message'=>'the way delivery input is false'],403);
-                 }
-                }elseif($request->delivery_type=='self_delivery'){
-
-                }
-                $order->update([
+                    'delivery_type_id'=>$delivery_type_id,
                     'checked'=>true
-                ]);
+                 ]);
             });
-
             $data['status']=true;
             $data['message']='order checled  succefully';
             return response()->json($data);
@@ -307,13 +301,17 @@ class OrderController extends Controller
             }
             $orders=[];
             foreach($drivers as $driver){
-                $order=DB::table('orders')->where('driver_id',$driver->driver_id)
-                ->select('orders.id as order_id','driver_id')->where('delivery_status','inprogress')
+                $order=DB::table('orders')->where('orders.driver_id',$driver->driver_id)
+                ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
+                ->select('orders.id as order_id','orders.driver_id','order_delivery_status.order_status as order_status')
+                ->where('orders.delivery_status','inprogress')
                 ->where('checked',true)
+                ->where('order_delivery_status.confirmation',false)
                 ->latest('orders.id')
                 ->first();
                 array_push($orders,$order);
             }
+         //   return response()->json($orders);
             $orderscount=Order::select('driver_id','id as order_id')->where('branch_id',$branch_id)->where('delivery_status','inprogress')
             ->groupBy('orders.driver_id')
             ->groupBy('orders.id')
@@ -347,6 +345,7 @@ class OrderController extends Controller
             ->groupBy('order_detailes.additionalservice_id')
             ->get();
             // but additional service inside service
+            $argents=db::table('argent')->wherein('order_id',$this->orders_id)->get();
             foreach($services as $service){
                 $service->additionalservice=[];
                 foreach($additionalservices as $key=>$additionalservice){
@@ -354,6 +353,12 @@ class OrderController extends Controller
                         array_push($service->additionalservice,$additionalservice);
                     }
                 }
+                foreach($argents as $argent){
+                    $service->argent=0;
+                    if($service->service_id==$argent->service_id&&$service->order_id == $argent->order_id){
+                        $service->argent=$argent->quantity;
+                    }
+                    }
              }
             foreach($orders as $order){
                 $order->services=[];
@@ -373,12 +378,15 @@ class OrderController extends Controller
                   }
             }
 
-            //return response()->json($orders);
+
+
+
             foreach($drivers as $driver){
+                $driver->orderstatus='';
                 $driver->order=[];
                 foreach($orders as $order){
                     if($order->driver_id==$driver->driver_id){
-                       //$driver->order=$order;
+                       $driver->orderstatus=$order->order_status;
                        foreach ($services as $service){
                         if($order->order_id==$service->order_id){
                             array_push($driver->order,$service);

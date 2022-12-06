@@ -61,4 +61,16 @@ class HomeController extends Controller
         $data['Balance']=$Balance;
         return $this->response(true,'get balance success',$data);
     }
+    public function branchinfo(Request $request){
+        $branch_id=Auth::guard('branch-api')->user()->id;
+        $lang=$request->header('lang');
+        App::setLocale($lang);
+        $branch=DB::table('branchs')
+        ->join('laundries','laundries.id','=','branchs.laundry_id')
+        ->select('branchs.status as status','laundries.name as name','laundries.logo as logo')
+        ->where('branchs.id',$branch_id)
+        ->first();
+        $data['branch']=$branch;
+        return $this->response(true,'get branch info successfully',$data);
+    }
 }

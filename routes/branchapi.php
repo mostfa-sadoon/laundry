@@ -1,14 +1,16 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\branch\Auth\AuthController;
-use App\Http\Controllers\branch\ServiceController;
+use  Illuminate\Http\Request;
+use  Illuminate\Support\Facades\Route;
+use  App\Http\Controllers\branch\Auth\AuthController;
+use  App\Http\Controllers\branch\ServiceController;
 use  App\Http\Controllers\branch\closeingdaycontroller;
 use  App\Http\Controllers\branch\OrderController;
 use  App\Http\Controllers\branch\driverController;
 use  App\Http\Controllers\branch\NotificationController;
 use  App\Http\Controllers\branch\HomeController;
+use  App\Http\Controllers\branch\SettingController;
+use  App\Http\Controllers\branch\indeliveryorderController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -85,5 +87,13 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
     });
     Route::controller(HomeController::class)->group(function () {
         Route::get('balance','getpalance');
+        Route::get('branch/info','branchinfo');
+    });
+    Route::controller(SettingController::class)->group(function () {
+        Route::get('updatestatus','updatestatus');
+    });
+    Route::controller(indeliveryorderController::class)->group(function () {
+        Route::get('delivery/fordriver','driverorder');
+        Route::get('delivery/forcustomer','customerorder');
     });
 });
