@@ -94,6 +94,6 @@ class indeliveryorderController extends Controller
         ->where('orders.delivery_type_id',3)->get();
         $orders=$this->orderwithservice($orders,$lang);
         $data['orders']=$orders;
-        return $this->response(true,'get balance success',$orders);
+        return $this->response(true,'get balance success',$data);
     }
 }

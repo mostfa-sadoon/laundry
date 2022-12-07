@@ -134,7 +134,7 @@ class ServiceController extends Controller
                 'status'=>false,
                 'message'=>'you haven not access in this branch or not found',
             ]);
-        }
+          }
             foreach($request->itemprices as $itemprice){
                  $baranchitem= Branchitem::where('item_id',$itemprice['item_id'])->where('branch_id',$request->branch_id)->first();
                     if($baranchitem!=null){
@@ -159,7 +159,7 @@ class ServiceController extends Controller
               }
             }
         return response()->json(['status'=>true,'message'=>'aditional service prices added successfully']);
- }
+     }
     public function branchservices(Request $request){
       $lang=$request->header('lang');
       App::setLocale($lang);
@@ -175,7 +175,7 @@ class ServiceController extends Controller
      $Branchitem=Branchitem::select('id')
      ->whereHas('itemadditionalservice')
      ->with(['itemadditionalservice.additionalservice'])
-    ->where('branch_id', $branch_id)
+      ->where('branch_id', $branch_id)
      ->get()->makehidden('translations');
       $data=[];
       $data['status']=true;
