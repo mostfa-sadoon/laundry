@@ -60,8 +60,6 @@ $services=DB::table('order_detailes')
             ->groupBy('order_detailes.service_id')
             ->groupBy('order_detailes.additionalservice_id')
             ->get();
-
-
        foreach($services as $service){
           $service->additionalservice=[];
           foreach($additionalservices as $additionalservice){

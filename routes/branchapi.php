@@ -11,6 +11,7 @@ use  App\Http\Controllers\branch\NotificationController;
 use  App\Http\Controllers\branch\HomeController;
 use  App\Http\Controllers\branch\SettingController;
 use  App\Http\Controllers\branch\indeliveryorderController;
+use  App\Http\Controllers\branch\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -91,9 +92,14 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
     });
     Route::controller(SettingController::class)->group(function () {
         Route::get('updatestatus','updatestatus');
+        Route::get('/dayes','avilabledayes');
     });
     Route::controller(indeliveryorderController::class)->group(function () {
         Route::get('delivery/fordriver','driverorder');
         Route::get('delivery/forcustomer','customerorder');
+    });
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('edit/profile','edit');
+        Route::POST('update/profile','update');
     });
 });
