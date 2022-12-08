@@ -414,6 +414,7 @@ class OrderController extends Controller
             ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
             ->where('branch_id',$branch_id)
             ->where('drivers.id',$driver_id)
+            ->where('order_delivery_status.confirmation',false)
             ->join('drivers','drivers.id','=','orders.driver_id')
             ->where('delivery_status','inprogress')
             ->latest('orders.id')->distinct()

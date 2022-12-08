@@ -28,6 +28,13 @@ class ProfileController extends Controller
     public function update(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
         $branch=branch::find($branch_id);
+        //check if user change phone number
+        if($request->phone!=$branch->phone){
+            $branch->update([
+              'otp'=>1234
+            ]);
+            return $this->response(true,'please end otp in the next request with phone number');
+        }
         if($request->password==null){
           $validator =Validator::make($request->all(), [
             'username'=>'required|unique:branchs,username,'.$branch_id,
@@ -104,10 +111,20 @@ class ProfileController extends Controller
                      }
                 });
         }
-
-
-
-
         return $this->response(true,'branch info updated successfully');
+    }
+    public function updatephone(Request $request){
+        $branch_id=Auth::guard('branch-api')->user()->id;
+        $lang=$request->header('lang');
+        App::setLocale($lang);
+        $branch=branch::find($branch_id);
+        if($branch->otp==$request->otp){
+            $branch->update([
+              'phone'=>$request->phone
+            ]);
+        }else{
+            return $this->respone(false,'otp is wrong');
+        }
+        return $this->response(true,'phone updated successfully');
     }
 }

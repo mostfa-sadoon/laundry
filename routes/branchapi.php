@@ -101,5 +101,6 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
     Route::controller(ProfileController::class)->group(function () {
         Route::get('edit/profile','edit');
         Route::POST('update/profile','update');
+        Route::POST('update/phone','updatephone');
     });
 });
