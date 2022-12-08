@@ -26,7 +26,7 @@ class SettingController extends Controller
               ]);
         }
         return $this->response(true,'update pranch status successfully');
-    }
+    }   
     public function avilabledayes(){
         $date=[];
          for($i=0;$i<7;$i++){
