@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Order\order;
 use App\Models\Order\orderdetailes;
 use App\Models\laundryservice\Serviceitemprice;
+use App\Interfaces\OrderRepositoryInterface;
 use App\Models\Order\OrderDriveryStatus;
 use App\Traits\queries\serviceTrait;
 use App\Traits\response;
@@ -31,22 +32,20 @@ use App;
 class OrderController extends Controller
 {
     use serviceTrait,orders,response;
+    use response;
+    private OrderRepositoryInterface $OrderRepository;
+    public function __construct(OrderRepositoryInterface $OrderRepository)
+    {
+        $this->OrderRepository = $OrderRepository;
+    }
     #Reigon[this is create ordder cycle]
         public $service_ids=[];
         public function getservice(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;
-        $branch=branch::find($branch_id);
         $lang=$request->header('lang');
         App::setLocale($lang);
-        $data=[];
-        $branchservices=branchservice::select('service_id')->where('branch_id',$branch_id)->where('status','on')->get();
-        foreach($branchservices as $branchservice){
-            array_push($this->service_ids,$branchservice->service_id);
-        }
-        $services=Service::wherein('id',$this->service_ids)->select('id')->with('categories')->get()->makehidden(['created_at','updated_at']);
-        $data['services']= $services;
-        $data['branchargent']=$branch->argent;
-        return response()->json(['status'=>true,'message'=>'get services succefully','data'=>$data]);
+        $services= $this->OrderRepository->selectlaundry($branch_id,$lang);
+        return $this->response(true,'get services succefully',$services);
        }
         public function itemdetailes(Request $request){
         $lang=$request->header('lang');
@@ -67,21 +66,16 @@ class OrderController extends Controller
          $branchid=Auth::guard('branch-api')->user()->id;
          DB::transaction(function()use(&$order,$request,$branchid)
          {
-         $order=order::create([
-            'branch_id'=>$branchid,
-            'customer_name'=>$request->customer_name,
-            'customer_phone'=>$request->customer_phone,
-            'customer_location'=>$request->customer_location,
-            'lat'=>$request->lat,
-            'long'=>$request->long,
-            'driver_id'=>1,
-         ]);
-        //  OrderDriveryStatus::create([
-        //     'order_id'=>$order->id,
-        //     'driver_id'=>1,
-        //     'order_status'=>'pick_up_laundy'
-        //  ]);
-         foreach($request->serviceprices as  $serviceprice){
+            $order=order::create([
+                'branch_id'=>$branchid,
+                'customer_name'=>$request->customer_name,
+                'customer_phone'=>$request->customer_phone,
+                'customer_location'=>$request->customer_location,
+                'lat'=>$request->lat,
+                'long'=>$request->long,
+                'driver_id'=>1,
+            ]);
+             foreach($request->serviceprices as  $serviceprice){
              $price=$serviceprice['quantity']*$serviceprice['price'];
              orderdetailes::create([
                  'order_id'=>$order->id,
@@ -102,18 +96,18 @@ class OrderController extends Controller
                     'branchitem_id'=>$serviceprice['branchitem_id'],
                 ]);
              }
-         }
-         foreach($request->additionalservices as $additionalservice){
-             orderdetailes::create([
-                 'order_id'=>$order->id,
-                 'branchitem_id'=>$additionalservice['branchitem_id'],
-                 'service_id'=>$additionalservice['service_id'],
-                 'price'=>$price,
-                 'additionalservice_id'=>$additionalservice['additionalservice_id'],
-                 'quantity'=>$additionalservice['quantity']
-               ]);
-         }
-        });
+           }
+            foreach($request->additionalservices as $additionalservice){
+                orderdetailes::create([
+                    'order_id'=>$order->id,
+                    'branchitem_id'=>$additionalservice['branchitem_id'],
+                    'service_id'=>$additionalservice['service_id'],
+                    'price'=>$price,
+                    'additionalservice_id'=>$additionalservice['additionalservice_id'],
+                    'quantity'=>$additionalservice['quantity']
+                ]);
+             }
+            });
         } catch (Throwable $e) {
             report($e);
             return false;

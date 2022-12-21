@@ -19,11 +19,17 @@ use App\Http\Resources\editservice\categoryresource;
 use App\Http\Resources\editservice\serviceresource;
 use App\Http\Resources\editservice\branchitem as branchitemresource;
 use App\Models\Laundry\branch;
+use App\Interfaces\OrderRepositoryInterface;
 use App;
 use Auth;
 class ServiceController extends Controller
 {
     //
+    private OrderRepositoryInterface $OrderRepository;
+    public function __construct(OrderRepositoryInterface $OrderRepository)
+    {
+        $this->OrderRepository = $OrderRepository;
+    }
     public function getservices(Request $request){
          $lang=$request->header('lang');
          App::setLocale($lang);
@@ -263,19 +269,10 @@ class ServiceController extends Controller
         $branch_id=Auth::guard('branch-api')->user()->id;
         $service_id=$request->service_id;
         $category_id=$request->category_id;
-        $brnchitem=Branchitem::whereHas('branchitemprice',function($q)use($service_id,$branch_id,$category_id){
-            $q->where('service_id',$service_id)->where('branch_id',$branch_id)->where('category_id',$category_id);
-        })->with(['branchitemprice'=>function($q)use($service_id,$branch_id,$category_id){
-            $q->where('service_id',$service_id)->where('branch_id',$branch_id)->where('category_id',$category_id)->get();
-        }])->get();
-        return[
-        'status'=>true,
-        'message'=>'get all pranch item price successfully',
-        'data'=>
-        [
-            'branchitem'=> branchitemresource::collection($brnchitem),
-        ]
-        ];
+        $lang=$request->header('lang');
+        App::setLocale($lang);
+        $categoryitems=$this->OrderRepository->getcategoryitems($category_id,$service_id,$branch_id,$lang);
+        return $categoryitems;
     }
     public function getaditionalservicecategory(Request $request){
         $branch_id=Auth::guard('branch-api')->user()->id;

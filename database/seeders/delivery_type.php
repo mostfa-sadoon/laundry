@@ -21,6 +21,8 @@ class delivery_type extends Seeder
                  "id"=>1,
               ],[
                 "id"=>2,
+              ],[
+                "id"=>3,
               ]
         ]);
 
