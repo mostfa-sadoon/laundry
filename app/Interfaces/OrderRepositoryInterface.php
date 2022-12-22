@@ -8,4 +8,5 @@ interface OrderRepositoryInterface
   public function getcategoryitems($category_id,$service_id,$branch_id,$lang);
   public function itemdetailes($itemid,$lang);
   public function submitorder($request);
+  public function reciveorder($request);
 }

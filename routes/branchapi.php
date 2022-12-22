@@ -76,6 +76,7 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
         Route::get('order/moreorder','moreorder');
         Route::get('order/ordersummary','ordersummary');
         Route::post('order/search','serachorder');
+        Route::get('order/recive{order_id?&confirm_type?}','reciveorder');
     });
     Route::controller(NotificationController::class)->group(function () {
         Route::get('getnotification','getnotification');

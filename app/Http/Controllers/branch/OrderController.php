@@ -41,117 +41,117 @@ class OrderController extends Controller
     #Reigon[this is create ordder cycle]
         public $service_ids=[];
         public function getservice(Request $request){
-        $branch_id=Auth::guard('branch-api')->user()->id;
-        $lang=$request->header('lang');
-        App::setLocale($lang);
-        $services= $this->OrderRepository->selectlaundry($branch_id,$lang);
-        return $this->response(true,'get services succefully',$services);
-       }
+            $branch_id=Auth::guard('branch-api')->user()->id;
+            $lang=$request->header('lang');
+            App::setLocale($lang);
+            $services= $this->OrderRepository->selectlaundry($branch_id,$lang);
+            return $this->response(true,'get services succefully',$services);
+        }
         public function itemdetailes(Request $request){
-        $lang=$request->header('lang');
-        App::setLocale($lang);
-        $item_id=$request->item_id;
-        $itemadditionalservice=Additionalservice::select('id')->whereHas('branchadditionalservice',function(Builder $query)use($item_id){
-            $query->where('branchitem_id',$item_id)->where('status','on');
-        })->with(['itemprices'=>function($q)use($item_id){
-                $q->select('additionalservice_id','price','id as item_price_id')->where('branchitem_id',$item_id)->get();
-        }])->get();
-        $data['status']=true;
-        $data['message']="return avavilable additional service of this item";
-        $data['data']['additionalservices']=$itemadditionalservice;
-        return response()->json($data);
+            $lang=$request->header('lang');
+            App::setLocale($lang);
+            $item_id=$request->item_id;
+            $itemadditionalservice=Additionalservice::select('id')->whereHas('branchadditionalservice',function(Builder $query)use($item_id){
+                $query->where('branchitem_id',$item_id)->where('status','on');
+            })->with(['itemprices'=>function($q)use($item_id){
+                    $q->select('additionalservice_id','price','id as item_price_id')->where('branchitem_id',$item_id)->get();
+            }])->get();
+            $data['status']=true;
+            $data['message']="return avavilable additional service of this item";
+            $data['data']['additionalservices']=$itemadditionalservice;
+            return response()->json($data);
         }
         public function submitorder(Request $request){
-        try{
-         $branchid=Auth::guard('branch-api')->user()->id;
-         DB::transaction(function()use(&$order,$request,$branchid)
-         {
-            $order=order::create([
-                'branch_id'=>$branchid,
-                'customer_name'=>$request->customer_name,
-                'customer_phone'=>$request->customer_phone,
-                'customer_location'=>$request->customer_location,
-                'lat'=>$request->lat,
-                'long'=>$request->long,
-                'driver_id'=>1,
-            ]);
-             foreach($request->serviceprices as  $serviceprice){
-             $price=$serviceprice['quantity']*$serviceprice['price'];
-             orderdetailes::create([
-                 'order_id'=>$order->id,
-                 'branchitem_id'=>$serviceprice['branchitem_id'],
-                 'price'=> $price,
-                 'service_id'=>$serviceprice['service_id'],
-                 'quantity'=>$serviceprice['quantity']
-               ]);
-               // this condation to add agent
-               if($serviceprice['argent']!=0){
-                $argentprice=Branchitem::select('argentprice')->where('id',$serviceprice['branchitem_id'])->first();
-                $argentprice=$serviceprice['argent']*$argentprice->argentprice;
-                Argent::create([
-                    'order_id'=>$order->id,
-                    'price'=>$argentprice,
-                    'quantity'=>$serviceprice['argent'],
-                    'service_id'=>$serviceprice['service_id'],
-                    'branchitem_id'=>$serviceprice['branchitem_id'],
+            try{
+            $branchid=Auth::guard('branch-api')->user()->id;
+            DB::transaction(function()use(&$order,$request,$branchid)
+            {
+                $order=order::create([
+                    'branch_id'=>$branchid,
+                    'customer_name'=>$request->customer_name,
+                    'customer_phone'=>$request->customer_phone,
+                    'customer_location'=>$request->customer_location,
+                    'lat'=>$request->lat,
+                    'long'=>$request->long,
+                    'driver_id'=>1,
                 ]);
-             }
-           }
-            foreach($request->additionalservices as $additionalservice){
+                foreach($request->serviceprices as  $serviceprice){
+                $price=$serviceprice['quantity']*$serviceprice['price'];
                 orderdetailes::create([
                     'order_id'=>$order->id,
-                    'branchitem_id'=>$additionalservice['branchitem_id'],
-                    'service_id'=>$additionalservice['service_id'],
-                    'price'=>$price,
-                    'additionalservice_id'=>$additionalservice['additionalservice_id'],
-                    'quantity'=>$additionalservice['quantity']
+                    'branchitem_id'=>$serviceprice['branchitem_id'],
+                    'price'=> $price,
+                    'service_id'=>$serviceprice['service_id'],
+                    'quantity'=>$serviceprice['quantity']
                 ]);
-             }
-            });
-        } catch (Throwable $e) {
-            report($e);
-            return false;
-        }
-            $data['status']=true;
-            $data['message']='order added succefully';
-            $data['data']['order']=$order->id;
-            return response()->json($data);
+                // this condation to add agent
+                if($serviceprice['argent']!=0){
+                    $argentprice=Branchitem::select('argentprice')->where('id',$serviceprice['branchitem_id'])->first();
+                    $argentprice=$serviceprice['argent']*$argentprice->argentprice;
+                    Argent::create([
+                        'order_id'=>$order->id,
+                        'price'=>$argentprice,
+                        'quantity'=>$serviceprice['argent'],
+                        'service_id'=>$serviceprice['service_id'],
+                        'branchitem_id'=>$serviceprice['branchitem_id'],
+                    ]);
+                }
+            }
+                foreach($request->additionalservices as $additionalservice){
+                    orderdetailes::create([
+                        'order_id'=>$order->id,
+                        'branchitem_id'=>$additionalservice['branchitem_id'],
+                        'service_id'=>$additionalservice['service_id'],
+                        'price'=>$price,
+                        'additionalservice_id'=>$additionalservice['additionalservice_id'],
+                        'quantity'=>$additionalservice['quantity']
+                    ]);
+                }
+                });
+                } catch (Throwable $e) {
+                    report($e);
+                    return false;
+                }
+                $data['status']=true;
+                $data['message']='order added succefully';
+                $data['data']['order']=$order->id;
+                return response()->json($data);
         }
         public function cancelorder(Request $request){
-        $order_id=$request->order_id;
-        $branchid=Auth::guard('branch-api')->user()->id;
-        $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
-        if($order==null){
-            $data['status']=false;
-            $data['message']='order not found';
-            return response()->json($data,405);
-        }else{
-            $order->delete();
-            $data['status']=true;
-            $data['message']='order cancel succefully';
-            return response()->json($data);
-        }
+            $order_id=$request->order_id;
+            $branchid=Auth::guard('branch-api')->user()->id;
+            $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
+            if($order==null){
+                $data['status']=false;
+                $data['message']='order not found';
+                return response()->json($data,405);
+            }else{
+                $order->delete();
+                $data['status']=true;
+                $data['message']='order cancel succefully';
+                return response()->json($data);
+            }
         }
         public function orderinfo(Request $request){
-        $lang=$request->header('lang');
-        $order_id=$request->order_id;
-        App::setLocale($lang);
-        $deliverytype=delivery_type::select('id')->get()->makehidden('translations');
-        $paymentmethods=payment_method::select('id')->get()->makehidden('translations');
-        //  $orderdetailes= DB::select('select service.name
-        //  from(select
-        //   order_detailes.service_id ,servicetranslations.name ,price, quantity
-        //   from order_detailes
-        //   INNER   join servicetranslations
-        //   ON
-        //   order_detailes.service_id =servicetranslations.service_id
-        //   where order_detailes.order_id = :id
-        //   And
-        //   servicetranslations.locale=:lang) as service
-        //   group by service_id
-        //   ',['id' => $order_id,
-        //   'lang'=>$lang
-        //   ]);
+            $lang=$request->header('lang');
+            $order_id=$request->order_id;
+            App::setLocale($lang);
+            $deliverytype=delivery_type::select('id')->get()->makehidden('translations');
+            $paymentmethods=payment_method::select('id')->get()->makehidden('translations');
+            //  $orderdetailes= DB::select('select service.name
+            //  from(select
+            //   order_detailes.service_id ,servicetranslations.name ,price, quantity
+            //   from order_detailes
+            //   INNER   join servicetranslations
+            //   ON
+            //   order_detailes.service_id =servicetranslations.service_id
+            //   where order_detailes.order_id = :id
+            //   And
+            //   servicetranslations.locale=:lang) as service
+            //   group by service_id
+            //   ',['id' => $order_id,
+            //   'lang'=>$lang
+            //   ]);
             $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
             ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
             ->selectRaw('sum(price) as total')
@@ -171,7 +171,7 @@ class OrderController extends Controller
             $data['data']['orderdetailes']=$orderdetailes;
             $data['data']['argentprice']= $argentprice;
             return response()->json($data);
-           }
+        }
            public function checkorder(Request $request){
             $order_id=$request->order_id;
             $branchid=Auth::guard('branch-api')->user()->id;
@@ -590,4 +590,13 @@ class OrderController extends Controller
                     return $this->response(true,'return orders success',$data);
         }
     #EndReigon
+    #Reigon[this is confirm order cycle]
+        public function reciveorder(Request $request){
+          $data=  $this->OrderRepository->reciveorder($request);
+          if ($data==null){
+            return $this->response(false,'some thing wrong');
+          }
+          return $this->response($data['status'],$data['message']);
+        }
+    #endReigon
 }

@@ -10,6 +10,8 @@ use App\Models\Laundry\branch;
 use App\Http\Resources\editservice\categoryresource;
 use App\Http\Resources\editservice\serviceresource;
 use App\Models\laundryservice\Additionalservice;
+use App\Models\Order\OrderDriveryStatus;
+use App\Models\Order\order;
 use App\Http\Resources\editservice\branchitem as branchitemresource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,20 +20,20 @@ use Auth;
 use App;
 class OrderRepository implements OrderRepositoryInterface
 {
-   public $service_ids=[];
-   public function selectlaundry($branch_id,$lang){
-         $branch=branch::find($branch_id);
-         $data=[];
-         $branchservices=branchservice::select('service_id')->where('branch_id',$branch_id)->where('status','on')->get();
-         foreach($branchservices as $branchservice){
-             array_push($this->service_ids,$branchservice->service_id);
-         }
-         $services=Service::wherein('id',$this->service_ids)->select('id')->with('categories')->get()->makehidden(['created_at','updated_at']);
-         $data['services']= $services;
-         $data['branchargent']=$branch->argent;
-         return $data;
-   }
-   public function getcategoryitems($category_id,$service_id,$branch_id,$lang){
+    public $service_ids=[];
+    public function selectlaundry($branch_id,$lang){
+            $branch=branch::find($branch_id);
+            $data=[];
+            $branchservices=branchservice::select('service_id')->where('branch_id',$branch_id)->where('status','on')->get();
+            foreach($branchservices as $branchservice){
+                array_push($this->service_ids,$branchservice->service_id);
+            }
+            $services=Service::wherein('id',$this->service_ids)->select('id')->with('categories')->get()->makehidden(['created_at','updated_at']);
+            $data['services']= $services;
+            $data['branchargent']=$branch->argent;
+            return $data;
+    }
+    public function getcategoryitems($category_id,$service_id,$branch_id,$lang){
       $brnchitem=Branchitem::whereHas('branchitemprice',function($q)use($service_id,$branch_id,$category_id){
             $q->where('service_id',$service_id)->where('branch_id',$branch_id)->where('category_id',$category_id);
         })->with(['branchitemprice'=>function($q)use($service_id,$branch_id,$category_id){
@@ -98,4 +100,35 @@ class OrderRepository implements OrderRepositoryInterface
            });
 
     }
+
+    public function reciveorder($request){
+        $order_id=$request->order_id;
+        $confirm_type=$request->confirm_type;
+        $orderstatus=OrderDriveryStatus::where('order_id',$order_id)->latest('id')->first();
+        $order=order::find($order_id);
+        if($order==null){
+            return false;
+        }
+        $driver_id=$order->driver_id;
+        if($confirm_type=='drop_of_laundry'){
+            if($orderstatus->order_status=='drop_of_laundry'){
+            $orderstatus->update([
+                'confirmation'=>true
+            ]);
+            OrderDriveryStatus::create([
+                 'order_id'=>$order_id,
+                 'driver_id'=>$driver_id,
+                 'order_status'=>'pick_up_laundry'
+             ]);
+             $order->update([
+                'delivery_status'=>'inprogress',
+                'progress'=>'inprogress',
+             ]);
+            }
+            $data['status']=true;
+            $data['message']='laundry recived order successfully';
+        }
+        return $data;
+    }
+
 }
