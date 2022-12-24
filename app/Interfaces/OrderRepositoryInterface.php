@@ -9,4 +9,5 @@ interface OrderRepositoryInterface
   public function itemdetailes($itemid,$lang);
   public function submitorder($request);
   public function reciveorder($request);
+  public function unasignedorder($request);
 }

@@ -15,11 +15,13 @@ use App\Models\Order\order;
 use App\Http\Resources\editservice\branchitem as branchitemresource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
+use App\Traits\queries\orders;
 use Validator;
 use Auth;
 use App;
 class OrderRepository implements OrderRepositoryInterface
 {
+    use orders;
     public $service_ids=[];
     public function selectlaundry($branch_id,$lang){
             $branch=branch::find($branch_id);
@@ -100,7 +102,6 @@ class OrderRepository implements OrderRepositoryInterface
            });
 
     }
-
     public function reciveorder($request){
         $order_id=$request->order_id;
         $confirm_type=$request->confirm_type;
@@ -130,5 +131,22 @@ class OrderRepository implements OrderRepositoryInterface
         }
         return $data;
     }
-
+    public function unasignedorder($request){
+        $branch_id=Auth::guard('branch-api')->user()->id;
+        $lang=$request->header('lang');
+        App::setLocale($lang);
+        $orders=DB::table('orders')
+        ->select('orders.id','orders.customer_name')
+        ->where('orders.progress','inprogress')
+        ->where('checked',true)
+        ->where('driver_id',null)
+        ->where('branch_id',$branch_id)
+        ->get();
+        // get service and put it under order
+        $orders=$this->orderwithservice($orders,$lang);
+        $data['status']=true;
+        $data['message']="get inprogress order successfully";
+        $data['data']['orders']=$orders;
+        return $data;
+    }
 }

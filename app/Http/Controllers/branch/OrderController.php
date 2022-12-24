@@ -172,7 +172,7 @@ class OrderController extends Controller
             $data['data']['argentprice']= $argentprice;
             return response()->json($data);
         }
-           public function checkorder(Request $request){
+        public function checkorder(Request $request){
             $order_id=$request->order_id;
             $branchid=Auth::guard('branch-api')->user()->id;
             $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
@@ -186,7 +186,7 @@ class OrderController extends Controller
             {
                 // delvivery consisit of threemain type(self delivery - one way delivery - by delivery)
               if($request->delivery_type=='bydelivery'){
-                $delivery_type_id=2;
+                 $delivery_type_id=2;
                  $order_status='pick_up_home';
               }
               elseif($request->delivery_type=='on_way_delivery')
@@ -233,7 +233,7 @@ class OrderController extends Controller
             $data['message']='order checled  succefully';
             return response()->json($data);
           }
-         }
+        }
     #EndReigon
      ###################################################################################################################
      ###################################################################################################################
@@ -588,6 +588,10 @@ class OrderController extends Controller
                     }
                     $data['orders']=$orders;
                     return $this->response(true,'return orders success',$data);
+        }
+        public function unasignedorder(Request $request){
+            $orders=$this->OrderRepository->unasignedorder($request);
+            return $this->response(true,$orders);
         }
     #EndReigon
     #Reigon[this is confirm order cycle]
