@@ -19,13 +19,13 @@ class NotificationController extends Controller
         $lang=$request->header('lang');
         App::setLocale($lang);
         $notifications=DB::table('notificationtypes')
+        ->join('notificationtypetranslations','notificationtypetranslations.notificationtype_id','=','notificationtypes.id')
         ->join('branchnotifytype','branchnotifytype.notificationtype_id','=','notificationtypes.id')
-        ->join('notificationtypetranslations','branchnotifytype.notificationtype_id','=','notificationtypes.id')
-
         ->select('branchnotifytype.id as id','notificationtypetranslations.name','branchnotifytype.status')
         ->where('locale',$lang)
         ->where('branch_id',$branch_id)
-       
+        ->groupBy('notificationtypetranslations.name')
+        ->groupBy('branchnotifytype.id')
         ->get();
         $data['data']['notifications']=$notifications;
         return $this->response(true,'get avilable driver successfully',$data);
