@@ -20,7 +20,7 @@ class ProfileController extends Controller
         $branch_id=Auth::guard('branch-api')->user()->id;
         $lang=$request->header('lang');
         App::setLocale($lang);
-        $branchinfo=branch::with('closingdayes')->select('id','username','phone','lat','long','open_time','closed_time')
+        $branchinfo=branch::with('closingdayes')->select('id','username','phone','lat','long','open_time','closed_time','address','country_code')
         ->find($branch_id);
         $data['branchinfo']=$branchinfo;
         return $this->response(true,'return branch ingo successfully',$data);
