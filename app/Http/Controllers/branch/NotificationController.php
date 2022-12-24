@@ -24,7 +24,7 @@ class NotificationController extends Controller
         ->select('branchnotifytype.id as id','notificationtypetranslations.name','branchnotifytype.status')
         ->where('locale',$lang)
         ->where('branch_id',$branch_id)
-        ->get();
+        ->get()->distinct();
         $data['data']['notifications']=$notifications;
         return $this->response(true,'get avilable driver successfully',$data);
     }
