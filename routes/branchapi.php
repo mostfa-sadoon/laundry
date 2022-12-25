@@ -70,6 +70,7 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
         Route::get('order/unassigned','unasignedorder');
         Route::post('order/submit','submitorder');
         Route::get('order/cancel{order_id?}','cancelorder');
+        Route::get('branch/open-time','getopentime');
         Route::post('order/check','checkorder');
         Route::get('order/completedorder','completedorder');
         Route::get('order/inprogressorder','inprogressorder');

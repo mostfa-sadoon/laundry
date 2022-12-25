@@ -20,6 +20,7 @@ use App\Models\Order\order;
 use App\Models\Order\orderdetailes;
 use App\Models\laundryservice\Serviceitemprice;
 use App\Interfaces\OrderRepositoryInterface;
+use App\Interfaces\BranchRepositoryInterface;
 use App\Models\Order\OrderDriveryStatus;
 use App\Traits\queries\serviceTrait;
 use App\Traits\response;
@@ -34,9 +35,10 @@ class OrderController extends Controller
     use serviceTrait,orders,response;
     use response;
     private OrderRepositoryInterface $OrderRepository;
-    public function __construct(OrderRepositoryInterface $OrderRepository)
+    public function __construct(OrderRepositoryInterface $OrderRepository,BranchRepositoryInterface $BranchRepository)
     {
         $this->OrderRepository = $OrderRepository;
+        $this->BranchRepository=$BranchRepository;
     }
     #Reigon[this is create ordder cycle]
         public $service_ids=[];
@@ -171,6 +173,13 @@ class OrderController extends Controller
             $data['data']['orderdetailes']=$orderdetailes;
             $data['data']['argentprice']= $argentprice;
             return response()->json($data);
+        }
+        public function getopentime(Request $request){
+            $branch_id=Auth::guard('branch-api')->user()->id;
+            $opentime=$this->BranchRepository->getopentime($branch_id);
+            if($opentime==false)
+            return $this->response(false,'some thing is wrong',$data=null,401);
+            return $this->response(true,'opening hours get successfuly',$opentime);
         }
         public function checkorder(Request $request){
             $order_id=$request->order_id;
