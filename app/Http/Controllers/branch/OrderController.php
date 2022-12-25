@@ -190,12 +190,12 @@ class OrderController extends Controller
             $data['message']='order not found';
             return response()->json($data,405);
            }else{
-
+              if($order->checked==true){
+                return $this->response(false,'this order alerdy checked',$data=null,403);
+              }
             // if order found
-
             DB::beginTransaction();
-
-                // delvivery consisit of threemain type(self delivery - one way delivery - by delivery)
+              // delvivery consisit of threemain type(self delivery - one way delivery - by delivery)
               if($request->delivery_type=='bydelivery'){
                  $delivery_type_id=2;
                  $order_status='pick_up_home';
@@ -222,11 +222,11 @@ class OrderController extends Controller
                        else{
                             return response()->json(['message'=>'the way delivery input is false'],403);
                         }
-                    }
-                    elseif($request->delivery_type=='self_delivery'){
+                }
+                elseif($request->delivery_type=='self_delivery'){
                         $delivery_type_id=1;
                         $order_status=null;
-                    }
+                }
                     OrderDriveryStatus::create([
                         'order_id'=>$order->id,
                         'driver_id'=>1,
