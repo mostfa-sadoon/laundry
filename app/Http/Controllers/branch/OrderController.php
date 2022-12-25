@@ -190,9 +190,11 @@ class OrderController extends Controller
             $data['message']='order not found';
             return response()->json($data,405);
            }else{
+
             // if order found
-            DB::transaction(function()use(&$order,$request)
-            {
+
+            DB::beginTransaction();
+
                 // delvivery consisit of threemain type(self delivery - one way delivery - by delivery)
               if($request->delivery_type=='bydelivery'){
                  $delivery_type_id=2;
@@ -201,14 +203,14 @@ class OrderController extends Controller
               elseif($request->delivery_type=='on_way_delivery')
               {
                      //start validate way of delivery
-                     $delivery_type_id=3;
+                       $delivery_type_id=3;
                        $validator =Validator::make($request->all(), [
                          'way_delivery'=>'required',
                         ]);
                         if($validator->fails()){
-                        return response()->json([
-                            'message'=>$validator->messages()->first()
-                        ],403);
+                            return response()->json([
+                                'message'=>$validator->messages()->first()
+                            ],403);
                         }
                        //  end validate way of delivery
                         if($request->way_delivery=='home_drop_of'){
@@ -237,7 +239,7 @@ class OrderController extends Controller
                         'delivery_type_id'=>$delivery_type_id,
                         'checked'=>true
                     ]);
-            });
+            DB::commit();
             $data['status']=true;
             $data['message']='order checled  succefully';
             return response()->json($data);
