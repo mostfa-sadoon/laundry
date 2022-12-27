@@ -62,12 +62,20 @@ class indeliveryorderController extends Controller
         ->groupBy('order_detailes.service_id')
         ->groupBy('order_detailes.additionalservice_id')
         ->get();
+        $argents=db::table('argent')->wherein('order_id',$this->orders_id)->get();
+
         // but additional service inside service
         foreach($services as $service){
             $service->additionalservice=[];
             foreach($additionalservices as $key=>$additionalservice){
                 if($service->order_id == $additionalservice->order_id && $service->service_id == $additionalservice->service_id){
                     array_push($service->additionalservice,$additionalservice);
+                }
+            }
+            foreach($argents as $argent){
+                $service->argent=0;
+                if($service->service_id==$argent->service_id&&$service->order_id == $argent->order_id){
+                    $service->argent=$argent->quantity;
                 }
             }
          }

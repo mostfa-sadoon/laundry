@@ -212,6 +212,7 @@ class OrderController extends Controller
                                 'message'=>$validator->messages()->first()
                             ],403);
                         }
+
                        //  end validate way of delivery
                         if($request->way_delivery=='home_drop_of'){
                             $order_status='pick_up_laundry';
