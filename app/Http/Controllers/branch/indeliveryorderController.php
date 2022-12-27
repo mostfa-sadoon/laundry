@@ -84,16 +84,20 @@ class indeliveryorderController extends Controller
         return $this->response(true,'get dirvers with orders success',$data);
     }
     public function customerorder(Request $request){
+        // this get order that customer will send it to laundry
         $branch_id=Auth::guard('branch-api')->user()->id;
         $lang=$request->header('lang');
         App::setLocale($lang);
         $orders=DB::table('orders')
         ->join('order_delivery_status','order_delivery_status.order_id','=','orders.id')
         ->select('orders.id','orders.customer_name')
-        ->where('order_delivery_status.order_status','drop_of_laundry')
+        ->where('order_delivery_status.order_status','pick_up_laundry')
         ->where('orders.delivery_type_id',3)->get();
         $orders=$this->orderwithservice($orders,$lang);
         $data['orders']=$orders;
         return $this->response(true,'get balance success',$data);
+    }
+    public function search(Request $request){
+
     }
 }
