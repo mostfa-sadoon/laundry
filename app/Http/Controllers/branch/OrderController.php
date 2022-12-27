@@ -605,6 +605,13 @@ class OrderController extends Controller
             $orders=$this->OrderRepository->unasignedorder($request);
             return $orders;
         }
+        public function reciveorderinfo(Request $request){
+            $order_id=$request->order_id;
+            $lang=$request->header('lang');
+            $orders=$this->OrderRepository->orderinfo($order_id,$lang);
+            return $orders;
+        }
+
     #EndReigon
     #Reigon[this is confirm order cycle]
         public function reciveorder(Request $request){

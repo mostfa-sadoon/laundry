@@ -80,11 +80,15 @@ class OrderController extends Controller
         ->selectRaw('sum(order_detailes.price) as price')
         ->groupBy('orders.id')
         ->first();
+        if($order==null){
+            return response()->json(['status'=>false,'message'=>'this order not found'],401);
+        }
         $orderargentprice=DB::table('orders')->where('orders.id',$order_id)
         ->leftjoin('argent','orders.id','=','argent.order_id')
         ->selectRaw('sum(argent.price) as argentprice')
          ->groupBy('argent.order_id')
          ->first();
+
          $order->price=$order->price+$orderargentprice->argentprice;
         // this query get services with count of item in it
         $services=$this->serive($order_id,$driver_id,$lang);

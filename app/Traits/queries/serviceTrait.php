@@ -19,7 +19,8 @@ function serive($order_id,$driver_id,$lang){
     ->where('order_detailes.additionalservice_id','=',null)
     ->groupBy('servicetranslations.service_id')
     ->groupBy('servicetranslations.name')
-    ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
+    //->where('orders.driver_id',$driver_id)
+    ->where('order_detailes.order_id',$order_id)
     ->get();
     return $services;
 }
@@ -41,7 +42,8 @@ public function items($order_id,$driver_id,$lang){
     ->groupBy('servicetranslations.name')
     ->groupBy('branchitemtranslations.name')
     ->groupBy('branchitemtranslations.branchitem_id')
-    ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
+    // ->where('orders.driver_id',$driver_id)
+    ->where('order_detailes.order_id',$order_id)
     ->get();
     return $items;
 }
@@ -55,7 +57,7 @@ public function additionals($order_id,$driver_id,$lang){
     ->selectRaw('branchitemtranslations.name as item')
     ->selectRaw('branchitemtranslations.branchitem_id as item_id')
     ->selectRaw('additionalservicetranslations.name')
-    ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
+    // ->where('orders.driver_id',$driver_id)->where('order_detailes.order_id',$order_id)
     ->where('order_detailes.additionalservice_id','!=',null)
     ->groupBy('additionalservicetranslations.additionalservice_id')
     ->groupBy('additionalservicetranslations.name')

@@ -10,4 +10,5 @@ interface OrderRepositoryInterface
   public function submitorder($request);
   public function reciveorder($request);
   public function unasignedorder($request);
+  public function orderinfo($order_id,$lang);
 }

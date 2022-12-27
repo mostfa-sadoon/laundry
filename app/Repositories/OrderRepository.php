@@ -16,12 +16,13 @@ use App\Http\Resources\editservice\branchitem as branchitemresource;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Builder;
 use App\Traits\queries\orders;
+use App\Traits\queries\serviceTrait;
 use Validator;
 use Auth;
 use App;
 class OrderRepository implements OrderRepositoryInterface
 {
-    use orders;
+    use orders,serviceTrait;
     public $service_ids=[];
     public function selectlaundry($branch_id,$lang){
             $branch=branch::find($branch_id);
@@ -148,5 +149,62 @@ class OrderRepository implements OrderRepositoryInterface
         $data['message']="get inprogress order successfully";
         $data['data']['orders']=$orders;
         return $data;
+    }
+
+    // we use this function when recive order to know order info of it
+    public function orderinfo($order_id,$lang){
+        $order=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
+        ->join('orders','orders.id','=','order_detailes.order_id')
+        ->selectRaw('orders.id')
+        ->selectRaw('sum(order_detailes.price) as price')
+        ->groupBy('orders.id')
+        ->first();
+        if($order==null){
+            return response()->json(['status'=>false,'message'=>'this order not found'],401);
+        }
+        $orderargentprice=DB::table('orders')->where('orders.id',$order_id)
+        ->leftjoin('argent','orders.id','=','argent.order_id')
+        ->selectRaw('sum(argent.price) as argentprice')
+         ->groupBy('argent.order_id')
+         ->first();
+
+         $order->price=$order->price+$orderargentprice->argentprice;
+        // this query get services with count of item in it
+        $services=$this->serive($order_id,null,$lang);
+         // this query get items with count of item in it
+        $items=$this->items($order_id,null,$lang);
+         // this query to get additional service
+        $additionals=$this->additionals($order_id,null,$lang);
+          $argents=db::table('argent')->where('order_id',$order_id)->get();
+            // but additional service in the item
+           foreach($items as $key=>$item){
+            $item->additonalservice=[];
+            foreach($additionals as $additional){
+                if($item->item_id==$additional->item_id){
+                    array_push($item->additonalservice,$additional);
+                }
+             }
+             //but argent inside item
+             foreach($argents as $argent){
+                $item->argent=0;
+                if($item->item_id==$argent->branchitem_id){
+                    $item->argent=$argent->quantity;
+                }
+             }
+           }
+            //but argent inside item
+          foreach($services as $key=>$service){
+            $service->item=[];
+             foreach($items as $item){
+                if($item->service_id==$service->service_id){
+                    array_push($service->item,$item);
+                }
+             }
+          }
+          $data['status']=true;
+          $data['message']="get new orders suceesfully";
+          $data['data']['order']=$order;
+          $data['data']['serives']=$services;
+          return $data;
     }
 }
