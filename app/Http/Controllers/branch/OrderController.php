@@ -602,7 +602,7 @@ class OrderController extends Controller
         }
         public function unasignedorder(Request $request){
             $orders=$this->OrderRepository->unasignedorder($request);
-            return $this->response(true,$orders);
+            return $orders;
         }
     #EndReigon
     #Reigon[this is confirm order cycle]
