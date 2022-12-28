@@ -22,6 +22,8 @@ class UserRepository implements UserRepositoryInterface
            ];
         }
         $user=User::where('phone',$request->phone)->where('country_code',$request->country_code)->first();
+        if($user==null)
+        return ['message' => 'your phone or password is  wrong'];
         if($user->verified==false){
             return ['message' => 'please verify your phone first'];
         }
@@ -39,10 +41,6 @@ class UserRepository implements UserRepositoryInterface
             'password'=> 'required|min:6|max:50|confirmed',
             'password_confirmation' => 'required|max:50|min:6',
             'phone'=>'required|unique:users',
-            'lat'=>'required',
-            'long'=>'required',
-            'city'=>'required',
-            'street'=>'required'
           ]);
           if ($validator->fails()) {
            return [
@@ -52,9 +50,9 @@ class UserRepository implements UserRepositoryInterface
         $data=$request->all();
         $data['otp']=1234;
         $data['password']= Hash::make($request->password);
-        unset($data['password_confirmation'],$data['city'],$data['district'],$data['street'],$data['building'],$data['floor'],$data['flat'],$data['lat'],$data['long']);
+        unset($data['password_confirmation']);
         $user= User::create($data);
-        $this->addaddress($request,$user->id);
+
     }
     public function verifyphone($request){
        $user=User::where('phone',$request->phone)->where('country_code',$request->country_code)->first();
