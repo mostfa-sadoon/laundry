@@ -56,7 +56,7 @@ class HomeController extends Controller
             $data['Balancetoday']=0;
         }else{
             $Balancetoday->price+=$argentpalancetoday->price;
-            $data['Balancetoday']=$Balancetoday;
+            $data['Balancetoday']=$Balancetoday->price;
         }
         $data['Balance']=$Balance;
         return $this->response(true,'get balance success',$data);
