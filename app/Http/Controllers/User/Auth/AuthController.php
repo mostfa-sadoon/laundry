@@ -20,7 +20,7 @@ class AuthController extends Controller
     public function signin(Request $request){
         $user= $this->UserRepository->signin($request);
         if(is_array($user)){
-           return $this->response(false,$user['message']);
+           return $this->response(false,$user['message'],null,401);
         }
         $data['token']=$user;
         return $this->response(true,'you logged in successfully',$data);

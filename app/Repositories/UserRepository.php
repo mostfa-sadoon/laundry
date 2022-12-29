@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\User\Adress;
 use Validator;
 use Hash;
-
+use DB;
 class UserRepository implements UserRepositoryInterface
 {
 
@@ -88,5 +88,29 @@ class UserRepository implements UserRepositoryInterface
        if($adress==null){
         return ['message'=>'this adress not found'];
        };
+    }
+    public function userinfo($id){
+       try{
+        DB::beginTransaction();
+        $user=User::select('name','email','phone','country_code')->find($id);
+        return $user;
+        DB::commit();
+        }catch(\Exception $ex){
+        DB::rollback();
+        return false;
+        }
+    }
+    public function updateuser($request,$id){
+        try{
+        DB::beginTransaction();
+        $data=$request;
+        $user=User::find($id);
+        $user->update($data);
+        return true;
+        DB::commit();
+        }catch(\Exception $ex){
+        DB::rollback();
+        return false;
+        }
     }
 }

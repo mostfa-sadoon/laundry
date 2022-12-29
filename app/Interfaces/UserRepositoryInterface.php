@@ -9,4 +9,6 @@ interface UserRepositoryInterface
     public function verifyphone($request);
     public function addaddress($request,$userid);
     public function deleteadress($address_id);
+    public function userinfo($id);
+    public function updateuser($request,$id);
 }

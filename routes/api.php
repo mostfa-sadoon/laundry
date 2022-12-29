@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\Auth\AuthController;
 use App\Http\Controllers\User\AdressController;
 use App\Http\Controllers\User\OrderController;
+use App\Http\Controllers\User\ProfileController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,12 @@ Route::controller(AuthController::class)->group(function () {
     Route::POST('/signin','signin');
     Route::POST('redister','register');
     Route::POST('verifyphone','verifyphone');
+});
+Route::controller(ProfileController::class)->group(function () {
+    Route::get('/edit/profile','edit');
+    Route::get('/edit/profile/phone','editphone');
+    Route::post('update/profile','update');
+    Route::post('profile/updatepassword','updatepassword');
 });
 Route::controller(OrderController::class)->group(function () {
   //order
