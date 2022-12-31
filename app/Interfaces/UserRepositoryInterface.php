@@ -11,4 +11,5 @@ interface UserRepositoryInterface
     public function deleteadress($address_id);
     public function userinfo($id);
     public function updateuser($request,$id);
+    public function updatephone($id);
 }

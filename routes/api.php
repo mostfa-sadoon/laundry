@@ -33,6 +33,9 @@ Route::controller(ProfileController::class)->group(function () {
     Route::get('/edit/profile/phone','editphone');
     Route::post('update/profile','update');
     Route::post('profile/updatepassword','updatepassword');
+    Route::post('profile/updatepassword','updatepassword');
+    Route::post('profile/updatephone','updatephone');
+
 });
 Route::controller(OrderController::class)->group(function () {
   //order

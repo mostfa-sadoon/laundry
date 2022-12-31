@@ -7,6 +7,7 @@ use App\Models\User\Adress;
 use Validator;
 use Hash;
 use DB;
+use Illuminate\Support\Str;
 class UserRepository implements UserRepositoryInterface
 {
 
@@ -79,7 +80,7 @@ class UserRepository implements UserRepositoryInterface
            ];
           }
        $data=$request->all();
-       unset($data['name'],$data['email'],$data['country_code'],$data['phone'],$data['password_confirmation'],$data['password']);
+       //unset($data['name'],$data['email'],$data['country_code'],$data['phone'],$data['password_confirmation'],$data['password']);
        $data['user_id']=$userid;
        Adress::create($data);
     }
@@ -112,5 +113,12 @@ class UserRepository implements UserRepositoryInterface
         DB::rollback();
         return false;
         }
+    }
+    public function updatephone($id){
+      $user=User::find($id);
+      $user->update([
+        'verificationcode'=>Str::random(40).now().$user->id,
+      ]);
+      return ['verificationcode'=>$user->verificationcode];
     }
 }

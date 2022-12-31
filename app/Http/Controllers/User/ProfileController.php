@@ -63,4 +63,16 @@ class ProfileController extends Controller
         if($user==false)
         return $this->response(false,'some thing is wrong',null,401);
     }
+    public function updatephone(Request $request){
+        $user_id=Auth::guard('user_api')->user()->id;
+        $validator =Validator::make($request->all(), [
+            'phone'=> 'required',
+            'country_code' => 'required',
+          ]);
+        if ($validator->fails()) {
+        return $this->response(false,$validator->messages()->first(),null,401);
+        }
+        $user=$this->UserRepository->updatephone($user_id);
+        return $this->response(true,'go to authntication request',$user);
+    }
 }
