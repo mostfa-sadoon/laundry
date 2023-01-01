@@ -57,7 +57,7 @@ class UserRepository implements UserRepositoryInterface
     }
     public function verifyphone($request){
        $user=User::where('phone',$request->phone)->where('country_code',$request->country_code)->first();
-       if($user=null)
+       if($user==null)
        return false;
        if($request->otp==$user->otp){
           $user->update([
