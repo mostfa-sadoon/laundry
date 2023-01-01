@@ -35,7 +35,7 @@ Route::controller(ProfileController::class)->group(function () {
     Route::post('profile/updatepassword','updatepassword');
     Route::post('profile/updatepassword','updatepassword');
     Route::post('profile/updatephone','updatephone');
-
+    Route::post('verified/phone','verifyphone');
 });
 Route::controller(OrderController::class)->group(function () {
   //order

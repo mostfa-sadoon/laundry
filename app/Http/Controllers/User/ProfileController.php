@@ -75,4 +75,21 @@ class ProfileController extends Controller
         $user=$this->UserRepository->updatephone($user_id);
         return $this->response(true,'go to authntication request',$user);
     }
+    public function verifyphone(Request $request){
+        $user=Auth::guard('user_api')->user();
+        $validator =Validator::make($request->all(), [
+            'phone'=> 'required',
+            'country_code' => 'required',
+            'verificationcode'=>'required',
+          ]);
+        if ($validator->fails()) {
+        return $this->response(false,$validator->messages()->first(),null,401);
+        }
+        if($user->verificationcode==$request->verificationcode){
+            $user->update(['phone'=>$request->phone]);
+            return $this->response(true,'phone updated successfuly');
+        }else{
+            return $this->response(false,'this verificationcode is false',null,401);
+        }
+    }
 }
