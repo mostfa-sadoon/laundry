@@ -21,7 +21,6 @@ class ProfileController extends Controller
     public function edit(Request $request){
         $user_id=Auth::guard('user_api')->user()->id;
         $user= $this->UserRepository->userinfo($user_id);
-        unset($user['phone']);unset($user['country_code']);
         return $this->response(true,'get data success',$user);
     }
     public function editphone(Request $request){
