@@ -21,9 +21,9 @@ class Useradresses extends Migration
             $table->boolean('curent')->default(true);
             $table->string('lat')->nullable();
             $table->string('long')->nullable();
-            $table->string('city');
+            $table->string('city')->nullable();
             $table->string('district')->nullable();
-            $table->string('street');
+            $table->string('street')->nullable();
             $table->string('building')->nullable();
             $table->string('floor')->nullable();
             $table->string('flat')->nullable();
