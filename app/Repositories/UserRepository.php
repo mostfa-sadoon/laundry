@@ -70,17 +70,7 @@ class UserRepository implements UserRepositoryInterface
        return true;
     }
     public function addaddress($request,$userid){
-        $validator =Validator::make($request->all(), [
-            'lat'=>'required',
-            'long'=>'required',
-            'city'=>'required',
-            'street'=>'required'
-          ]);
-          if ($validator->fails()) {
-           return [
-               'message'=>$validator->messages()->first()
-           ];
-          }
+       
        $data=$request->all();
        //unset($data['name'],$data['email'],$data['country_code'],$data['phone'],$data['password_confirmation'],$data['password']);
        $data['user_id']=$userid;
