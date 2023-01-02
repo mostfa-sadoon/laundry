@@ -20,6 +20,13 @@ class branch extends Authenticatable implements JWTSubject
     public function closingdayes(){
         return $this->belongsToMany(Closeingday::class,'branch_closingdaies');
     }
+    public function branchservices(){
+        return $this->hasMany(branchservice::class,'branch_id');
+    }
+
+    public function laundry(){
+        return $this->belongsTo(Laundry::class,'laundry_id');
+    }
     public function getJWTIdentifier()
     {
         return $this->getKey();

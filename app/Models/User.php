@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-
+use App\Models\User\Adress;
 class User  extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -23,6 +23,9 @@ class User  extends Authenticatable implements JWTSubject
     //     'email',
     //     'password',
     // ];
+    public function adress(){
+        return $this->hasMany(Adress::class,'user_id');
+    }
 
     use HasFactory;
     public $guarded=[];

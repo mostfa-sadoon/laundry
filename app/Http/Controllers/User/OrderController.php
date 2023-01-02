@@ -15,25 +15,45 @@ class OrderController extends Controller
     {
         $this->OrderRepository = $OrderRepository;
     }
-    public function selectlaundry(Request $request){
-      $lang=$request->header('lang');
-      App::setLocale($lang);
-      $services= $this->OrderRepository->selectlaundry($request->branch_id,$lang);
-      return $this->response(true,'get services succefully',$services);
-    }
-    public function getcategoryitems(Request $request){
+    #Reigon[this is show order cycle]
+        public function getservices(Request $request){
+            $lang=$request->header('lang');
+            App::setLocale($lang);
+            $services= $this->OrderRepository->getservices($request,$lang);
+            $data['services']= $services;
+            return $this->response(true,'get services succefully',$data);
+
+        }
+        public function selectlaundry(Request $request){
+            $lang=$request->header('lang');
+            App::setLocale($lang);
+            $branchs= $this->OrderRepository->selectlaundry($request,$lang);
+            $data['ststua']=true;
+            $data['message']='get branches successfuly';
+            $data['data']['branches']=$branchs;
+            return response()->json($data);
+        }
+        public function chooselaundry(Request $request){
         $lang=$request->header('lang');
         App::setLocale($lang);
-        $categoryitems=$this->OrderRepository->getcategoryitems($request->category_id,$request->service_id,$request->branch_id,$lang);
-        return $categoryitems;
-    }
-    public function itemdetailes(Request $request){
-       $lang=$request->header('lang');
-       App::setLocale($lang);
-       $itemdetailes=$this->OrderRepository->itemdetailes($request->item_id,$lang);
-       return $this->response(true,'return item detailes successfulty',$itemdetailes);
-    }
-    public function submitorder(Request $request){
-       $order=$this->OrderRepository->submitorder($request);
-    }
+        $services= $this->OrderRepository->chooselaundry($request->branch_id,$lang);
+        return $this->response(true,'get services succefully',$services);
+        }
+        public function getcategoryitems(Request $request){
+            $lang=$request->header('lang');
+            App::setLocale($lang);
+            $categoryitems=$this->OrderRepository->getcategoryitems($request->category_id,$request->service_id,$request->branch_id,$lang);
+            return $categoryitems;
+        }
+        public function itemdetailes(Request $request){
+        $lang=$request->header('lang');
+        App::setLocale($lang);
+        $itemdetailes=$this->OrderRepository->itemdetailes($request->item_id,$lang);
+        return $this->response(true,'return item detailes successfulty',$itemdetailes);
+        }
+        public function submitorder(Request $request){
+         $order=$this->OrderRepository->submitorder($request);
+         return $this->response(true,'order creates success',['order_id'=>$order]);
+        }
+
 }

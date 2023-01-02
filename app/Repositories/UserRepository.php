@@ -123,4 +123,10 @@ class UserRepository implements UserRepositoryInterface
       ]);
       return ['verificationcode'=>$user->verificationcode];
     }
+    public function getaddresses($user){
+         $adresses=Adress::where('user_id',$user->id)->get();
+         if($adresses==null)
+         return false;
+         return $adresses;
+    }
 }

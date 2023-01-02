@@ -46,6 +46,9 @@ class ProfileController extends Controller
     }
     public function updatepassword(Request $request){
         $user_id=Auth::guard('user_api')->user()->id;
+        if(!Hash::check($request->old_password, Auth::guard('user_api')->user()->password)) {
+            return $this->response(false, "The specified password does not match the old password");
+        }
         $validator =Validator::make($request->all(), [
             'password'=> 'required|min:6|max:50|confirmed',
             'password_confirmation' => 'required|max:50|min:6',
@@ -90,5 +93,13 @@ class ProfileController extends Controller
         }else{
             return $this->response(false,'this verificationcode is false',null,401);
         }
+    }
+    public function getaddresses(Request $request){
+        $user=Auth::guard('user_api')->user();
+        $addresses= $this->UserRepository->getaddresses($user);
+        if($addresses==false)
+        return $this->response(false,'no address avilable',null,401);
+        $data['addresses']=$addresses;
+        return $this->response(true,'get addresses',$data);
     }
 }

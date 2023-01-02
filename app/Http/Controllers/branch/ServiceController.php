@@ -33,7 +33,6 @@ class ServiceController extends Controller
     public function getservices(Request $request){
          $lang=$request->header('lang');
          App::setLocale($lang);
-         $data=[];
          $services=Service::select('id')->listsTranslations('name')->with('categories.items')->get();
          $data['services']= $services;
          return response()->json(['status'=>true,'message'=>'get services succefully','data'=>$data]);

@@ -22,31 +22,36 @@ use App\Http\Controllers\User\ProfileController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
 Route::controller(AuthController::class)->group(function () {
     Route::POST('/signin','signin');
     Route::POST('redister','register');
     Route::POST('verifyphone','verifyphone');
 });
-Route::controller(ProfileController::class)->group(function () {
-    Route::get('/edit/profile','edit');
-    Route::get('/edit/profile/phone','editphone');
-    Route::post('update/profile','update');
-    Route::post('profile/updatepassword','updatepassword');
-    Route::post('profile/updatepassword','updatepassword');
-    Route::post('profile/updatephone','updatephone');
-    Route::post('verified/phone','verifyphone');
-});
 Route::controller(OrderController::class)->group(function () {
   //order
-  Route::get('select/laundry/{branch_id?}','selectlaundry');
+  Route::get('services','getservices');
+  Route::get('select/laundry/{services?}','selectlaundry');
+  Route::get('choose/laundry/{branch_id?}','chooselaundry');
   Route::get('category/items/{service_id?&category_id?&branch_id?}','getcategoryitems');
   Route::get('items/detailes{item_id?}','itemdetailes');
-  Route::POST('submitorder','submitorder');
 });
-Route::group(['userApiAuth' => 'userApiAuth'],function(){
+
+Route::group(['middleware' => 'userApiAuth'],function(){
     Route::controller(AdressController::class)->group(function () {
         Route::POST('newadress','createadress');
         Route::get('delete/adress/{adress_id?}','deleteadress');
+    });
+    Route::controller(ProfileController::class)->group(function () {
+        Route::get('/edit/profile','edit');
+        Route::get('/edit/profile/phone','editphone');
+        Route::post('update/profile','update');
+        Route::post('profile/updatepassword','updatepassword');
+        Route::post('profile/updatepassword','updatepassword');
+        Route::post('profile/updatephone','updatephone');
+        Route::post('verified/phone','verifyphone');
+        Route::get('user/adress','getaddresses');
+    });
+    Route::controller(OrderController::class)->group(function () {
+        Route::POST('submitorder','submitorder');
     });
 });

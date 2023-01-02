@@ -611,7 +611,6 @@ class OrderController extends Controller
             $orders=$this->OrderRepository->orderinfo($order_id,$lang);
             return $orders;
         }
-
     #EndReigon
     #Reigon[this is confirm order cycle]
         public function reciveorder(Request $request){
