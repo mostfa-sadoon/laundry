@@ -48,6 +48,7 @@ class OrderController extends Controller
             App::setLocale($lang);
           //  $services= $this->OrderRepository->selectlaundry($branch_id,$lang);
             $services=Service::select('id')->get();
+            $data['services']=$services;
             return $this->response(true,'get services succefully',$services);
         }
         public function itemdetailes(Request $request){
