@@ -49,7 +49,7 @@ class OrderController extends Controller
           //  $services= $this->OrderRepository->selectlaundry($branch_id,$lang);
             $services=Service::select('id')->get();
             $data['services']=$services;
-            return $this->response(true,'get services succefully',$services);
+            return $this->response(true,'get services succefully',$data);
         }
         public function itemdetailes(Request $request){
             $lang=$request->header('lang');
