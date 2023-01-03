@@ -47,7 +47,7 @@ class OrderController extends Controller
             $lang=$request->header('lang');
             App::setLocale($lang);
           //  $services= $this->OrderRepository->selectlaundry($branch_id,$lang);
-            $services=Service::select('id')->get();
+            $services=Service::select('id')->with('categories')->get();
             $data['services']=$services;
             return $this->response(true,'get services succefully',$data);
         }
