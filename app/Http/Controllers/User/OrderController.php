@@ -28,7 +28,7 @@ class OrderController extends Controller
             $lang=$request->header('lang');
             App::setLocale($lang);
             $branchs= $this->OrderRepository->selectlaundry($request,$lang);
-            $data['ststua']=true;
+            $data['status']=true;
             $data['message']='get branches successfuly';
             $data['data']['branches']=$branchs;
             return response()->json($data);
