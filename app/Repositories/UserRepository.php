@@ -70,17 +70,47 @@ class UserRepository implements UserRepositoryInterface
        return true;
     }
     public function addaddress($request,$userid){
-       
        $data=$request->all();
        //unset($data['name'],$data['email'],$data['country_code'],$data['phone'],$data['password_confirmation'],$data['password']);
        $data['user_id']=$userid;
+       $address=Adress::where('user_id',$userid)->get();
+       if($address!=null){
+        foreach($address as $addres)
+           $addres->update([
+             'curent'=>0
+           ]);
+       }
        Adress::create($data);
+    }
+    public function updateaddress($request,$userid){
+        $address_id=$request->address_id;
+        $address=Adress::where('user_id',$userid)->get();
+        if($address!=null){
+         foreach($address as $addres)
+            $addres->update([
+              'curent'=>0
+            ]);
+        }
+        $adress=Adress::find($address_id);
+        if($adress==null){
+            return ['message'=>'this adress not found'];
+        };
+        $data=$request->all();
+        unset($data['address_id']);
+        $adress->update($data);
+        return true;
     }
     public function deleteadress($address_id){
        $adress=Adress::find($address_id)->delete();
        if($adress==null){
         return ['message'=>'this adress not found'];
        };
+    }
+    public function getaddresses($user){
+        $adresses=Adress::where('user_id',$user->id)->get();
+        if($adresses==null)
+        return false;
+        return $adresses;
     }
     public function userinfo($id){
        try{
@@ -112,11 +142,5 @@ class UserRepository implements UserRepositoryInterface
         'verificationcode'=>Str::random(40).now().$user->id,
       ]);
       return ['verificationcode'=>$user->verificationcode];
-    }
-    public function getaddresses($user){
-         $adresses=Adress::where('user_id',$user->id)->get();
-         if($adresses==null)
-         return false;
-         return $adresses;
     }
 }

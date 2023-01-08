@@ -24,6 +24,14 @@ class AdressController extends Controller
      }
      return $this->response(true,'adress added successfuly');
     }
+    public function updateaddress(Request $request){
+        $user_id=Auth::guard('user_api')->user()->id;
+        $adress= $this->UserRepository->updateaddress($request,$user_id);
+        if(is_array($adress)){
+            return $this->response(false,$adress['message']);
+        }
+        return $this->response(true,'adress updated successfuly');
+    }
     public function deleteadress(Request $request){
         $adress_id=$request->adress_id;
         $adress= $this->UserRepository->deleteadress($adress_id);

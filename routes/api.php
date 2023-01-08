@@ -39,6 +39,7 @@ Route::controller(OrderController::class)->group(function () {
 Route::group(['middleware' => 'userApiAuth'],function(){
     Route::controller(AdressController::class)->group(function () {
         Route::POST('newadress','createadress');
+        Route::POST('updateaddress','updateaddress');
         Route::get('delete/adress/{adress_id?}','deleteadress');
     });
     Route::controller(ProfileController::class)->group(function () {
