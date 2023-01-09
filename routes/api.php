@@ -6,6 +6,8 @@ use App\Http\Controllers\User\Auth\AuthController;
 use App\Http\Controllers\User\AdressController;
 use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\HomeController;
+
 
 
 /*
@@ -26,6 +28,9 @@ Route::controller(AuthController::class)->group(function () {
     Route::POST('/signin','signin');
     Route::POST('redister','register');
     Route::POST('verifyphone','verifyphone');
+});
+Route::controller(HomeController::class)->group(function () {
+   Route::get('slider','getslider');
 });
 Route::controller(OrderController::class)->group(function () {
   //order

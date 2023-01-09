@@ -36,6 +36,8 @@ class DatabaseSeeder extends Seeder
         $this->call(delivery_type_trnaslations::class);
         $this->call(notificationtype::class);
         $this->call(notificationtypetranslations::class);
+        $this->call(slider::class);
+        $this->call(slidertranslation::class);
         // \App\Models\User::factory(10)->create();
     }
 }
