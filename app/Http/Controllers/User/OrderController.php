@@ -49,7 +49,8 @@ class OrderController extends Controller
         $lang=$request->header('lang');
         App::setLocale($lang);
         $itemdetailes=$this->OrderRepository->itemdetailes($request->item_id,$lang);
-        return $this->response(true,'return item detailes successfulty',$itemdetailes);
+        $data['itemdetailes']=$itemdetailes;
+        return $this->response(true,'return item detailes successfulty',$data);
         }
         public function submitorder(Request $request){
          $order=$this->OrderRepository->submitorder($request);
