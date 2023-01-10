@@ -46,7 +46,7 @@ class OrderController extends Controller
             $branch_id=Auth::guard('branch-api')->user()->id;
             $lang=$request->header('lang');
             App::setLocale($lang);
-          //  $services= $this->OrderRepository->selectlaundry($branch_id,$lang);
+            //$services= $this->OrderRepository->selectlaundry($branch_id,$lang);
             $services=Service::select('id')->with('categories')->get();
             $data['services']=$services;
             return $this->response(true,'get services succefully',$data);
