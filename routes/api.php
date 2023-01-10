@@ -32,7 +32,7 @@ Route::controller(AuthController::class)->group(function () {
 });
 Route::controller(HomeController::class)->group(function () {
    Route::get('slider','getslider');
-   Route::get('near/laundry','getdistance');
+   Route::get('top/laundry/{lat?&lon?}','toplaundries');
 });
 Route::controller(LaundryController::class)->group(function () {
     Route::get('laundryinfo/{branch_id?}','laundryinfo');
@@ -45,7 +45,6 @@ Route::controller(OrderController::class)->group(function () {
   Route::get('category/items/{service_id?&category_id?&branch_id?}','getcategoryitems');
   Route::get('items/detailes{item_id?}','itemdetailes');
 });
-
 Route::group(['middleware' => 'userApiAuth'],function(){
     Route::controller(AdressController::class)->group(function () {
         Route::POST('newadress','createadress');

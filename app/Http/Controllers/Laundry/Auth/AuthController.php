@@ -25,7 +25,7 @@ class AuthController extends Controller
         if (!$token = auth('laundry_api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-      // return response()->json(Auth::guard('laundry-api')->check());
+       // return response()->json(Auth::guard('laundry-api')->check());
 
         return response()->json($token);
         // return $this->returnData('token', $token, $msg = "");
@@ -46,7 +46,6 @@ class AuthController extends Controller
          'phone'=>'required|unique:laundries',
          'tax_card'=>'required',
        ]);
-
        if ($validator->fails()) {
         return response()->json([
             'message'=>$validator->messages()->first()
