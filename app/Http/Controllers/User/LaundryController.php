@@ -21,7 +21,9 @@ class LaundryController extends Controller
             return $this->response(false,$validator->messages()->first(),null,401);
           }
            $id=$request->branch_id;
-           $branch=branch::select('id','username','laundry_id','lat','long','address')->find($id);
+           $branch=branch::select('id','username','laundry_id','lat','long','address')->with('laundry',function($q){
+            $q->select('name','id')->get();
+            })->find($id);
            $avgerge_service_time['ironing']=20;
            $avgerge_service_time['washing']=20;
            $avgerge_service_time['washing&iroing']=20;
