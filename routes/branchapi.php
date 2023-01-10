@@ -80,7 +80,6 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
         Route::post('order/search','serachorder');
         Route::get('order/recive{order_id?&confirm_type?}','reciveorder');
         Route::get('recive/order/info/{order_id?}','reciveorderinfo');
-
     });
     Route::controller(NotificationController::class)->group(function () {
         Route::get('getnotification','getnotification');
@@ -88,6 +87,8 @@ Route::group(['middleware' => 'branchApiAuth'],function(){
     });
     Route::controller(driverController::class)->group(function () {
         Route::get('avilable/driver','avilabledriver');
+        Route::get('offline/driver/driver','offlinedriver');
+        Route::get('alldriver','alldriver');
         Route::get('assign/order/{order_id?&driver_id?}','assignorder');
         Route::POST('assign/orders','assignorders');
     });

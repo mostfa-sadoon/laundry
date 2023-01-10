@@ -11,15 +11,14 @@ use App;
 class HomeController extends Controller
 {
     //
-    use response;
-    public function getslider(Request $request){
-         $lang=$request->header('lang');
-         App::setLocale($lang);
-         $sliders=Slider::select('id')->get();
-         $data['slider']=$sliders;
-         return $this->response(true,'get sliders successfully',$data);
-    }
-
+      use response;
+      public function getslider(Request $request){
+          $lang=$request->header('lang');
+          App::setLocale($lang);
+          $sliders=Slider::select('id')->get();
+          $data['slider']=$sliders;
+          return $this->response(true,'get sliders successfully',$data);
+      }
       function sort($arr){
         $n=count($arr);
         if($n<= 1){
@@ -92,5 +91,3 @@ class HomeController extends Controller
         return $distance;
       }
 }
-
-

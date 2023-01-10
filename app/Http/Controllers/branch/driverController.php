@@ -13,10 +13,22 @@ class driverController extends Controller
 {
     //
     use response;
+    // get online driver
     public function avilabledriver(Request $request){
       $avilabledriver=Driver::select('id','name')->where('status','online')->get();
       $data['avilabledriver']=$avilabledriver;
      return $this->response(true,'get avilable driver successfully',$data);
+    }
+    // get offline driver
+    public function offlinedriver(Request $request){
+        $avilabledriver=Driver::select('id','name')->where('status','offline')->get();
+        $data['avilabledriver']=$avilabledriver;
+       return $this->response(true,'get offline driver successfully',$data);
+    }
+    public function alldriver(Request $request){
+        $avilabledriver=Driver::select('id','name')->get();
+        $data['avilabledriver']=$avilabledriver;
+       return $this->response(true,'get all driver successfully',$data);
     }
     public function assignorder(Request $request){
         $order_id=$request->order_id;
