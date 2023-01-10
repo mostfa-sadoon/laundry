@@ -63,5 +63,6 @@ Route::group(['middleware' => 'userApiAuth'],function(){
     });
     Route::controller(OrderController::class)->group(function () {
         Route::POST('submitorder','submitorder');
+        Route::POST('checkout','checkout');
     });
 });

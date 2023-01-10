@@ -4,6 +4,10 @@ use App\Interfaces\OrderRepositoryInterface;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Traits\response;
+use App\Models\Order\order;
+use Illuminate\Support\Facades\DB;
+use App\Models\Order\OrderDriveryStatus;
+use Validator;
 use App;
 use Auth;
 class OrderController extends Controller
@@ -56,5 +60,69 @@ class OrderController extends Controller
          $order=$this->OrderRepository->submitorder($request);
          return $this->response(true,'order creates success',['order_id'=>$order]);
         }
+        public function checkout(Request $request){
+            $order_id=$request->order_id;
+            $branchid=$request->branch_id;
+            $order=order::where('id',$order_id)->where('branch_id',$branchid)->first();
+            if($order==null){
+            $data['status']=false;
+            $data['message']='order not found';
+            return response()->json($data,405);
+           }else{
+              if($order->checked==true){
+                return $this->response(false,'this order alerdy checked',$data=null,403);
+              }
+            // if order found
+            DB::beginTransaction();
+              // delvivery consisit of threemain type(self delivery - one way delivery - by delivery)
+              if($request->delivery_type=='bydelivery'){
+                 $delivery_type_id=2;
+                 $order_status='pick_up_home';
+              }
+              elseif($request->delivery_type=='on_way_delivery')
+              {
+                     //start validate way of delivery
+                       $delivery_type_id=3;
+                       $validator =Validator::make($request->all(), [
+                         'way_delivery'=>'required',
+                        ]);
+                        if($validator->fails()){
+                            return response()->json([
+                                'message'=>$validator->messages()->first()
+                            ],403);
+                        }
 
+                       //  end validate way of delivery
+                        if($request->way_delivery=='home_drop_of'){
+                            $order_status='pick_up_laundry';
+                        }
+                        elseif($request->way_delivery=='self_drop_of'){
+                            $order_status='pick_up_home';
+                        }
+                       else{
+                            return response()->json(['message'=>'the way delivery input is false'],403);
+                        }
+                }
+                elseif($request->delivery_type=='self_delivery'){
+                        $delivery_type_id=1;
+                        $order_status=null;
+                }
+                    OrderDriveryStatus::create([
+                        'order_id'=>$order->id,
+                        'driver_id'=>1,
+                        'order_status'=>$order_status
+                    ]);
+                    $order->update([
+                        'day'=>$request->day,
+                        'from'=>$request->from,
+                        'to'=>$request->to,
+                        'delivery_type_id'=>$delivery_type_id,
+                        'checked'=>true
+                    ]);
+            DB::commit();
+            $data['status']=true;
+            $data['message']='order checled  succefully';
+            return response()->json($data);
+        }
+    }
 }

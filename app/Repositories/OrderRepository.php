@@ -227,4 +227,8 @@ class OrderRepository implements OrderRepositoryInterface
           $data['data']['serives']=$services;
           return $data;
     }
+    public function checkout($request){
+        
+    }
+
 }
