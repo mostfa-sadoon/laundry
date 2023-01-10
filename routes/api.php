@@ -7,6 +7,7 @@ use App\Http\Controllers\User\AdressController;
 use App\Http\Controllers\User\OrderController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\HomeController;
+use App\Http\Controllers\User\LaundryController;
 
 
 
@@ -31,7 +32,11 @@ Route::controller(AuthController::class)->group(function () {
 });
 Route::controller(HomeController::class)->group(function () {
    Route::get('slider','getslider');
+   Route::get('near/laundry','getdistance');
 });
+Route::controller(LaundryController::class)->group(function () {
+    Route::get('laundryinfo/{branch_id?}','laundryinfo');
+ });
 Route::controller(OrderController::class)->group(function () {
   //order
   Route::get('services','getservices');

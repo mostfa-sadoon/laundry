@@ -14,19 +14,15 @@ class Laundry extends Authenticatable implements JWTSubject
     //use Translatable;
     protected $guarded=[];
     protected $table="laundries";
-   // public $translatedAttributes = ['name'];
-
+    //public $translatedAttributes = ['name'];
     public function branchitem()
     {
         return $this->hasMany(Categoryservice::class);
     }
-
-
     public function getJWTIdentifier()
     {
         return $this->getKey();
     }
-
     public function getJWTCustomClaims()
     {
         return [];
