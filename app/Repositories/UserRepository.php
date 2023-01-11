@@ -51,6 +51,7 @@ class UserRepository implements UserRepositoryInterface
         $data['otp']=1234;
         $data['password']= Hash::make($request->password);
         unset($data['password_confirmation']);
+        $data['verified']=true;
         $user= User::create($data);
 
     }

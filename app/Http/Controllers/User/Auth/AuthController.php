@@ -30,7 +30,7 @@ class AuthController extends Controller
         if(is_array($user)){
            return $this->response(false,$user['message']);
         }
-        return $this->response(true,'verfy phone number please');
+        return $this->response(true,'accout created successfuly go to login');
     }
     public function verifyphone(Request $request){
         $verifyphone=$this->UserRepository->verifyphone($request);

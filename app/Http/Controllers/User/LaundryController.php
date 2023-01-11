@@ -37,7 +37,7 @@ class LaundryController extends Controller
           }
         }
     }
-     // end of distance
+    //end of distance
     public function laundryinfo(Request $request){
         $lang=$request->header('lang');
         App::setLocale($lang);
