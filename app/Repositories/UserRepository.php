@@ -9,7 +9,14 @@ use DB;
 use Illuminate\Support\Str;
 class UserRepository implements UserRepositoryInterface
 {
-
+    function uploadImage($photo_name, $folder)
+    {
+        $image = $photo_name;
+        $image_name = time() . '' . $image->getClientOriginalName();
+        $destinationPath = public_path($folder);
+        $image->move($destinationPath, $image_name);
+        return $image_name;
+    }
     public function signin($request){
         $validator =Validator::make($request->all(), [
             'country_code'=>'required',
@@ -131,7 +138,7 @@ class UserRepository implements UserRepositoryInterface
     public function updateuser($request,$id){
         $user=User::find($id);
         if($request->hasFile('img')){
-            $image_name = uploadImage($request->file('img'), 'uploads/users/img');
+            $image_name = $this->uploadImage($request->file('img'), 'uploads/users/img');
         }else{
             $image_name=$user->img;
         }
