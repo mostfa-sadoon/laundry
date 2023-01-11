@@ -120,7 +120,7 @@ class UserRepository implements UserRepositoryInterface
     public function userinfo($id){
        try{
         DB::beginTransaction();
-        $user=User::select('name','email','phone','country_code')->find($id);
+        $user=User::select('name','email','phone','img','country_code')->find($id);
         return $user;
         DB::commit();
         }catch(\Exception $ex){
@@ -129,17 +129,17 @@ class UserRepository implements UserRepositoryInterface
         }
     }
     public function updateuser($request,$id){
-        try{
-        DB::beginTransaction();
-        $data=$request;
         $user=User::find($id);
+        if($request->hasFile('img')){
+            $image_name = uploadImage($request->file('img'), 'uploads/users/img');
+        }else{
+            $image_name=$user->img;
+        }
+        $data=$request->all();
+        $data['img']=$image_name;
+
         $user->update($data);
         return true;
-        DB::commit();
-        }catch(\Exception $ex){
-        DB::rollback();
-        return false;
-        }
     }
     public function updatephone($id){
       $user=User::find($id);

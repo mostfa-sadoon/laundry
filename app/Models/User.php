@@ -29,6 +29,12 @@ class User  extends Authenticatable implements JWTSubject
 
     use HasFactory;
     public $guarded=[];
+    public function getImgAttribute($value)
+    {
+         if($value==null)
+         return asset('uploads/users/img/default/default.png');
+         return asset('uploads/users/img/'.$value);
+    }
     public function getJWTIdentifier()
     {
         return $this->getKey();

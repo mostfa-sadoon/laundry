@@ -38,7 +38,7 @@ class ProfileController extends Controller
           if ($validator->fails()) {
             return $this->response(false,$validator->messages()->first(),null,401);
           }
-        $user=$this->UserRepository->updateuser($request->all(),$user_id);
+        $user=$this->UserRepository->updateuser($request,$user_id);
         if($user==true)
         return $this->response(true,'data updated successfully',null);
         if($user==false)

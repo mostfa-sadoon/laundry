@@ -123,7 +123,7 @@ class OrderController extends Controller
             $data['status']=true;
             $data['message']='order checled  succefully';
             return response()->json($data);
-        }
+         }
         }
         public function reciveorder(Request $request){
             $data=  $this->OrderRepository->reciveorder($request);
@@ -132,4 +132,5 @@ class OrderController extends Controller
             }
             return $this->response($data['status'],$data['message']);
         }
+    #EndReigon[this is show order cycle]
 }

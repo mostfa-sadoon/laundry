@@ -47,6 +47,9 @@ Route::controller(OrderController::class)->group(function () {
   Route::get('order/pick_up{order_id?&confirm_type?}','reciveorder');
 });
 Route::group(['middleware' => 'userApiAuth'],function(){
+    Route::controller(AuthController::class)->group(function () {
+        Route::POST('logout','logout');
+    });
     Route::controller(AdressController::class)->group(function () {
         Route::POST('newadress','createadress');
         Route::POST('updateaddress','updateaddress');

@@ -40,4 +40,11 @@ class AuthController extends Controller
         }
         return $this->response(true,'account verfied');
     }
+    public function logout(Request $request){
+        Auth::guard('user_api')->logout();
+        return response()->json([
+            'status' => true,
+            'message'=>'logout success',
+        ]);
+    }
 }
