@@ -9,14 +9,14 @@ use DB;
 use Illuminate\Support\Str;
 class UserRepository implements UserRepositoryInterface
 {
-    // function uploadImage($photo_name, $folder)
-    // {
-    //     $image = $photo_name;
-    //     $image_name = time() . '' . $image->getClientOriginalName();
-    //     $destinationPath = public_path($folder);
-    //     $image->move($destinationPath, $image_name);
-    //     return $image_name;
-    // }
+    function uploadImage($photo_name, $folder)
+    {
+        $image = $photo_name;
+        $image_name = time() . '' . $image->getClientOriginalName();
+        $destinationPath = public_path($folder);
+        $image->move($destinationPath, $image_name);
+        return $image_name;
+    }
     public function signin($request){
         $validator =Validator::make($request->all(), [
             'country_code'=>'required',
