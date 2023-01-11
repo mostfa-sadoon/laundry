@@ -26,11 +26,12 @@ class AuthController extends Controller
         return $this->response(true,'you logged in successfully',$data);
     }
     public function register(Request $request){
-        $user= $this->UserRepository->createUser($request);
-        if(is_array($user)){
-           return $this->response(false,$user['message']);
+        $token= $this->UserRepository->createUser($request);
+        if(is_array($token)){
+           return $this->response(false,$token['message']);
         }
-        return $this->response(true,'accout created successfuly go to login');
+        $data['token']=$token;
+        return $this->response(true,'accout created successfuly go to login',$data);
     }
     public function verifyphone(Request $request){
         $verifyphone=$this->UserRepository->verifyphone($request);

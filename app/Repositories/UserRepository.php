@@ -53,7 +53,12 @@ class UserRepository implements UserRepositoryInterface
         unset($data['password_confirmation']);
         $data['verified']=true;
         $user= User::create($data);
-
+        $credentials = ['phone'=>$user->phone,
+        'password'=>$request->password];
+         if (!$token = auth()->guard('user_api')->attempt($credentials)) {
+         return response()->json(['error' => 'Your user phone or password maybe incorrect, please try agian'], 401);
+         }
+         return $token;
     }
     public function verifyphone($request){
        $user=User::where('phone',$request->phone)->where('country_code',$request->country_code)->first();
