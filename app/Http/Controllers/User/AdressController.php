@@ -7,6 +7,7 @@ use App\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Traits\response;
 use Auth;
+use Validator;
 class AdressController extends Controller
 {
     //
@@ -17,6 +18,13 @@ class AdressController extends Controller
         $this->UserRepository = $UserRepository;
     }
     public function createadress(Request $request){
+    $validator =Validator::make($request->all(), [
+        'lat'=> 'required',
+        'long' => 'required',
+        ]);
+    if($validator->fails()) {
+        return $this->response(false,$validator->messages()->first(),null,401);
+    }
      $user_id=Auth::guard('user_api')->user()->id;
      $adress= $this->UserRepository->addaddress($request,$user_id);
      if(is_array($adress)){

@@ -10,7 +10,7 @@ use App\Traits\response;
 use App;
 class HomeController extends Controller
 {
-    //
+      //
       use response;
       public function getslider(Request $request){
           $lang=$request->header('lang');
@@ -65,7 +65,7 @@ class HomeController extends Controller
             return $miles;
           }
         }
-      }
+      } // end of distance
       public $toplaundries=[];
       public function toplaundries(Request $request){
         $lat=$request->lat;
@@ -81,7 +81,6 @@ class HomeController extends Controller
                 $this->toplaundries[$key]['username']=$branch->username;
                 $this->toplaundries[$key]['address']=$branch->address;
                 $this->toplaundries[$key]['distance']=$distance;
-
         }
         // sort array
         $this->toplaundries=$this->sort($this->toplaundries);

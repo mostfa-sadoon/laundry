@@ -35,7 +35,7 @@ Route::controller(HomeController::class)->group(function () {
    Route::get('top/laundry/{lat?&lon?}','toplaundries');
 });
 Route::controller(LaundryController::class)->group(function () {
-    Route::get('laundryinfo/{branch_id?}','laundryinfo');
+    Route::get('laundryinfo/{branch_id?&lat?&long?}','laundryinfo');
  });
 Route::controller(OrderController::class)->group(function () {
   //order
@@ -55,7 +55,6 @@ Route::group(['middleware' => 'userApiAuth'],function(){
         Route::get('/edit/profile','edit');
         Route::get('/edit/profile/phone','editphone');
         Route::post('update/profile','update');
-        Route::post('profile/updatepassword','updatepassword');
         Route::post('profile/updatepassword','updatepassword');
         Route::post('profile/updatephone','updatephone');
         Route::post('verified/phone','verifyphone');
