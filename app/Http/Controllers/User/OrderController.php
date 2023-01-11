@@ -124,5 +124,12 @@ class OrderController extends Controller
             $data['message']='order checled  succefully';
             return response()->json($data);
         }
-    }
+        }
+        public function reciveorder(Request $request){
+            $data=  $this->OrderRepository->reciveorder($request);
+            if ($data==null){
+              return $this->response(false,'some thing wrong');
+            }
+            return $this->response($data['status'],$data['message']);
+        }
 }

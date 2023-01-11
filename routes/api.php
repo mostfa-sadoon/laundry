@@ -44,6 +44,7 @@ Route::controller(OrderController::class)->group(function () {
   Route::get('choose/laundry/{branch_id?}','chooselaundry');
   Route::get('category/items/{service_id?&category_id?&branch_id?}','getcategoryitems');
   Route::get('items/detailes{item_id?}','itemdetailes');
+  Route::get('order/pick_up{order_id?&confirm_type?}','reciveorder');
 });
 Route::group(['middleware' => 'userApiAuth'],function(){
     Route::controller(AdressController::class)->group(function () {

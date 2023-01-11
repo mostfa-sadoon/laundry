@@ -124,6 +124,7 @@ class OrderRepository implements OrderRepositoryInterface
         }
 
     }
+    // in this function user or laundery recive order from driver by scaning qr code
     public function reciveorder($request){
         $order_id=$request->order_id;
         $confirm_type=$request->confirm_type;
@@ -150,6 +151,18 @@ class OrderRepository implements OrderRepositoryInterface
             }
             $data['status']=true;
             $data['message']='laundry recived order successfully';
+        }elseif($confirm_type=='drop_of_home'){
+            if($orderstatus->order_status=='drop_of_home'){
+                $orderstatus->update([
+                    'confirmation'=>true
+                ]);
+                order::find($order_id)->update([
+                    'progress'=>'completed',
+                    'delivery_status'=>'completed',
+                 ]);
+                }
+                $data['status']=true;
+                $data['message']='user recived order successfully';
         }
         return $data;
     }
@@ -228,7 +241,7 @@ class OrderRepository implements OrderRepositoryInterface
           return $data;
     }
     public function checkout($request){
-        
+
     }
 
 }
