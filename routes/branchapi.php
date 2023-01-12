@@ -30,6 +30,9 @@ use  App\Http\Controllers\branch\ProfileController;
 Route::controller(AuthController::class)->group(function () {
         Route::post('branch/login','login');
 });
+Route::controller(SettingController::class)->group(function () {
+
+});
 Route::group(['middleware' => 'lundryApiAuth'],function(){
     Route::controller(AuthController::class)->group(function () {
     Route::post('branch/register','registration');
@@ -46,7 +49,6 @@ Route::controller(ServiceController::class)->group(function () {
     Route::get('branch/services','getservices');
     Route::get('branch/aditionalservices{branch_id?}','getaditionalservices');
     Route::get('get/branch/category/item{category_id?}','getcategoryitem');
-
 });
 Route::group(['middleware' => 'branchApiAuth'],function(){
     Route::controller(AuthController::class)->group(function () {

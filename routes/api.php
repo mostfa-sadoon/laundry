@@ -66,7 +66,9 @@ Route::group(['middleware' => 'userApiAuth'],function(){
     });
     Route::controller(OrderController::class)->group(function () {
         Route::POST('submitorder','submitorder');
-        Route::POST('checkout','checkout');
         Route::get('order/summary/{order_id?}','ordersummary');
+        Route::get('branch/open-time/{branch_id?}','opentime');
+        
+        Route::POST('checkout','checkout');
     });
 });

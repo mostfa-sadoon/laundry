@@ -38,7 +38,6 @@ class OrderController extends Controller
     public function __construct(OrderRepositoryInterface $OrderRepository,BranchRepositoryInterface $BranchRepository)
     {
         $this->OrderRepository = $OrderRepository;
-        $this->BranchRepository=$BranchRepository;
     }
     #Reigon[this is create ordder cycle]
         public $service_ids=[];
