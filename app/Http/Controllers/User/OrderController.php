@@ -19,7 +19,7 @@ class OrderController extends Controller
     {
         $this->OrderRepository = $OrderRepository;
     }
-    #Reigon[this is show order cycle]
+    #Reigon[this is show order cycle & make order]
         public function getservices(Request $request){
             $lang=$request->header('lang');
             App::setLocale($lang);
@@ -59,6 +59,10 @@ class OrderController extends Controller
         public function submitorder(Request $request){
          $order=$this->OrderRepository->submitorder($request);
          return $this->response(true,'order creates success',['order_id'=>$order]);
+        }
+        public function ordersummary(Request $request){
+            $ordersummary=$this->OrderRepository->ordersummary($request);
+            return $this->response(true,'order summary',$ordersummary);
         }
         public function checkout(Request $request){
             $order_id=$request->order_id;

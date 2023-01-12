@@ -19,6 +19,8 @@ use App\Models\Order\orderdetailes;
 use App\Models\laundryservice\Argent;
 use App\Traits\queries\orders;
 use App\Traits\queries\serviceTrait;
+use App\Models\Order\delivery_type;
+use App\Models\Order\payment_method;
 use Validator;
 use Auth;
 use App;
@@ -26,12 +28,14 @@ class OrderRepository implements OrderRepositoryInterface
 {
     use orders,serviceTrait;
     public $service_ids=[];
+    // this function get the services in the system
     public function getservices($request,$lang){
         $lang=$request->header('lang');
         App::setLocale($lang);
         $services=Service::select('id')->get();
         return $services;
     }
+    // this function get laundry that provide service that choosen by user
     public function selectlaundry($request,$lang){
         $branchs=branch::select('id','username','laundry_id')->whereHas('branchservices',function($q)use($request){
         $q->wherein('service_id',$request->services);
@@ -52,6 +56,7 @@ class OrderRepository implements OrderRepositoryInterface
             $data['branchargent']=$branch->argent;
             return $data;
     }
+    // this function get item inside specify category
     public function getcategoryitems($category_id,$service_id,$branch_id,$lang){
       $brnchitem=Branchitem::whereHas('branchitemprice',function($q)use($service_id,$branch_id,$category_id){
             $q->where('service_id',$service_id)->where('branch_id',$branch_id)->where('category_id',$category_id);
@@ -62,13 +67,14 @@ class OrderRepository implements OrderRepositoryInterface
                   'data'=>['branchitem'=> branchitemresource::collection($brnchitem)]
                   ];
       }
+    // we use this function to get the additional serviece that can be done in this item
     public function itemdetailes($item_id,$lang){
-      $itemadditionalservice=Additionalservice::select('id')->whereHas('branchadditionalservice',function(Builder $query)use($item_id){
-          $query->where('branchitem_id',$item_id)->where('status','on');
-      })->with(['itemprices'=>function($q)use($item_id){
-              $q->select('additionalservice_id','price','id as item_price_id')->where('branchitem_id',$item_id)->get();
-      }])->get();
-      return $itemadditionalservice;
+    $itemadditionalservice=Additionalservice::select('id')->whereHas('branchadditionalservice',function(Builder $query)use($item_id){
+        $query->where('branchitem_id',$item_id)->where('status','on');
+    })->with(['itemprices'=>function($q)use($item_id){
+            $q->select('additionalservice_id','price','id as item_price_id')->where('branchitem_id',$item_id)->get();
+    }])->get();
+    return $itemadditionalservice;
     }
     public function submitorder($request){
         $branchid=$request->branch_id;
@@ -184,7 +190,7 @@ class OrderRepository implements OrderRepositoryInterface
         $data['data']['orders']=$orders;
         return $data;
     }
-    // we use this function when recive order to know order info of it
+    // we use this function when recive order to know order info of it in branch application
     public function orderinfo($order_id,$lang){
         $order=DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
         ->join('orders','orders.id','=','order_detailes.order_id')
@@ -240,8 +246,31 @@ class OrderRepository implements OrderRepositoryInterface
           $data['data']['serives']=$services;
           return $data;
     }
-    public function checkout($request){
-
+    // this order summary for customer application this function is the same function in App\Http\Controllers\branch\orderController  (order info)
+    public function ordersummary($request){
+        $lang=$request->header('lang');
+        $order_id=$request->order_id;
+        App::setLocale($lang);
+        $deliverytype=delivery_type::select('id')->get()->makehidden('translations');
+        $paymentmethods=payment_method::select('id')->get()->makehidden('translations');
+        $orderdetailes= DB::table('order_detailes')->where('order_detailes.order_id',$order_id)
+        ->join('servicetranslations','servicetranslations.service_id','=','order_detailes.service_id')
+        ->selectRaw('sum(price) as total')
+        ->selectRaw('sum(quantity) as quantity')
+        ->selectRaw('servicetranslations.name')
+        ->where('order_detailes.order_id',$order_id)
+        ->where('servicetranslations.locale',$lang)
+        ->where('order_detailes.additionalservice_id','=',null)
+        ->groupBy('servicetranslations.service_id')
+        ->groupBy('servicetranslations.name')
+        ->get();
+        $argentprice=Argent::where('order_id',$order_id)->sum('price');
+        $data['status']=true;
+        $data['message']="return order info succeffuly";
+        $data['data']['deliverytype']=$deliverytype;
+        $data['data']['paymentmethods']=$paymentmethods;
+        $data['data']['orderdetailes']=$orderdetailes;
+        $data['data']['argentprice']= $argentprice;
+        return $data;
     }
-
 }
